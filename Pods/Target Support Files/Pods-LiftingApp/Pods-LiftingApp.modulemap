@@ -1,0 +1,6 @@
+framework module Pods_LiftingApp {
+  umbrella header "Pods-LiftingApp-umbrella.h"
+
+  export *
+  module * { export * }
+}

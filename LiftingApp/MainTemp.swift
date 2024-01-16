@@ -10,6 +10,7 @@ import SwiftUI
 struct MainTemp: View {
     var body: some View {
         Text("hi")
+        Text("bye")
     }
 }
 

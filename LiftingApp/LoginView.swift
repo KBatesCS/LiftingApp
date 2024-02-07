@@ -8,14 +8,27 @@
 import SwiftUI
 
 struct LoginView: View {
+    @State var isLoggedIn: Bool = false
+    var body: some View {
+        if (isLoggedIn) {
+            MainTabView()
+        }
+        else {
+            LoginViewScreen(isLoggedIn: $isLoggedIn)
+        }
+    }
+}
+
+struct LoginViewScreen: View {
     @State private var yVal: CGFloat = 0.0
     @State private var opacity: Double = 0.0
     @State private var username: String = ""
     @State private var password: String = ""
     
-    @State private var isLoggedIn: Bool = false
+    @Binding var isLoggedIn: Bool
     
     var body: some View {
+        
         ZStack {
             Color("Background").edgesIgnoringSafeArea(.all)
             VStack {
@@ -35,29 +48,21 @@ struct LoginView: View {
                     TextField("", text: $username)
                         .padding(.horizontal, 10)
                         .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
-                        .overlay(RoundedRectangle(cornerSize: CGSize(width: 25, height: 25)).stroke(Constants.color1, lineWidth: 1))
-                        .ignoresSafeArea(.keyboard)
+                        .overlay(RoundedRectangle(cornerSize: CGSize(width: 25, height: 25)).stroke(Color("Accent"), lineWidth: 1))
                     TextField("", text: $password)
                         .padding(.horizontal, 10)
                         .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
-                        .overlay(RoundedRectangle(cornerSize: CGSize(width: 25, height: 25)).stroke(Constants.color1, lineWidth: 1))
-                        .ignoresSafeArea(.keyboard)
-                    
+                        .overlay(RoundedRectangle(cornerSize: CGSize(width: 25, height: 25)).stroke(Color("Accent"), lineWidth: 1))
                     Button (action: {
-                        isLoggedIn = true
-                        
-                        //MainTemp()
+                        isLoggedIn = login()
                     }, label: {
                         Text("Login")
                             .font(.title2)
                             .foregroundColor(Color("Background"))
                             .bold()
                     })
-                    .background(
-                        NavigationLink(destination: MainTemp(), isActive: $isLoggedIn, label: {EmptyView()})
-                    )
                     .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
-                    .background(Color("MainColor"))
+                    .background(Color("Accent"))
                     .cornerRadius(21)
                     
                     
@@ -73,7 +78,9 @@ struct LoginView: View {
                 }
                 Spacer()
             }
+            .ignoresSafeArea(.keyboard)
         }
+        
     }
     func login() -> Bool {
         if !username.isEmpty && !password.isEmpty {
@@ -83,7 +90,7 @@ struct LoginView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()
     }

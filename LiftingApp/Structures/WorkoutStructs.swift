@@ -8,29 +8,29 @@
 import Foundation
 import SwiftUI
 
-struct Routine: Identifiable, Codable {
+class Routine: Identifiable, Codable {
     var id: UUID
     
     var ownerID: String
     var name: String
-    var workouts: [workout]
+    var workouts: [Workout]
     
-    init(id: UUID = UUID(), ownerID: String = "", name: String = "default", workouts: [workout] = []) {
+    init(id: UUID = UUID(), ownerID: String = "", name: String = "default", workouts: [Workout] = []) {
         self.id = id
         self.name = name
         self.workouts = []
         self.ownerID = ownerID
     }
     
-    mutating func setName(name: String) {
+    func setName(name: String) {
         self.name = name
     }
     
-    mutating func addWorkout(newWorkout: workout) {
+    func addWorkout(newWorkout: Workout) {
         self.workouts.append(newWorkout)
     }
     
-    mutating func removeWorkout(atPos: Int) {
+    func removeWorkout(atPos: Int) {
         workouts.remove(at: atPos)
     }
     
@@ -48,31 +48,33 @@ struct Routine: Identifiable, Codable {
     }
 }
 
-struct workout: Identifiable, Codable {
+class Workout: Identifiable, Codable {
     var id: UUID
     
     var name: String
     var exercises: [ExerciseSet]
+    var notes: String
     
     init(id: UUID = UUID(), name: String = "default", exercises: [ExerciseSet] = []) {
         self.id = id
         self.name = name
+        self.notes = ""
         self.exercises = exercises
     }
     
-    mutating func setName(name: String) {
+    func setName(name: String) {
         self.name = name
     }
     
-    mutating func addExercise(newExercise: ExerciseSet) {
+    func addExercise(newExercise: ExerciseSet) {
         exercises.append(newExercise)
     }
     
-    mutating func addExercise(newExercise: Exercise) {
+    func addExercise(newExercise: Exercise) {
         exercises.append(ExerciseSet(exerciseInfo: newExercise))
     }
     
-    mutating func removeExercise(atPos: Int) {
+    func removeExercise(atPos: Int) {
         exercises.remove(at: atPos)
     }
     
@@ -90,7 +92,7 @@ struct workout: Identifiable, Codable {
     }
 }
 
-struct ExerciseSet: Identifiable, Codable {
+class ExerciseSet: Identifiable, Codable {
     var id: UUID
     
     var name: String
@@ -99,11 +101,13 @@ struct ExerciseSet: Identifiable, Codable {
     var intensityForm: IntensityType
     var intensityList: [Int]
     var restLengths: [Int] //in seconds
+    var notes: String
     
     init(id: UUID = UUID(), exerciseInfo: Exercise,
          intensityForm: IntensityType = IntensityType.None) {
         self.id = id
         self.name = exerciseInfo.name
+        self.notes = ""
         
         self.exerciseInfo = exerciseInfo
         self.intensityForm = intensityForm
@@ -111,13 +115,14 @@ struct ExerciseSet: Identifiable, Codable {
         self.repList = [12,12,12]
         self.restLengths = [90,90,90]
         self.setIntensityListToDefaults()
+        
     }
     
-    mutating func setName(name: String) {
+    func setName(name: String) {
         self.name = name
     }
     
-    mutating func changeIntensityForm(newIntensityForm: IntensityType) {
+    func changeIntensityForm(newIntensityForm: IntensityType) {
         if self.intensityForm == newIntensityForm {
             return
         }
@@ -126,7 +131,7 @@ struct ExerciseSet: Identifiable, Codable {
         self.setIntensityListToDefaults()
     }
     
-    mutating func setIntensityListToDefaults() {
+    func setIntensityListToDefaults() {
         if self.intensityForm == IntensityType.PercentOfMax {
             self.intensityList = Array(repeating: 75, count: repList.count)
         } else if self.intensityForm == IntensityType.RPE {
@@ -136,7 +141,7 @@ struct ExerciseSet: Identifiable, Codable {
         }
     }
     
-    mutating func changeIntensity(intensityPos: Int = -1, newIntensity: Int) {
+    func changeIntensity(intensityPos: Int = -1, newIntensity: Int) {
         if (intensityPos == -1) {
             for i in intensityList.indices {
                 intensityList[i] = newIntensity
@@ -146,13 +151,13 @@ struct ExerciseSet: Identifiable, Codable {
         }
     }
     
-    mutating func addSet() {
+    func addSet() {
         repList.append(repList.last ?? 12)
         restLengths.append(restLengths.last ?? 90)
         intensityList.append(intensityList.last ?? 0)
     }
     
-    mutating func removeSet(atPos: Int = -1) {
+    func removeSet(atPos: Int = -1) {
         if repList.count <= 0 {
             return
         }

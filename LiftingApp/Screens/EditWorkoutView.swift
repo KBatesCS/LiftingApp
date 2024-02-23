@@ -13,6 +13,8 @@ struct EditWorkoutView: View {
     
     @State private var name: String = ""
     
+    
+    
     init (workout: Workout? = nil) {
         self.workout = workout ?? Workout()
         self.isNew = (workout == nil)
@@ -20,11 +22,15 @@ struct EditWorkoutView: View {
         
     }
     
+    
+    
     var body: some View {
+        
         TextField("name", text: $name)
             .textFieldStyle(RoundedTextFieldStyle())
             .frame(alignment: .topLeading)
         Spacer()
+        
         
         ForEach(0..<workout.exercises.count, id: \.self) {
             let exercise: ExerciseSet = workout.exercises[$0]
@@ -33,6 +39,7 @@ struct EditWorkoutView: View {
             Text(exercise.notes)
             Spacer()
         }
+         
         
         Button (action: {
             workout.addExercise(newExercise: Exercise())
@@ -46,7 +53,7 @@ struct EditWorkoutView: View {
         Spacer()
         
         
-        
+        Text("hi")
     }
 }
 

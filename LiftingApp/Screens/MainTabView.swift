@@ -12,7 +12,7 @@ struct MainTabView: View {
     var body: some View {
         TabView (selection: $defaultTab){
             // screen 1
-            Text("Screen 2")
+            EditRoutineView()
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                 }.tag(1)

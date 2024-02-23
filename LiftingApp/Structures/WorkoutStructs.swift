@@ -8,18 +8,40 @@
 import Foundation
 import SwiftUI
 
-class Routine: Identifiable, Codable {
-    var id: UUID
-    
-    var ownerID: String
-    var name: String
-    var workouts: [Workout]
+class Routine: Identifiable, Codable, ObservableObject {
+    @Published var id: UUID
+    @Published var ownerID: String
+    @Published var name: String
+    @Published var workouts: [Workout]
     
     init(id: UUID = UUID(), ownerID: String = "", name: String = "default", workouts: [Workout] = []) {
         self.id = id
         self.name = name
         self.workouts = []
         self.ownerID = ownerID
+    }
+    
+    enum CodingKeys: CodingKey {
+        case id
+        case ownerID
+        case name
+        case workouts
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        id = try container.decode(UUID.self, forKey: .id)
+        workouts = try container.decode([Workout].self, forKey: .workouts)
+        ownerID = try container.decode(String.self, forKey: .ownerID)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(id, forKey: .id)
+        try container.encode(workouts, forKey: .workouts)
+        try container.encode(ownerID, forKey: .ownerID)
     }
     
     func setName(name: String) {
@@ -48,18 +70,41 @@ class Routine: Identifiable, Codable {
     }
 }
 
-class Workout: Identifiable, Codable {
-    var id: UUID
+class Workout: Identifiable, Codable, ObservableObject {
+    @Published var id: UUID
     
-    var name: String
-    var exercises: [ExerciseSet]
-    var notes: String
+    @Published var name: String
+    @Published var exercises: [ExerciseSet]
+    @Published var notes: String
     
     init(id: UUID = UUID(), name: String = "default", exercises: [ExerciseSet] = []) {
         self.id = id
         self.name = name
         self.notes = ""
         self.exercises = exercises
+    }
+    
+    enum CodingKeys: CodingKey {
+        case id
+        case notes
+        case name
+        case exercises
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        id = try container.decode(UUID.self, forKey: .id)
+        exercises = try container.decode([ExerciseSet].self, forKey: .exercises)
+        notes = try container.decode(String.self, forKey: .notes)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(id, forKey: .id)
+        try container.encode(exercises, forKey: .exercises)
+        try container.encode(notes, forKey: .notes)
     }
     
     func setName(name: String) {

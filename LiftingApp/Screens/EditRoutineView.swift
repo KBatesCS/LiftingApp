@@ -8,18 +8,15 @@
 import SwiftUI
 
 struct EditRoutineView: View {
-    @State var curRoutine: Routine
+    @ObservedObject var curRoutine: Routine
     private var isNew: Bool
     
     @State var reload: Bool = false
-    
     @State private var name: String = ""
     
     init(curRoutine: Routine? = nil) {
-        self.curRoutine = curRoutine ?? Routine()
+        self.curRoutine = curRoutine ?? Routine(name: "test")
         self.isNew = (curRoutine == nil)
-        //self.name = curRoutine?.name ?? "error"
-        self.name = self.curRoutine.name
     }
     
     var body: some View {
@@ -31,14 +28,20 @@ struct EditRoutineView: View {
                     .foregroundColor(Color("Accent"))
                     .textFieldStyle(RoundedTextFieldStyle())
                     .padding()
-                Spacer()
-                ForEach(0..<curRoutine.workouts.count, id: \.self) {
-                    WorkoutMetaDislay(workout: curRoutine.workouts[$0])
-                    Spacer()
+                    .onAppear {
+                        self.name = self.curRoutine.name
+                    }
+                List(curRoutine.workouts) { workout in
+                    NavigationLink {
+                        EditWorkoutView(workout: workout)
+                    } label: {
+                        WorkoutMetaDislay(workout: workout)
+                    }
                 }
+                
                 Button (action: {
-                    curRoutine.addWorkout(newWorkout: Workout())
-                    //reload.toggle()
+                    curRoutine.addWorkout(newWorkout: Workout(name: "Day \(curRoutine.workouts.count + 1)"))
+                    
                 }, label: {
                     Text("+ workout")
                         .font(.title2)
@@ -46,6 +49,7 @@ struct EditRoutineView: View {
                         .bold()
                 })
                 .frame(alignment: .topLeading)
+                .padding()
                 
             }
             

@@ -14,7 +14,7 @@ class Routine: Identifiable, Codable, ObservableObject {
     @Published var name: String
     @Published var workouts: [Workout]
     
-    init(id: UUID = UUID(), ownerID: String = "", name: String = "default", workouts: [Workout] = []) {
+    init(id: UUID = UUID(), ownerID: String = "", name: String = "default", workouts: [Workout] = [Workout]()) {
         self.id = id
         self.name = name
         self.workouts = []
@@ -77,7 +77,7 @@ class Workout: Identifiable, Codable, ObservableObject {
     @Published var exercises: [ExerciseSet]
     @Published var notes: String
     
-    init(id: UUID = UUID(), name: String = "default", exercises: [ExerciseSet] = []) {
+    init(id: UUID = UUID(), name: String = "default", exercises: [ExerciseSet] = [ExerciseSet]()) {
         self.id = id
         self.name = name
         self.notes = ""

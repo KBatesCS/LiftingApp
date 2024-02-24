@@ -52,6 +52,19 @@ class Routine: Identifiable, Codable, ObservableObject {
         self.workouts.append(newWorkout)
     }
     
+    
+    func createWorkout(name: String) -> Workout {
+        let newWorkout: Workout = Workout(name: name)
+        self.addWorkout(newWorkout: newWorkout)
+        return newWorkout
+    }
+    
+    
+    func getLatestWorkout() -> Workout? {
+        return self.workouts.last ?? nil
+    }
+    
+    
     func removeWorkout(atPos: Int) {
         workouts.remove(at: atPos)
     }

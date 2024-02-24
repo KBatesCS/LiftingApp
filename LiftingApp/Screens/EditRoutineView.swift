@@ -11,12 +11,16 @@ struct EditRoutineView: View {
     @ObservedObject var curRoutine: Routine
     private var isNew: Bool
     
-    @State var reload: Bool = false
     @State private var name: String = ""
     
     init(curRoutine: Routine? = nil) {
-        self.curRoutine = curRoutine ?? Routine(name: "test")
-        self.isNew = (curRoutine == nil)
+        if (curRoutine == nil) {
+            self.curRoutine = Routine(name: "new Routine")
+            self.isNew = true
+        } else {
+            self.curRoutine = curRoutine!
+            self.isNew = false
+        }
     }
     
     var body: some View {
@@ -33,12 +37,22 @@ struct EditRoutineView: View {
                     }
                 List(curRoutine.workouts) { workout in
                     NavigationLink {
-                        EditWorkoutView(workout: workout)
+                        EditWorkoutView(workout: workout, routine: self.curRoutine)
                     } label: {
                         WorkoutMetaDislay(workout: workout)
                     }
                 }
-                
+                NavigationLink {
+                    EditWorkoutView(routine: self.curRoutine)
+                } label: {
+                    Text("+ workout")
+                        .font(.title2)
+                        .foregroundColor(Color("Background"))
+                        .bold()
+                        .frame(alignment: .topLeading)
+                        .padding()
+                }
+                /*
                 Button (action: {
                     curRoutine.addWorkout(newWorkout: Workout(name: "Day \(curRoutine.workouts.count + 1)"))
                     
@@ -50,6 +64,7 @@ struct EditRoutineView: View {
                 })
                 .frame(alignment: .topLeading)
                 .padding()
+                 */
                 
             }
             

@@ -8,29 +8,50 @@
 import SwiftUI
 
 struct EditWorkoutView: View {
+    @Environment(\.presentationMode) var presentationMode
     @ObservedObject var workout: Workout
+    @ObservedObject var routine: Routine
     private var isNew: Bool
     
     @State private var name: String = ""
     
     
     
-    init (workout: Workout? = nil) {
-        self.workout = workout ?? Workout()
-        self.isNew = (workout == nil)
+    init (workout: Workout? = nil, routine: Routine) {
+        if (workout == nil) {
+            self.isNew = true
+            let newWorkout = Workout(name: "Day \(routine.workouts.count + 1)")
+            //routine.addWorkout(newWorkout: newWorkout)
+            self.workout = newWorkout
+        } else {
+            self.workout = workout ?? Workout(name: "should never")
+            self.isNew = false
+        }
+        
+        self.routine = routine
     }
     
     
     
     var body: some View {
         VStack {
-            
-            TextField("name", text: $name)
-                .textFieldStyle(RoundedTextFieldStyle())
-                .frame(alignment: .topLeading)
-                .onAppear {
-                    self.name = self.workout.name
-                }
+            HStack {
+                TextField("name", text: $name)
+                    .textFieldStyle(RoundedTextFieldStyle())
+                    .frame(alignment: .topLeading)
+                    .onAppear {
+                        self.name = self.workout.name
+                    }
+                    .padding()
+                
+                Button (action: {
+                    self.workout.name = name
+                    self.presentationMode.wrappedValue.dismiss()
+                }, label: {
+                    Image(systemName: "square.and.arrow.down")
+                        .imageScale(.large)
+                })
+            }
             Spacer()
             
             /*
@@ -62,11 +83,16 @@ struct EditWorkoutView: View {
             
             Text("hi")
         }
+        .onAppear {
+            if (self.isNew) {
+                self.routine.addWorkout(newWorkout: self.workout)
+            }
+        }
     }
 }
 
 
 
 #Preview {
-    EditWorkoutView(workout: Workout())
+    EditWorkoutView(routine: Routine())
 }

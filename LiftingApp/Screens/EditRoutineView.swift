@@ -13,14 +13,9 @@ struct EditRoutineView: View {
     
     @State private var name: String = ""
     
-    init(curRoutine: Routine? = nil) {
-        if (curRoutine == nil) {
-            self.curRoutine = Routine(name: "new Routine")
-            self.isNew = true
-        } else {
-            self.curRoutine = curRoutine!
-            self.isNew = false
-        }
+    init(curRoutine: Routine) {
+        self.curRoutine = curRoutine
+        self.isNew = false
     }
     
     var body: some View {
@@ -35,15 +30,14 @@ struct EditRoutineView: View {
                     .onAppear {
                         self.name = self.curRoutine.name
                     }
-                List(curRoutine.workouts) { workout in
-                    NavigationLink {
-                        EditWorkoutView(workout: workout, routine: self.curRoutine)
-                    } label: {
+                List(Array(curRoutine.workouts.enumerated()), id: \.element.id) { index, workout in
+                    NavigationLink(destination: EditWorkoutView(routine: self.curRoutine, position: index)) {
                         WorkoutMetaDislay(workout: workout)
                     }
                 }
+                /*
                 NavigationLink {
-                    EditWorkoutView(routine: self.curRoutine)
+                    EditWorkoutView(routine: self.curRoutine, position: self.curRoutine.workouts.count)
                 } label: {
                     Text("+ workout")
                         .font(.title2)
@@ -52,7 +46,10 @@ struct EditRoutineView: View {
                         .frame(alignment: .topLeading)
                         .padding()
                 }
-                /*
+                .onTapGesture {
+                    self.curRoutine.addWorkout(newWorkout: Workout(name: "ifuns"))
+                }*/
+                
                 Button (action: {
                     curRoutine.addWorkout(newWorkout: Workout(name: "Day \(curRoutine.workouts.count + 1)"))
                     
@@ -64,7 +61,7 @@ struct EditRoutineView: View {
                 })
                 .frame(alignment: .topLeading)
                 .padding()
-                 */
+                 
                 
             }
             
@@ -92,5 +89,5 @@ struct WorkoutMetaDislay: View {
 }
 
 #Preview {
-    EditRoutineView()
+    EditRoutineView(curRoutine: Routine(name: "new routine"))
 }

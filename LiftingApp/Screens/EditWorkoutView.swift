@@ -12,11 +12,12 @@ struct EditWorkoutView: View {
     @ObservedObject var workout: Workout
     @ObservedObject var routine: Routine
     private var isNew: Bool
+    private var pos: Int
     
     @State private var name: String = ""
     
     
-    
+    /*
     init (workout: Workout? = nil, routine: Routine) {
         if (workout == nil) {
             self.isNew = true
@@ -30,7 +31,21 @@ struct EditWorkoutView: View {
         
         self.routine = routine
     }
+    */
     
+    init (routine: Routine, position: Int) {
+        self.routine = routine
+        
+        if (position >= routine.workouts.count) {
+            self.workout = Workout(name: "Day \(routine.workouts.count + 1)")
+            self.isNew = true
+            self.pos = position - 1
+        } else {
+            self.workout = routine.get(position: position)
+            self.isNew = false
+            self.pos = position
+        }
+    }
     
     
     var body: some View {
@@ -39,13 +54,10 @@ struct EditWorkoutView: View {
                 TextField("name", text: $name)
                     .textFieldStyle(RoundedTextFieldStyle())
                     .frame(alignment: .topLeading)
-                    .onAppear {
-                        self.name = self.workout.name
-                    }
                     .padding()
                 
                 Button (action: {
-                    self.workout.name = name
+                    save()
                     self.presentationMode.wrappedValue.dismiss()
                 }, label: {
                     Image(systemName: "square.and.arrow.down")
@@ -87,12 +99,17 @@ struct EditWorkoutView: View {
             if (self.isNew) {
                 self.routine.addWorkout(newWorkout: self.workout)
             }
-        }
+            self.name = self.workout.name
+        } 
+    }
+    func save() {
+       //self.workout.name = name
+        self.routine.workouts[pos].name = name
     }
 }
 
 
 
 #Preview {
-    EditWorkoutView(routine: Routine())
+    EditWorkoutView(routine: Routine(), position: 0)
 }

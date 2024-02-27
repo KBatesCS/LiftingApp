@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Alamofire
+import KeychainAccess
 
 struct LoginView: View {
     @State var isLoggedIn: Bool = false
@@ -49,12 +51,16 @@ struct LoginViewScreen: View {
                         .padding(.horizontal, 10)
                         .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
                         .overlay(RoundedRectangle(cornerSize: CGSize(width: 25, height: 25)).stroke(Color("Accent"), lineWidth: 1))
-                    TextField("", text: $password)
+                        .keyboardType(.emailAddress)
+                        .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                    SecureField("", text: $password)
                         .padding(.horizontal, 10)
                         .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
                         .overlay(RoundedRectangle(cornerSize: CGSize(width: 25, height: 25)).stroke(Color("Accent"), lineWidth: 1))
                     Button (action: {
-                        isLoggedIn = login()
+                        login(completion: {success in
+                            isLoggedIn = success
+                        })
                     }, label: {
                         Text("Login")
                             .font(.title2)
@@ -82,11 +88,36 @@ struct LoginViewScreen: View {
         }
         
     }
-    func login() -> Bool {
+    func login(completion: @escaping (Bool) -> ()) {
         if !username.isEmpty && !password.isEmpty {
-            return true
+            let SERVER_URL = "http://127.0.0.1:3000/auth/local/login";
+            let parameters: [String: String] = [
+                "email": username,
+                "password": password
+            ]
+            AF.request(SERVER_URL, method: .post, parameters: parameters).responseData { response in
+                if response.response?.statusCode == 200 {
+                    switch response.result {
+                        case .success(let data):
+                            do {
+                                let asJSON = (try JSONSerialization.jsonObject(with: data)) as? [String: Any]
+                                print(asJSON!["access_token"])
+//                                let keychain = Keychain(server: "http://127.0.0.1", protocolType: .http)
+//                                keychain["server_access_token"] = asJSON!["access_token"] as? String
+                                completion(true)
+                            } catch {
+                                print(error)
+                            }
+                        case .failure(let error):
+                            print(error)
+                        }
+                } else {
+                    completion(false)
+                }
+            }
+        } else {
+            completion(false)
         }
-        return false
     }
 }
 

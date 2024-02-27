@@ -8,4 +8,6 @@ target 'LiftingApp' do
   # Pods for LiftingApp
 	pod 'GoogleSignIn'
 	pod 'GoogleSignInSwiftSupport'
+  pod 'Alamofire'
+  pod 'KeychainAccess'
 end

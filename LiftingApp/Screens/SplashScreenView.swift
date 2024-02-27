@@ -14,7 +14,7 @@ struct SplashScreenView: View {
         ZStack {
             if self.isActive {
                 if self.isLoggedIn() {
-                    MainTemp()
+                    MainTabView()
                 } else {
                     LoginView()
                 }
@@ -38,7 +38,7 @@ struct SplashScreenView: View {
     }
     
     func isLoggedIn() -> Bool {
-        return false
+        return true
     }
 }
 

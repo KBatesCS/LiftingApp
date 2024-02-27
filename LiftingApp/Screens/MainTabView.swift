@@ -9,10 +9,11 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var defaultTab = 2
+    
     var body: some View {
         TabView (selection: $defaultTab){
             // screen 1
-            Text("Screen 2")
+            EditRoutineView(curRoutine: Routine(name: "new routine"))
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                 }.tag(1)

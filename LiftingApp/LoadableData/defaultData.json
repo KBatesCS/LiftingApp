@@ -1,0 +1,43 @@
+[
+  {
+    "name" : "BenchPress",
+    "secondaryMusclesWorked" : [
+      {
+        "shoulder" : {
+
+        }
+      },
+      {
+        "tricep" : {
+
+        }
+      }
+    ],
+    "id" : "901C1639-5917-439A-923E-A30D372FAE45",
+    "primaryMusclesWorked" : [
+      {
+        "chest" : {
+
+        }
+      }
+    ]
+  },
+  {
+    "name" : "Pullup",
+    "id" : "7F67B659-6333-4E96-816F-DB96DF9780C7",
+    "primaryMusclesWorked" : [
+      {
+        "back" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+      {
+        "bicep" : {
+
+        }
+      }
+    ]
+  }
+]

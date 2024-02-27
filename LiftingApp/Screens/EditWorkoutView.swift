@@ -76,8 +76,8 @@ struct EditWorkoutView: View {
             }
              */
             
-            ForEach(workout.exercises) { exercise in
-                Text(exercise.name)
+            List(Array(workout.exercises.enumerated()), id: \.element.id) { index, eset in
+                ExerciseSetDisplay(eset: eset)
             }
             
             
@@ -100,7 +100,7 @@ struct EditWorkoutView: View {
                 self.routine.addWorkout(newWorkout: self.workout)
             }
             self.name = self.workout.name
-        } 
+        }
     }
     func save() {
        //self.workout.name = name
@@ -108,7 +108,23 @@ struct EditWorkoutView: View {
     }
 }
 
-
+struct ExerciseSetDisplay: View {
+    
+    let eset: ExerciseSet
+    
+    var body: some View {
+        VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
+            Text(eset.name)
+            List(eset.repList.indices, id: \.self) { index in
+                Text("Item \(eset.repList[index])")
+                
+            }
+        }
+        .padding()
+    }
+    
+    
+}
 
 #Preview {
     EditWorkoutView(routine: Routine(), position: 0)

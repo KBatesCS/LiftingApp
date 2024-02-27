@@ -8,30 +8,30 @@
 import SwiftUI
 
 struct EditRoutineView: View {
-    @ObservedObject var curRoutine: Routine
+    @ObservedObject var routine: Routine
     private var isNew: Bool
     
     @State private var name: String = ""
     
     init(curRoutine: Routine) {
-        self.curRoutine = curRoutine
+        self.routine = curRoutine
         self.isNew = false
     }
     
     var body: some View {
         NavigationStack {
             VStack {
-                TextField("RoutineName", text: $name)
+                TextField("RoutineName", text: $routine.name)
                     .frame(alignment: .topLeading)
                     .multilineTextAlignment(.center)
                     .foregroundColor(Color("Accent"))
                     .textFieldStyle(RoundedTextFieldStyle())
                     .padding()
-                    .onAppear {
-                        self.name = self.curRoutine.name
+                    .onSubmit {
+                        routine.setName(name: name)
                     }
-                List(Array(curRoutine.workouts.enumerated()), id: \.element.id) { index, workout in
-                    NavigationLink(destination: EditWorkoutView(routine: self.curRoutine, position: index)) {
+                List(Array(routine.workouts.enumerated()), id: \.element.id) { index, workout in
+                    NavigationLink(destination: EditWorkoutView(routine: self.routine, position: index)) {
                         WorkoutMetaDislay(workout: workout)
                     }
                 }
@@ -51,7 +51,7 @@ struct EditRoutineView: View {
                 }*/
                 
                 Button (action: {
-                    curRoutine.addWorkout(newWorkout: Workout(name: "Day \(curRoutine.workouts.count + 1)"))
+                    routine.addWorkout(newWorkout: Workout(name: "Day \(routine.workouts.count + 1)"))
                     
                 }, label: {
                     Text("+ workout")
@@ -67,10 +67,6 @@ struct EditRoutineView: View {
             
             Spacer()
         }
-    }
-    
-    func save() {
-        
     }
 }
 

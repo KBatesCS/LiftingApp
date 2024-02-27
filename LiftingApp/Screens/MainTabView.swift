@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var defaultTab = 2
+    //@State public var routineList: [Routine] = []
     
     var body: some View {
         TabView (selection: $defaultTab){
@@ -25,10 +26,21 @@ struct MainTabView: View {
                 }.tag(2)
                         
             // Screen 3
-            Text("Screen 3")
+            MainTemp()
                 .tabItem {
                     Image(systemName: "chart.xyaxis.line")
                 }.tag(3)
+        }
+        .onAppear {
+            /*
+            let defaults = UserDefaults.standard
+            if let savedRoutineList = defaults.object(forKey: "ExampleUser") as? Data {
+                let decoder = JSONDecoder()
+                if let loadedRoutineList = try? decoder.decode([Routine].self, from: savedRoutineList) {
+                    routineList = loadedRoutineList
+                }
+            }
+             */
         }
     }
 }

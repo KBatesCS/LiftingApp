@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct EditRoutineView: View {
+    @ObservedObject var routineList: RoutineList
     @ObservedObject var routine: Routine
     private var isNew: Bool
     
-    @State private var name: String = ""
-    
-    init(curRoutine: Routine) {
+    init(curRoutine: Routine, routineList: RoutineList) {
         self.routine = curRoutine
         self.isNew = false
+        self.routineList = routineList
     }
     
     var body: some View {
@@ -27,8 +27,11 @@ struct EditRoutineView: View {
                     .foregroundColor(Color("Accent"))
                     .textFieldStyle(RoundedTextFieldStyle())
                     .padding()
-                    .onSubmit {
-                        routine.setName(name: name)
+                    .onChange(of: routine.name) { _ in
+                        routine.save()
+                        if let index = routineList.routines.firstIndex(where: { $0.id == routine.id }) {
+                            routineList.routines[index] = routine
+                        }
                     }
                 List(Array(routine.workouts.enumerated()), id: \.element.id) { index, workout in
                     NavigationLink(destination: EditWorkoutView(routine: self.routine, position: index)) {
@@ -85,5 +88,5 @@ struct WorkoutMetaDislay: View {
 }
 
 #Preview {
-    EditRoutineView(curRoutine: Routine(name: "new routine"))
+    EditRoutineView(curRoutine: Routine(name: "new routine"), routineList: RoutineList())
 }

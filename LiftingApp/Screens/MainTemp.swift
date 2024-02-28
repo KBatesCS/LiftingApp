@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct MainTemp: View {
-    @State private var routineList: [Routine]
+    @ObservedObject private var routineList: RoutineList
     
     init() {
         if let data = UserDefaults.standard.data(forKey: "ExampleUser") {
-            if let decoded = try? JSONDecoder().decode([Routine].self, from: data) {
+            if let decoded = try? JSONDecoder().decode(RoutineList.self, from: data) {
                 routineList = decoded
                 return
             }
         }
-        routineList = []
+        routineList = RoutineList()
     }
     
     var body: some View {
@@ -26,10 +26,10 @@ struct MainTemp: View {
                 Spacer()
                 Text("hello?")
                 Spacer()
-                List(Array(routineList.enumerated()), id: \.element.id) { index, routine in
-                    if let data = UserDefaults.standard.data(forKey: routine.id.uuidString) {
+                List(routineList.routines.indices, id: \.self) { index in
+                    if let data = UserDefaults.standard.data(forKey: routineList.routines[index].id.uuidString) {
                         if let loadedRoutine = try? JSONDecoder().decode(Routine.self, from: data) {
-                            NavigationLink(destination: EditRoutineView(curRoutine: loadedRoutine)) {
+                            NavigationLink(destination: EditRoutineView(curRoutine: loadedRoutine, routineList: routineList)) {
                                 Text(loadedRoutine.name)
                             }
                         }
@@ -37,7 +37,7 @@ struct MainTemp: View {
                 }
                 Spacer()
                 Button (action: {
-                    routineList.append(Routine())
+                    routineList.routines.append(Routine())
                     save()
                 }, label: {
                     Text("+ routine")

@@ -14,7 +14,7 @@ struct MainTabView: View {
     var body: some View {
         TabView (selection: $defaultTab){
             // screen 1
-            EditRoutineView(curRoutine: Routine(name: "new routine"))
+            MainTemp()
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                 }.tag(1)
@@ -26,7 +26,8 @@ struct MainTabView: View {
                 }.tag(2)
                         
             // Screen 3
-            MainTemp()
+            //replace with whatever you need for now.
+            EmptyView()
                 .tabItem {
                     Image(systemName: "chart.xyaxis.line")
                 }.tag(3)

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C7497919EC49BF9495216855 /* Pods_LiftingApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C72E220A79BBF9067BF1A9D2 /* Pods_LiftingApp.framework */; };
 		D665A1352B8BF29500FB2043 /* defaultData.json in Resources */ = {isa = PBXBuildFile; fileRef = D665A1342B8BF29500FB2043 /* defaultData.json */; };
+		D665A1372B8FB08B00FB2043 /* RegisterAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D665A1362B8FB08B00FB2043 /* RegisterAccountView.swift */; };
 		D673693A2B8BD47700187549 /* CustomViewObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D67369392B8BD47600187549 /* CustomViewObjects.swift */; };
 		D673693F2B8BD51600187549 /* WorkoutStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D673693E2B8BD51600187549 /* WorkoutStructs.swift */; };
 		D69769112B8539A500458370 /* EditRoutineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69769102B8539A500458370 /* EditRoutineView.swift */; };
@@ -28,6 +29,7 @@
 		3A5C07DB321520577D3D6B9F /* Pods-LiftingApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LiftingApp.release.xcconfig"; path = "Target Support Files/Pods-LiftingApp/Pods-LiftingApp.release.xcconfig"; sourceTree = "<group>"; };
 		C72E220A79BBF9067BF1A9D2 /* Pods_LiftingApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LiftingApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D665A1342B8BF29500FB2043 /* defaultData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = defaultData.json; sourceTree = "<group>"; };
+		D665A1362B8FB08B00FB2043 /* RegisterAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterAccountView.swift; sourceTree = "<group>"; };
 		D67369392B8BD47600187549 /* CustomViewObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomViewObjects.swift; path = ../../../../../Downloads/CustomViewObjects.swift; sourceTree = "<group>"; };
 		D673693E2B8BD51600187549 /* WorkoutStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkoutStructs.swift; path = "../../../../../Library/Mobile Documents/.Trash/WorkoutStructs.swift"; sourceTree = "<group>"; };
 		D67369452B8BDD3D00187549 /* createExerciseScript.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = createExerciseScript.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -110,6 +112,7 @@
 				D6A7CE042B62D5CB005ED2BA /* StartWorkoutView.swift */,
 				D69769102B8539A500458370 /* EditRoutineView.swift */,
 				D69769122B868FCA00458370 /* EditWorkoutView.swift */,
+				D665A1362B8FB08B00FB2043 /* RegisterAccountView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -274,6 +277,7 @@
 				D69769132B868FCA00458370 /* EditWorkoutView.swift in Sources */,
 				D6D56FCE2B4C82F20040D4C4 /* LoginView.swift in Sources */,
 				D673693F2B8BD51600187549 /* WorkoutStructs.swift in Sources */,
+				D665A1372B8FB08B00FB2043 /* RegisterAccountView.swift in Sources */,
 				D673693A2B8BD47700187549 /* CustomViewObjects.swift in Sources */,
 				D6D56FCC2B4C82F20040D4C4 /* LiftingAppApp.swift in Sources */,
 				D6D56FDB2B4CABF00040D4C4 /* SplashScreenView.swift in Sources */,

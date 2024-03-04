@@ -33,11 +33,24 @@ struct EditRoutineView: View {
                             routineList.routines[index] = routine
                         }
                     }
+                /*
                 List(Array(routine.workouts.enumerated()), id: \.element.id) { index, workout in
                     NavigationLink(destination: EditWorkoutView(routine: self.routine, position: index)) {
                         WorkoutMetaDislay(workout: workout)
                     }
                 }
+                 */
+                
+                List(routine.workouts.indices, id: \.self) { index in
+                    if let data = UserDefaults.standard.data(forKey: routine.workouts[index].id.uuidString) {
+                        if let loadedWorkout = try? JSONDecoder().decode(Workout.self, from: data) {
+                            NavigationLink(destination: EditWorkoutView(routine: routine, workout: loadedWorkout)) {
+                                Text(loadedWorkout.name)
+                            }
+                        }
+                    }
+                }
+                
                 /*
                 NavigationLink {
                     EditWorkoutView(routine: self.curRoutine, position: self.curRoutine.workouts.count)

@@ -33,11 +33,23 @@ struct EditWorkoutView: View {
             Spacer()
             
             List(Array(workout.exercises.enumerated()), id: \.element.id) { index, eset in
-                ExerciseSetDisplay(eset: eset)
-                
+                if let data = UserDefaults.standard.data(forKey: workout.exercises[index].id.uuidString) {
+                    if let loadedESet = try? JSONDecoder().decode(ExerciseSet.self, from: data) {
+                        NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: loadedESet)) {
+                            ExerciseSetDisplay(eset: loadedESet)
+                        }
+                    }
+                }
             }
             
+            NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: nil)) {
+                Text("+ exersize")
+                    .font(.title2)
+                    .foregroundColor(Color("Background"))
+                    .bold()
+            }
             
+            /*
             Button (action: {
                 workout.addExercise(newExercise: Exercise())
             }, label: {
@@ -46,6 +58,7 @@ struct EditWorkoutView: View {
                     .foregroundColor(Color("Background"))
                     .bold()
             })
+             */
             //.frame(alignment: .topLeading)
             Spacer()
             
@@ -69,7 +82,7 @@ struct ExerciseSetDisplay: View {
     
     var body: some View {
         VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
-            Text(eset.name)
+            Text(eset.exerciseInfo.name)
             List(eset.repList.indices, id: \.self) { index in
                 Text("Item \(eset.repList[index])")
                 

@@ -9,18 +9,28 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var defaultTab = 2
+    @ObservedObject private var routineList: RoutineList
     //@State public var routineList: [Routine] = []
+    
+    init() {
+        if let loadedRL: RoutineList = load(key: "ExampleUser") {
+            routineList = loadedRL
+        } else {
+            routineList = RoutineList(user: "ExampleUser")
+            routineList.save()
+        }
+    }
     
     var body: some View {
         TabView (selection: $defaultTab){
             // screen 1
-            MainTemp()
+            MainTemp(routineList: self.routineList)
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                 }.tag(1)
              
             // Screen 2
-            StartWorkoutView()
+            StartWorkoutView(routineList: self.routineList)
                 .tabItem {
                     Image(systemName: "dumbbell")
                 }.tag(2)

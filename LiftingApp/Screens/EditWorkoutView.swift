@@ -17,7 +17,6 @@ struct EditWorkoutView: View {
         self.workout = workout
     }
     
-    
     var body: some View {
         VStack {
             TextField("name", text: $workout.name)
@@ -85,8 +84,8 @@ struct ExerciseSetDisplay: View {
             Text(eset.exerciseInfo.name)
             List(eset.repList.indices, id: \.self) { index in
                 Text("Item \(eset.repList[index])")
-                
             }
+            .scrollDisabled(true)
         }
         .padding()
     }

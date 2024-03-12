@@ -11,27 +11,46 @@ struct MainTemp: View {
     @ObservedObject private var routineList: RoutineList
     
     init() {
+        /*
         if let data = UserDefaults.standard.data(forKey: "ExampleUser") {
             if let decoded = try? JSONDecoder().decode(RoutineList.self, from: data) {
                 routineList = decoded
                 return
             }
+        }*/
+        if let loadedData: RoutineList = load(key: "ExampleUser") {
+            routineList = loadedData
+        } else {
+            routineList = RoutineList(user: "ExampleUser")
+            routineList.save()
         }
-        routineList = RoutineList()
+    }
+    
+    init(routineList: RoutineList) {
+        self.routineList = routineList
     }
     
     var body: some View {
         NavigationStack {
             VStack {
                 Spacer()
-                Text("hello?")
+                Text("Routines")
+                    .bold()
+                    .scaledToFit()
                 Spacer()
                 List(routineList.routines.indices, id: \.self) { index in
+                    /*
                     if let data = UserDefaults.standard.data(forKey: routineList.routines[index].id.uuidString) {
                         if let loadedRoutine = try? JSONDecoder().decode(Routine.self, from: data) {
                             NavigationLink(destination: EditRoutineView(curRoutine: loadedRoutine, routineList: routineList)) {
                                 Text(loadedRoutine.name)
                             }
+                        }
+                    }
+                     */
+                    if let loadedRoutine:Routine = load(key: routineList.routines[index].id.uuidString) {
+                        NavigationLink(destination: EditRoutineView(curRoutine: loadedRoutine, routineList: routineList)) {
+                            Text(loadedRoutine.name)
                         }
                     }
                 }

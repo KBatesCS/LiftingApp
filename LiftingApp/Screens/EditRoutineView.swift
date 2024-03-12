@@ -101,5 +101,5 @@ struct WorkoutMetaDislay: View {
 }
 
 #Preview {
-    EditRoutineView(curRoutine: Routine(name: "new routine"), routineList: RoutineList())
+    EditRoutineView(curRoutine: Routine(name: "new routine"), routineList: RoutineList(user: "temp"))
 }

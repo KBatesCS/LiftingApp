@@ -8,15 +8,20 @@
 import SwiftUI
 
 struct EditRoutineView: View {
-    @ObservedObject var routineList: RoutineList
+    @EnvironmentObject var routineList: RoutineList
     @ObservedObject var routine: Routine
-    private var isNew: Bool
+    @State var refresh: Bool = true
     
-    init(curRoutine: Routine, routineList: RoutineList) {
-        self.routine = curRoutine
-        self.isNew = false
-        self.routineList = routineList
-    }
+    @State private var isShowingDeleteConfirmation = false
+    @State private var deletionIndexSet: IndexSet?
+    
+    
+    /*
+     @ObservedObject var routine: Routine
+     init(routine: Routine) {
+     self.routine = routine
+     }
+     */
     
     var body: some View {
         NavigationStack {
@@ -28,46 +33,43 @@ struct EditRoutineView: View {
                     .textFieldStyle(RoundedTextFieldStyle())
                     .padding()
                     .onChange(of: routine.name) { _ in
-                        routine.save()
-                        if let index = routineList.routines.firstIndex(where: { $0.id == routine.id }) {
-                            routineList.routines[index] = routine
+                        routineList.refreshAndSave()
+                    }
+                
+                
+                List {
+                    ForEach(routine.workouts) { workout in
+                        NavigationLink(destination: EditWorkoutView(workout: workout)) {
+                            Text(workout.name)
                         }
                     }
-                /*
-                List(Array(routine.workouts.enumerated()), id: \.element.id) { index, workout in
-                    NavigationLink(destination: EditWorkoutView(routine: self.routine, position: index)) {
-                        WorkoutMetaDislay(workout: workout)
+                    .onDelete { indexSet in
+                        deletionIndexSet = indexSet
+                        isShowingDeleteConfirmation = true
                     }
                 }
-                 */
-                
-                List(routine.workouts.indices, id: \.self) { index in
-                    if let data = UserDefaults.standard.data(forKey: routine.workouts[index].id.uuidString) {
-                        if let loadedWorkout = try? JSONDecoder().decode(Workout.self, from: data) {
-                            NavigationLink(destination: EditWorkoutView(routine: routine, workout: loadedWorkout)) {
-                                Text(loadedWorkout.name)
+                .alert(isPresented: $isShowingDeleteConfirmation) {
+                    Alert(
+                        title: Text("Delete Workout"),
+                        message: Text("Are you sure you want to delete this workout?"),
+                        primaryButton: .destructive(Text("Delete")) {
+                            if let indexSet = deletionIndexSet {
+                                routine.workouts.remove(atOffsets: indexSet)
+                                routineList.refreshAndSave()
                             }
-                        }
-                    }
+                            // Reset deletion state
+                            deletionIndexSet = nil
+                        },
+                        secondaryButton: .cancel()
+                    )
                 }
                 
-                /*
-                NavigationLink {
-                    EditWorkoutView(routine: self.curRoutine, position: self.curRoutine.workouts.count)
-                } label: {
-                    Text("+ workout")
-                        .font(.title2)
-                        .foregroundColor(Color("Background"))
-                        .bold()
-                        .frame(alignment: .topLeading)
-                        .padding()
-                }
-                .onTapGesture {
-                    self.curRoutine.addWorkout(newWorkout: Workout(name: "ifuns"))
-                }*/
                 
                 Button (action: {
-                    routine.addWorkout(newWorkout: Workout(name: "Day \(routine.workouts.count + 1)"))
+                    //routine.addWorkout(newWorkout: Workout(name: "Day \(routine.workouts.count + 1)"))
+                    routine.workouts.append(Workout(name: "Day \(routine.workouts.count + 1)"))
+                    routineList.refreshAndSave()
+                    //refresh.toggle()
                     
                 }, label: {
                     Text("+ workout")
@@ -77,7 +79,7 @@ struct EditRoutineView: View {
                 })
                 .frame(alignment: .topLeading)
                 .padding()
-                 
+                
                 
             }
             
@@ -85,6 +87,7 @@ struct EditRoutineView: View {
         }
     }
 }
+
 
 struct WorkoutMetaDislay: View {
     
@@ -100,6 +103,9 @@ struct WorkoutMetaDislay: View {
     
 }
 
-#Preview {
-    EditRoutineView(curRoutine: Routine(name: "new routine"), routineList: RoutineList(user: "temp"))
-}
+/*
+ #Preview {
+ //EditRoutineView(curRoutine: Routine(name: "new routine"))
+ //.environment(Routine())
+ }
+ */

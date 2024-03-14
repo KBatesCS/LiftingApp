@@ -8,29 +8,27 @@
 import SwiftUI
 
 struct EditWorkoutView: View {
-    @Environment(\.presentationMode) var presentationMode
+    //@Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var routineList: RoutineList
     @ObservedObject var workout: Workout
-    @ObservedObject var routine: Routine
     
-    init (routine: Routine, workout: Workout) {
-        self.routine = routine
+    init (workout: Workout) {
         self.workout = workout
     }
     
     var body: some View {
         VStack {
+            
             TextField("name", text: $workout.name)
                 .textFieldStyle(RoundedTextFieldStyle())
                 .frame(alignment: .topLeading)
                 .padding()
-                .onChange(of: workout.name){ _ in
-                    workout.save()
-                    if let index = routine.workouts.firstIndex(where: { $0.id == workout.id }) {
-                        routine.workouts[index] = workout
-                    }
+                .onChange(of: workout.name) { _ in
+                    routineList.refreshAndSave()
                 }
             Spacer()
             
+            /*
             List(Array(workout.exercises.enumerated()), id: \.element.id) { index, eset in
                 if let data = UserDefaults.standard.data(forKey: workout.exercises[index].id.uuidString) {
                     if let loadedESet = try? JSONDecoder().decode(ExerciseSet.self, from: data) {
@@ -40,14 +38,22 @@ struct EditWorkoutView: View {
                     }
                 }
             }
-            
+            */
+            /*
+            List($workout.exercises, id: \.self) { $exercise in
+                //NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: loadedESet)) {
+                    ExerciseSetDisplay(eset: exercise)
+                //}
+            }
+             */
+            /*
             NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: nil)) {
                 Text("+ exersize")
                     .font(.title2)
                     .foregroundColor(Color("Background"))
                     .bold()
             }
-            
+            */
             /*
             Button (action: {
                 workout.addExercise(newExercise: Exercise())
@@ -90,7 +96,8 @@ struct ExerciseSetDisplay: View {
         .padding()
     }
 }
-
-#Preview {
-    EditWorkoutView(routine: Routine(), workout: Workout())
-}
+/*
+ #Preview {
+ EditWorkoutView(routine: Routine(), workout: Workout())
+ }
+ */

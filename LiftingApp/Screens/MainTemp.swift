@@ -8,27 +8,10 @@
 import SwiftUI
 
 struct MainTemp: View {
-    @ObservedObject private var routineList: RoutineList
+    @EnvironmentObject private var routineList: RoutineList
     
-    init() {
-        /*
-        if let data = UserDefaults.standard.data(forKey: "ExampleUser") {
-            if let decoded = try? JSONDecoder().decode(RoutineList.self, from: data) {
-                routineList = decoded
-                return
-            }
-        }*/
-        if let loadedData: RoutineList = load(key: "ExampleUser") {
-            routineList = loadedData
-        } else {
-            routineList = RoutineList(user: "ExampleUser")
-            routineList.save()
-        }
-    }
-    
-    init(routineList: RoutineList) {
-        self.routineList = routineList
-    }
+    @State private var isShowingDeleteConfirmation = false
+    @State private var deletionIndexSet: IndexSet?
     
     var body: some View {
         NavigationStack {
@@ -38,26 +21,49 @@ struct MainTemp: View {
                     .bold()
                     .scaledToFit()
                 Spacer()
-                List(routineList.routines.indices, id: \.self) { index in
-                    /*
-                    if let data = UserDefaults.standard.data(forKey: routineList.routines[index].id.uuidString) {
-                        if let loadedRoutine = try? JSONDecoder().decode(Routine.self, from: data) {
-                            NavigationLink(destination: EditRoutineView(curRoutine: loadedRoutine, routineList: routineList)) {
-                                Text(loadedRoutine.name)
-                            }
+                
+                List {
+                    ForEach(routineList.routines) { routine in
+                        NavigationLink(destination: EditRoutineView(routine: routine)) {
+                            
+                            Text(routine.name)
                         }
                     }
-                     */
-                    if let loadedRoutine:Routine = load(key: routineList.routines[index].id.uuidString) {
-                        NavigationLink(destination: EditRoutineView(curRoutine: loadedRoutine, routineList: routineList)) {
-                            Text(loadedRoutine.name)
+                    .onDelete { indexSet in
+                        deletionIndexSet = indexSet
+                        isShowingDeleteConfirmation = true
+                    }
+                }
+                .alert(isPresented: $isShowingDeleteConfirmation) {
+                    Alert(
+                        title: Text("Delete Routine"),
+                        message: Text("Are you sure you want to delete this workout?"),
+                        primaryButton: .destructive(Text("Delete")) {
+                            if let indexSet = deletionIndexSet {
+                                routineList.routines.remove(atOffsets: indexSet)
+                                routineList.refreshAndSave()
+                            }
+                            // Reset deletion state
+                            deletionIndexSet = nil
+                        },
+                        secondaryButton: .cancel()
+                    )
+                }
+                
+                /*
+                List {
+                    ForEach(routineList.routines.indices, id: \.self) { index in
+                        NavigationLink(destination: EditRoutineView(routine: $routineList.routines[index])) {
+                            Text(routineList.routines[index].name)
                         }
                     }
                 }
+                 */
+                
                 Spacer()
                 Button (action: {
                     routineList.routines.append(Routine())
-                    save()
+                    routineList.refreshAndSave()
                 }, label: {
                     Text("+ routine")
                         .font(.title2)
@@ -69,6 +75,7 @@ struct MainTemp: View {
                 Spacer()
             }
         }
+        .environmentObject(routineList)
     }
     
     

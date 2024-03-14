@@ -9,24 +9,9 @@ import SwiftUI
 
 struct StartWorkoutView: View {
     
-    @ObservedObject private var routineList: RoutineList = RoutineList(user: "ExampleUser")
+    @EnvironmentObject private var routineList: RoutineList
     @State private var selectedRoutine: Routine = Routine(name: "Select A Routine", saveOnCreate: false)
-    
-    init() {
-        if let data = UserDefaults.standard.data(forKey: "ExampleUser") {
-            if let decoded = try? JSONDecoder().decode(RoutineList.self, from: data) {
-                routineList = decoded
-                selectedRoutine = routineList.routines.first ?? Routine(saveOnCreate: false)
-            }
-        }
-    }
-    
-    init(routineList: RoutineList) {
-        self.routineList = routineList
-        if let selRT = routineList.routines.first {
-            self.selectedRoutine = selRT
-        }
-    }
+    @State private var selectedWorkout: Workout? = nil
     
     var body: some View {
         VStack {
@@ -41,10 +26,8 @@ struct StartWorkoutView: View {
             Menu {
                 Picker("", selection: $selectedRoutine) {
                     ForEach(routineList.routines) { routine in
-                        if let cur: Routine = load(key: routine.id.uuidString) {
-                            Text(cur.name)
-                                .tag(cur)
-                        }
+                        Text(routine.name)
+                            .tag(routine)
                     }
                 }
             } label: {
@@ -64,16 +47,16 @@ struct StartWorkoutView: View {
                 
             }
             
-            Text(selectedRoutine.name)
             Spacer()
             
-            List(selectedRoutine.workouts.indices, id: \.self) { index in
-                if let data = UserDefaults.standard.data(forKey: selectedRoutine.workouts[index].id.uuidString) {
-                    if let loadedWorkout = try? JSONDecoder().decode(Workout.self, from: data) {
-                        Text(loadedWorkout.name)
+            List(selectedRoutine.workouts) { workout in
+                Text(workout.name)
+                    .onTapGesture {
+                        selectedWorkout = workout
                     }
-                }
             }
+            
+            Spacer()
             
             Button (action: {
                 
@@ -90,6 +73,7 @@ struct StartWorkoutView: View {
             Spacer()
         }
     }
+        
 }
 
 #Preview {

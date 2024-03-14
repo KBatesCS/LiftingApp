@@ -9,14 +9,14 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var defaultTab = 2
-    @ObservedObject private var routineList: RoutineList
+    @StateObject private var routineList: RoutineList
     //@State public var routineList: [Routine] = []
     
     init() {
         if let loadedRL: RoutineList = load(key: "ExampleUser") {
-            routineList = loadedRL
+            _routineList = StateObject(wrappedValue: loadedRL)
         } else {
-            routineList = RoutineList(user: "ExampleUser")
+            _routineList = StateObject(wrappedValue: RoutineList(user: "ExampleUser"))
             routineList.save()
         }
     }
@@ -24,13 +24,13 @@ struct MainTabView: View {
     var body: some View {
         TabView (selection: $defaultTab){
             // screen 1
-            MainTemp(routineList: self.routineList)
+            MainTemp()
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                 }.tag(1)
              
             // Screen 2
-            StartWorkoutView(routineList: self.routineList)
+            StartWorkoutView()
                 .tabItem {
                     Image(systemName: "dumbbell")
                 }.tag(2)
@@ -42,17 +42,7 @@ struct MainTabView: View {
                     Image(systemName: "chart.xyaxis.line")
                 }.tag(3)
         }
-        .onAppear {
-            /*
-            let defaults = UserDefaults.standard
-            if let savedRoutineList = defaults.object(forKey: "ExampleUser") as? Data {
-                let decoder = JSONDecoder()
-                if let loadedRoutineList = try? decoder.decode([Routine].self, from: savedRoutineList) {
-                    routineList = loadedRoutineList
-                }
-            }
-             */
-        }
+        .environmentObject(routineList)
     }
 }
 

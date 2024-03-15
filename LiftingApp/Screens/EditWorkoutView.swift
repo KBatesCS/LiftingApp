@@ -39,36 +39,23 @@ struct EditWorkoutView: View {
                 }
             }
             */
-            /*
-            List($workout.exercises, id: \.self) { $exercise in
-                //NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: loadedESet)) {
-                    ExerciseSetDisplay(eset: exercise)
-                //}
+            
+            List(workout.exercises, id: \.self) { exerciseSet in
+                NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: exerciseSet)) {
+                    ExerciseSetDisplay(eset: exerciseSet)
+                }
             }
-             */
-            /*
+             
+            Spacer()
+            
             NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: nil)) {
                 Text("+ exersize")
                     .font(.title2)
                     .foregroundColor(Color("Background"))
                     .bold()
             }
-            */
-            /*
-            Button (action: {
-                workout.addExercise(newExercise: Exercise())
-            }, label: {
-                Text("+ exersize")
-                    .font(.title2)
-                    .foregroundColor(Color("Background"))
-                    .bold()
-            })
-             */
-            //.frame(alignment: .topLeading)
+            
             Spacer()
-            
-            
-            Text("hi")
         }
         /*
         .onAppear {

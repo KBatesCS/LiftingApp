@@ -19,5 +19,10 @@ func load<T: Codable>(key: String) -> T? {
 }
 
 func save<T: Codable>(key: String, data: T) {
-    
+    do {
+        let encoded = try JSONEncoder().encode(data)
+        UserDefaults.standard.set(encoded, forKey: key)
+    } catch {
+        print("Failed to encode data:", error)
+    }
 }

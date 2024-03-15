@@ -10,19 +10,13 @@ import SwiftUI
 struct StartWorkoutView: View {
     
     @EnvironmentObject private var routineList: RoutineList
+    
     @State private var selectedRoutine: Routine = Routine(name: "Select A Routine", saveOnCreate: false)
-    @State private var selectedWorkout: Workout? = nil
+    
+    @State private var selectedWorkout: Workout = Workout(name: "no workout selected", saveOnCreate: false)
     
     var body: some View {
         VStack {
-            /*
-            Picker("Select Routine", selection: $selectedRoutine) {
-                ForEach(routineList.routines) { routine in
-                    Text(routine.name)
-                }
-            }
-             */
-            
             Menu {
                 Picker("", selection: $selectedRoutine) {
                     ForEach(routineList.routines) { routine in
@@ -41,21 +35,47 @@ struct StartWorkoutView: View {
                 }
                 .underline()
             }
-            
-            Spacer()
-            ScrollView {
-                
+            .onChange(of: selectedRoutine) { _ in
+                save(key: "ExampleUser/SelectedRoutine", data: selectedRoutine)
+            }
+            .onAppear {
+                if let SLRT: Routine = load(key: "ExampleUser/SelectedRoutine") {
+                    if let foundRT = routineList.routines.first(where: {$0.id == SLRT.id}) {
+                        self.selectedRoutine = foundRT
+                        if let SLWO: Workout = load(key: "ExampleUser/SelectedWorkout") {
+                            if let foundWO = selectedRoutine.workouts.first(where: {$0.id == SLWO.id}) {
+                                self.selectedWorkout = foundWO
+                            }
+                        }
+                    }
+                }
             }
             
             Spacer()
             
-            List(selectedRoutine.workouts) { workout in
-                Text(workout.name)
+            List {
+                ForEach(selectedRoutine.workouts) { workout in
+                    HStack {
+                        Text(workout.name)
+                        Spacer()
+                    }
+                    .contentShape(Rectangle())
+                    .foregroundColor(workout == selectedWorkout ? .black :
+                            .gray)
                     .onTapGesture {
                         selectedWorkout = workout
+                        save(key: "ExampleUser/SelectedWorkout", data: selectedWorkout)
                     }
+                }
             }
+            .listRowSpacing(10)
+//            .onChange(of: selectedWorkout) { _ in
+//                save(key: "ExampleUser/SelectedWorkout", data: selectedWorkout)
+//            }
             
+            Spacer()
+            
+            Text(selectedWorkout.name)
             Spacer()
             
             Button (action: {
@@ -73,6 +93,7 @@ struct StartWorkoutView: View {
             Spacer()
         }
     }
+    
         
 }
 

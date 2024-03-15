@@ -9,6 +9,8 @@ import SwiftUI
 
 struct SelectNewWorkoutView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @EnvironmentObject var routineList: RoutineList
+    
     private var exerciseList: [Exercise] = []
     @ObservedObject var eSet: ExerciseSet
     @ObservedObject var workout: Workout
@@ -27,18 +29,23 @@ struct SelectNewWorkoutView: View {
     }
     
     var body: some View {
+
+        
         List(Array(exerciseList.enumerated()), id: \.element.id) { index, exercise in
             exerciseDisplay(exercise: exercise)
                 .onTapGesture {
                     eSet.exerciseInfo = exercise
-                    eSet.save()
+                    //eSet.save()
                     if (isNew) {
                         workout.addExercise(newExercise: eSet)
                     }
+                    /*
                     if let i = workout.exercises.firstIndex(where: { $0.id == eSet.id }) {
                         workout.exercises[i] = eSet
-                    }
+                    }*/
+                    routineList.refreshAndSave()
                     presentationMode.wrappedValue.dismiss()
+                    
                 }
         }
     }

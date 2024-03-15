@@ -41,10 +41,16 @@ struct EditWorkoutView: View {
             */
             
             List(workout.exercises, id: \.self) { exerciseSet in
-                NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: exerciseSet)) {
-                    ExerciseSetDisplay(eset: exerciseSet)
-                }
+                    Section {
+                        ExerciseSetDisplay(eset: exerciseSet)
+                    } header: {
+                        NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: exerciseSet)) {
+                            Text(exerciseSet.exerciseInfo.name)
+                        }
+                    }
+                
             }
+            .listRowSpacing(10)
              
             Spacer()
             
@@ -69,18 +75,36 @@ struct EditWorkoutView: View {
 }
 
 struct ExerciseSetDisplay: View {
-    
-    let eset: ExerciseSet
+    @EnvironmentObject var routineList: RoutineList
+    @ObservedObject var eset: ExerciseSet
     
     var body: some View {
         VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
-            Text(eset.exerciseInfo.name)
-            List(eset.repList.indices, id: \.self) { index in
-                Text("Item \(eset.repList[index])")
+            ForEach(eset.repList.indices, id: \.self) { index in
+                HStack {
+                    Text("Set \(index):")
+                    Spacer()
+                    
+                    Button (action: {
+                        eset.repList[index] -= 1
+                        routineList.refreshAndSave()
+                    }, label: {
+                        Text("-")
+                    })
+                    .buttonStyle(BorderlessButtonStyle())
+                    
+                    Text("\(eset.repList[index])")
+                    
+                    Button (action: {
+                        eset.repList[index] += 1
+                        routineList.refreshAndSave()
+                    }, label: {
+                        Text("+")
+                    })
+                    .buttonStyle(BorderlessButtonStyle())
+                }
             }
-            .scrollDisabled(true)
         }
-        .padding()
     }
 }
 /*

@@ -86,8 +86,10 @@ struct ExerciseSetDisplay: View {
                     Spacer()
                     
                     Button (action: {
-                        eset.repList[index] -= 1
-                        routineList.refreshAndSave()
+                        if (eset.repList[index] >= 1) {
+                            eset.repList[index] -= 1
+                            routineList.refreshAndSave()
+                        }
                     }, label: {
                         Text("-")
                     })

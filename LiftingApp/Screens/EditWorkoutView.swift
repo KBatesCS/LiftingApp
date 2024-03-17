@@ -106,6 +106,8 @@ struct ExerciseSetDisplay: View {
                     .buttonStyle(BorderlessButtonStyle())
                 }
             }
+            .foregroundColor(Color("Text"))
+            .listRowBackground(Color("Accent"))
         }
     }
 }

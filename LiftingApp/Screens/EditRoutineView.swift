@@ -42,12 +42,15 @@ struct EditRoutineView: View {
                         NavigationLink(destination: EditWorkoutView(workout: workout)) {
                             Text(workout.name)
                         }
+                        .foregroundColor(Color("Text"))
+                        .listRowBackground(Color("Accent"))
                     }
                     .onDelete { indexSet in
                         deletionIndexSet = indexSet
                         isShowingDeleteConfirmation = true
                     }
                 }
+                .listRowSpacing(10)
                 .alert(isPresented: $isShowingDeleteConfirmation) {
                     Alert(
                         title: Text("Delete Workout"),

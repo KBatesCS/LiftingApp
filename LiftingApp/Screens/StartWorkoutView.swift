@@ -21,6 +21,8 @@ struct StartWorkoutView: View {
             NavigationStack {
                 
                 VStack {
+                    Spacer()
+                    Spacer()
                     Menu {
                         Picker("", selection: $selectedRoutine) {
                             ForEach(routineList.routines) { routine in
@@ -37,7 +39,10 @@ struct StartWorkoutView: View {
                                 .scaleEffect(0.7)
                                 .underline()
                         }
+                        .scaleEffect(1.75)
+                        .foregroundStyle(Color("Text"))
                         .underline()
+                        .padding(.top)
                     }
                     .onChange(of: selectedRoutine) { _ in
                         save(key: "ExampleUser/SelectedRoutine", data: selectedRoutine)
@@ -81,7 +86,7 @@ struct StartWorkoutView: View {
                     
                     Spacer()
                     
-                    NavigationLink(destination: ActiveWorkoutView(activeWorkout: selectedWorkout)) {
+                    NavigationLink(destination: ActiveWorkoutView(workout: selectedWorkout)) {
                         Text("Begin")
                             .font(.title2)
                             .foregroundColor(Color("Text"))

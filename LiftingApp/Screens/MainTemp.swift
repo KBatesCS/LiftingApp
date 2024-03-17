@@ -28,12 +28,16 @@ struct MainTemp: View {
                             
                             Text(routine.name)
                         }
+                        .foregroundColor(Color("Text"))
+                        .listRowBackground(Color("Accent"))
                     }
                     .onDelete { indexSet in
                         deletionIndexSet = indexSet
                         isShowingDeleteConfirmation = true
                     }
                 }
+                .listRowSpacing(10)
+                
                 .alert(isPresented: $isShowingDeleteConfirmation) {
                     Alert(
                         title: Text("Delete Routine"),
@@ -77,6 +81,7 @@ struct MainTemp: View {
         }
         .environmentObject(routineList)
     }
+    
     
     
     func save() {

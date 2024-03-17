@@ -30,12 +30,7 @@ struct ActiveWorkoutView: View {
                     Text("\(timerString)")
                         .onReceive(timer) { _ in
                             if self.isTimerRunning {
-                                let currentTimeInterval = Date().timeIntervalSince(self.startTime)
-                                let hours = Int(currentTimeInterval / 3600)
-                                let minutes = Int((currentTimeInterval.truncatingRemainder(dividingBy: 3600)) / 60)
-                                let seconds = Int(currentTimeInterval.truncatingRemainder(dividingBy: 60))
-
-                                self.timerString = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+                                self.timerString = hhmmssTimeSince(date: self.startTime)
                             }
                         }
                     Spacer()
@@ -58,6 +53,13 @@ struct ActiveWorkoutView: View {
                 }, label: {
                     Text("Finish Workout")
                         .frame(alignment: .bottom)
+                        .font(.title2)
+                        .foregroundColor(Color("Text"))
+                        .bold()
+                        .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
+                        .background(Color("Accent"))
+                        .cornerRadius(21)
+                        .padding()
                 })
                 
             }
@@ -72,6 +74,17 @@ struct ActiveWorkoutView: View {
     func startTimer() {
         self.timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
         self.isTimerRunning = true
+    }
+    
+    func hhmmssTimeSince(date: Date) -> String {
+        let currentTimeInterval = Date().timeIntervalSince(date)
+        let hours = Int(currentTimeInterval / 3600)
+        let minutes = Int((currentTimeInterval.truncatingRemainder(dividingBy: 3600)) / 60)
+        let seconds = Int(currentTimeInterval.truncatingRemainder(dividingBy: 60))
+
+        let out = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        
+        return out
     }
 }
 

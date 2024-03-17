@@ -394,6 +394,86 @@ struct Exercise: Identifiable, Codable {
     }
 }
 
+class WorkoutRecord {
+    @Published var id: UUID
+    @Published var userID: String
+    
+    @Published var date: Date
+    @Published var exercises: [ExerciseRecord]
+    
+    init(id: UUID = UUID(), userID: String, date: Date, exercises: [ExerciseRecord] = []) {
+        self.id = id
+        self.userID = userID
+        self.date = date
+        self.exercises = exercises
+    }
+    
+    enum CodingKeys: CodingKey {
+        case id
+        case userID
+        case date
+        case exercises
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        userID = try container.decode(String.self, forKey: .userID)
+        date = try container.decode(Date.self, forKey: .date)
+        exercises = try container.decode([ExerciseRecord].self, forKey: .exercises)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(userID, forKey: .userID)
+        try container.encode(date, forKey: .date)
+        try container.encode(exercises, forKey: .exercises)
+    }
+    
+    func addExerciseRecord(exerciseRecord: ExerciseRecord) {
+        exercises.append(exerciseRecord)
+    }
+}
+
+class ExerciseRecord: Identifiable, Codable {
+    @Published var id: UUID
+    
+    @Published var exercise: Exercise
+    @Published var sets: [Set]
+    
+    init(id: UUID = UUID(), exercise: Exercise, sets: [Set] = []) {
+        self.id = id
+        self.exercise = exercise
+        self.sets = sets
+    }
+    
+    enum CodingKeys: CodingKey {
+        case id
+        case exercise
+        case sets
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        exercise = try container.decode(Exercise.self, forKey: .exercise)
+        sets = try container.decode([Set].self, forKey: .sets)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(exercise, forKey: .exercise)
+        try container.encode(sets, forKey: .sets)
+    }
+}
+
+struct Set: Codable {
+    var reps: Int
+    var weight: Int
+}
+
 enum Muscles: Codable {
     case quad, hamstring, calf,
         chest, tricep, shoulder,

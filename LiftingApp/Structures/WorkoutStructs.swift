@@ -241,24 +241,22 @@ class ExerciseSet: Identifiable, Codable, ObservableObject, Hashable {
     
     @Published var name: String
     @Published var exerciseInfo: Exercise
-    @Published var repList: [Int]
     @Published var intensityForm: IntensityType
-    @Published var intensityList: [Int]
-    @Published var restLengths: [Int] //in seconds
     @Published var notes: String
+    @Published var sets: [Set]
     
     init(id: UUID = UUID(), exerciseInfo: Exercise = Exercise(),
-         intensityForm: IntensityType = IntensityType.None, saveOnCreate: Bool = true) {
+         intensityForm: IntensityType = IntensityType.None, saveOnCreate: Bool = true, sets: [Set] = []) {
         self.id = id
         self.name = exerciseInfo.name
         self.notes = ""
         
         self.exerciseInfo = exerciseInfo
         self.intensityForm = intensityForm
-        self.intensityList = []
-        self.repList = [12,12,12]
-        self.restLengths = [90,90,90]
-        self.setIntensityListToDefaults()
+        self.sets = sets
+        self.sets.append(Set(reps: 12, intensity: -1, restLength: 90))
+        self.sets.append(Set(reps: 12, intensity: -1, restLength: 90))
+        self.sets.append(Set(reps: 12, intensity: -1, restLength: 90))
         if (saveOnCreate) {
             save()
         }
@@ -276,11 +274,9 @@ class ExerciseSet: Identifiable, Codable, ObservableObject, Hashable {
         case id
         case name
         case exerciseInfo
-        case repList
         case intensityForm
-        case intensityList
-        case restLengths
         case notes
+        case sets
     }
 
     required init(from decoder: Decoder) throws {
@@ -289,10 +285,8 @@ class ExerciseSet: Identifiable, Codable, ObservableObject, Hashable {
         name = try container.decode(String.self, forKey: .name)
         notes = try container.decode(String.self, forKey: .notes)
         exerciseInfo = try container.decode(Exercise.self, forKey: .exerciseInfo)
-        repList = try container.decode([Int].self, forKey: .repList)
+        sets = try container.decode([Set].self, forKey: .sets)
         intensityForm = try container.decode(IntensityType.self, forKey: .intensityForm)
-        intensityList = try container.decode([Int].self, forKey: .intensityList)
-        restLengths = try container.decode([Int].self, forKey: .restLengths)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -301,16 +295,15 @@ class ExerciseSet: Identifiable, Codable, ObservableObject, Hashable {
         try container.encode(id, forKey: .id)
         try container.encode(notes, forKey: .notes)
         try container.encode(exerciseInfo, forKey: .exerciseInfo)
-        try container.encode(repList, forKey: .repList)
+        try container.encode(sets, forKey: .sets)
         try container.encode(intensityForm, forKey: .intensityForm)
-        try container.encode(intensityList, forKey: .intensityList)
-        try container.encode(restLengths, forKey: .restLengths)
     }
     
     func setName(name: String) {
         self.name = name
     }
     
+    /*
     func changeIntensityForm(newIntensityForm: IntensityType) {
         if self.intensityForm == newIntensityForm {
             return
@@ -318,16 +311,6 @@ class ExerciseSet: Identifiable, Codable, ObservableObject, Hashable {
         
         self.intensityForm = newIntensityForm
         self.setIntensityListToDefaults()
-    }
-    
-    func setIntensityListToDefaults() {
-        if self.intensityForm == IntensityType.PercentOfMax {
-            self.intensityList = Array(repeating: 75, count: repList.count)
-        } else if self.intensityForm == IntensityType.RPE {
-            self.intensityList = Array(repeating: 8, count: repList.count)
-        } else {
-            self.intensityList = []
-        }
     }
     
     func changeIntensity(intensityPos: Int = -1, newIntensity: Int) {
@@ -339,11 +322,11 @@ class ExerciseSet: Identifiable, Codable, ObservableObject, Hashable {
             intensityList[intensityPos] = newIntensity
         }
     }
+     */
     
     func addSet() {
-        repList.append(repList.last ?? 12)
-        restLengths.append(restLengths.last ?? 90)
-        intensityList.append(intensityList.last ?? 0)
+        let lastSet = sets.last
+        sets.append(Set(reps: lastSet?.reps ?? 12, intensity: lastSet?.intensity ?? -1, restLength: lastSet?.restLength ?? 90))
     }
     
     func save() {
@@ -363,19 +346,25 @@ class ExerciseSet: Identifiable, Codable, ObservableObject, Hashable {
     }
     
     func removeSet(atPos: Int = -1) {
-        if repList.count <= 0 {
+        if sets.count <= 0 {
             return
+        } else if atPos == -1 {
+            sets.removeLast()
+        } else if atPos > 0 && atPos < sets.count {
+            sets.remove(at: atPos)
         }
-        
-        if atPos == -1 {
-            repList.removeLast()
-            intensityList.removeLast()
-            restLengths.removeLast()
-        } else if atPos > 0 && atPos < repList.count {
-            repList.remove(at: atPos)
-            intensityList.remove(at: atPos)
-            restLengths.remove(at: atPos)
-        }
+    }
+}
+
+class Set: Codable {
+    var reps: Int
+    var intensity: Int
+    var restLength: Int
+    
+    init(reps: Int, intensity: Int, restLength: Int) {
+        self.reps = reps
+        self.intensity = intensity
+        self.restLength = restLength
     }
 }
 
@@ -467,11 +456,6 @@ class ExerciseRecord: Identifiable, Codable {
         try container.encode(exercise, forKey: .exercise)
         try container.encode(sets, forKey: .sets)
     }
-}
-
-struct Set: Codable {
-    var reps: Int
-    var weight: Int
 }
 
 enum Muscles: Codable {

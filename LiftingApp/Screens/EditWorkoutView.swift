@@ -8,108 +8,109 @@
 import SwiftUI
 
 struct EditWorkoutView: View {
-    @Environment(\.presentationMode) var presentationMode
+    //@Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var routineList: RoutineList
     @ObservedObject var workout: Workout
-    @ObservedObject var routine: Routine
-    private var isNew: Bool
-    private var pos: Int
     
-    @State private var name: String = ""
-    
-    
-    /*
-    init (workout: Workout? = nil, routine: Routine) {
-        if (workout == nil) {
-            self.isNew = true
-            let newWorkout = Workout(name: "Day \(routine.workouts.count + 1)")
-            //routine.addWorkout(newWorkout: newWorkout)
-            self.workout = newWorkout
-        } else {
-            self.workout = workout ?? Workout(name: "should never")
-            self.isNew = false
-        }
-        
-        self.routine = routine
+    init (workout: Workout) {
+        self.workout = workout
     }
-    */
-    
-    init (routine: Routine, position: Int) {
-        self.routine = routine
-        
-        if (position >= routine.workouts.count) {
-            self.workout = Workout(name: "Day \(routine.workouts.count + 1)")
-            self.isNew = true
-            self.pos = position - 1
-        } else {
-            self.workout = routine.get(position: position)
-            self.isNew = false
-            self.pos = position
-        }
-    }
-    
     
     var body: some View {
         VStack {
-            HStack {
-                TextField("name", text: $name)
-                    .textFieldStyle(RoundedTextFieldStyle())
-                    .frame(alignment: .topLeading)
-                    .padding()
-                
-                Button (action: {
-                    save()
-                    self.presentationMode.wrappedValue.dismiss()
-                }, label: {
-                    Image(systemName: "square.and.arrow.down")
-                        .imageScale(.large)
-                })
-            }
+            
+            TextField("name", text: $workout.name)
+                .textFieldStyle(RoundedTextFieldStyle())
+                .frame(alignment: .topLeading)
+                .padding()
+                .onChange(of: workout.name) { _ in
+                    routineList.refreshAndSave()
+                }
             Spacer()
             
             /*
-            ForEach(0..<workout.exercises.count, id: \.self) {
-                let exercise: ExerciseSet = workout.exercises[$0]
-                Text(exercise.name)
-                    .bold()
-                Text(exercise.notes)
-                Spacer()
+            List(Array(workout.exercises.enumerated()), id: \.element.id) { index, eset in
+                if let data = UserDefaults.standard.data(forKey: workout.exercises[index].id.uuidString) {
+                    if let loadedESet = try? JSONDecoder().decode(ExerciseSet.self, from: data) {
+                        NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: loadedESet)) {
+                            ExerciseSetDisplay(eset: loadedESet)
+                        }
+                    }
+                }
             }
-             */
+            */
             
-            ForEach(workout.exercises) { exercise in
-                Text(exercise.name)
+            List(workout.exercises, id: \.self) { exerciseSet in
+                    Section {
+                        ExerciseSetDisplay(eset: exerciseSet)
+                    } header: {
+                        NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: exerciseSet)) {
+                            Text(exerciseSet.exerciseInfo.name)
+                        }
+                    }
+                
             }
+            .listRowSpacing(10)
+             
+            Spacer()
             
-            
-            Button (action: {
-                workout.addExercise(newExercise: Exercise())
-            }, label: {
+            NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: nil)) {
                 Text("+ exersize")
                     .font(.title2)
                     .foregroundColor(Color("Background"))
                     .bold()
-            })
-            //.frame(alignment: .topLeading)
+            }
+            
             Spacer()
-            
-            
-            Text("hi")
         }
+        /*
         .onAppear {
             if (self.isNew) {
                 self.routine.addWorkout(newWorkout: self.workout)
             }
             self.name = self.workout.name
-        } 
-    }
-    func save() {
-       //self.workout.name = name
-        self.routine.workouts[pos].name = name
+        }
+         */
     }
 }
 
-
-
-#Preview {
-    EditWorkoutView(routine: Routine(), position: 0)
+struct ExerciseSetDisplay: View {
+    @EnvironmentObject var routineList: RoutineList
+    @ObservedObject var eset: ExerciseSet
+    
+    var body: some View {
+        VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
+            ForEach(eset.repList.indices, id: \.self) { index in
+                HStack {
+                    Text("Set \(index):")
+                    Spacer()
+                    
+                    Button (action: {
+                        if (eset.repList[index] >= 1) {
+                            eset.repList[index] -= 1
+                            routineList.refreshAndSave()
+                        }
+                    }, label: {
+                        Text("-")
+                    })
+                    .buttonStyle(BorderlessButtonStyle())
+                    
+                    Text("\(eset.repList[index])")
+                    
+                    Button (action: {
+                        eset.repList[index] += 1
+                        routineList.refreshAndSave()
+                    }, label: {
+                        Text("+")
+                    })
+                    .buttonStyle(BorderlessButtonStyle())
+                }
+            }
+        }
+    }
 }
+/*
+ #Preview {
+ EditWorkoutView(routine: Routine(), workout: Workout())
+ }
+ */

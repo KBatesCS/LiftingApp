@@ -54,33 +54,54 @@ struct ActiveWorkoutView: View {
                 GeometryReader { geometry in
                     ScrollView {
                         ForEach(workoutDisplay.exercises.indices, id: \.self) { woIndex in
-                            var eSetDisplay = workoutDisplay.exercises[woIndex]
+                            let eSetDisplay = workoutDisplay.exercises[woIndex]
                             Section {
+                                let displayIntensity = (eSetDisplay.intensityForm != IntensityType.None
+                                    && !allSameIntensity(exerciseSet: eSetDisplay))
+                                let numCols = displayIntensity ? 5.0:4.0
                                 HStack {
                                     Text("target")
-                                        .frame(width: geometry.size.width / 4, alignment: .leading)
-                                    Text("intensity")
-                                        .frame(width: geometry.size.width / 4, alignment: .leading)
+                                        .frame(width: geometry.size.width / numCols, alignment: .leading)
+                                    if displayIntensity {
+                                        Text("intensity")
+                                            .frame(width: geometry.size.width / numCols, alignment: .leading)
+                                    }
                                     Text("reps")
-                                        .frame(width: geometry.size.width / 4, alignment: .leading)
+                                        .frame(width: geometry.size.width / numCols, alignment: .leading)
                                     Text("weight")
-                                        .frame(width: geometry.size.width / 4, alignment: .leading)
+                                        .frame(width: geometry.size.width / numCols, alignment: .leading)
+                                    Text("")
+                                        .frame(width: geometry.size.width / numCols, alignment: .leading)
                                 }
                                 
                                 ForEach(eSetDisplay.sets.indices, id: \.self) { sindex in
-                                    var set = eSetDisplay.sets[sindex]
+                                    let set = eSetDisplay.sets[sindex]
                                         //var setRecord :
                                     HStack {
                                         Text("\(set.targetReps)")
-                                            .frame(width: geometry.size.width / 4, alignment: .leading)
-                                        Text("\(set.intensity)")
-                                            .frame(width: geometry.size.width / 4, alignment: .leading)
+                                            .frame(width: geometry.size.width / numCols, alignment: .leading)
+                                        if displayIntensity {
+                                            Text("\(set.intensity)")
+                                                .frame(width: geometry.size.width / numCols, alignment: .leading)
+                                        }
                                         TextField("0", value: $workoutDisplay.exercises[woIndex].sets[sindex].achievedReps, format: .number)
                                             .keyboardType(.numberPad)
-                                            .frame(width: geometry.size.width / 4, alignment: .leading)
+                                            .frame(width: geometry.size.width / numCols, alignment: .leading)
                                         TextField("0", value: $workoutDisplay.exercises[woIndex].sets[sindex].weight, format: .number)
                                             .keyboardType(.numberPad)
-                                            .frame(width: geometry.size.width / 4, alignment: .leading)
+                                            .frame(width: geometry.size.width / numCols, alignment: .leading)
+                                        RoundedRectangle(cornerRadius: 5.0)
+                                            .stroke(lineWidth: 2)
+                                            .frame(width: 25, height: 25, alignment: .leading)
+                                            .cornerRadius(5.0)
+                                            .overlay {
+                                                Image(systemName: workoutDisplay.exercises[woIndex].sets[sindex].completed ? "checkmark" : "")
+                                            }
+                                            .onTapGesture {
+                                                //withAnimation(.spring()) {
+                                                    workoutDisplay.exercises[woIndex].sets[sindex].completed.toggle()
+                                                //}
+                                            }
                                     }
                                     .frame(maxWidth: .infinity)
                                     .ignoresSafeArea(.all)
@@ -181,9 +202,9 @@ struct ActiveWorkoutView: View {
     }
     
     func getActiveWorkoutDisplay(workout: Workout) -> ActiveWorkoutDisplay {
-        var out = ActiveWorkoutDisplay(workoutID: workout.id)
+        let out = ActiveWorkoutDisplay(workoutID: workout.id)
         for eSet in workout.exercises {
-            var newESD = ActiveExerciseSetDisplay(exercise: eSet.exerciseInfo, intensityForm: eSet.intensityForm)
+            let newESD = ActiveExerciseSetDisplay(exercise: eSet.exerciseInfo, intensityForm: eSet.intensityForm)
             newESD.sets = getDisplaySet(eset: eSet)
             out.exercises.append(newESD)
         }

@@ -383,7 +383,7 @@ struct Exercise: Identifiable, Codable {
     }
 }
 
-class WorkoutRecord {
+class WorkoutRecord: ObservableObject {
     @Published var id: UUID
     @Published var userID: String
     
@@ -429,9 +429,9 @@ class ExerciseRecord: Identifiable, Codable {
     @Published var id: UUID
     
     @Published var exercise: Exercise
-    @Published var sets: [Set]
+    @Published var sets: [SetRecord]
     
-    init(id: UUID = UUID(), exercise: Exercise, sets: [Set] = []) {
+    init(id: UUID = UUID(), exercise: Exercise, sets: [SetRecord] = []) {
         self.id = id
         self.exercise = exercise
         self.sets = sets
@@ -447,7 +447,7 @@ class ExerciseRecord: Identifiable, Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
         exercise = try container.decode(Exercise.self, forKey: .exercise)
-        sets = try container.decode([Set].self, forKey: .sets)
+        sets = try container.decode([SetRecord].self, forKey: .sets)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -455,6 +455,44 @@ class ExerciseRecord: Identifiable, Codable {
         try container.encode(id, forKey: .id)
         try container.encode(exercise, forKey: .exercise)
         try container.encode(sets, forKey: .sets)
+    }
+}
+
+class SetRecord: Identifiable, Codable {
+    @Published var id: UUID
+    
+    @Published var reps: Int
+    @Published var weight: Int
+    @Published var completed: Bool
+    
+    init(id: UUID = UUID(), reps: Int, weight: Int, completed: Bool) {
+        self.id = id
+        self.reps = reps
+        self.weight = weight
+        self.completed = completed
+    }
+    
+    enum CodingKeys: CodingKey {
+        case id
+        case reps
+        case weight
+        case completed
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        reps = try container.decode(Int.self, forKey: .reps)
+        weight = try container.decode(Int.self, forKey: .weight)
+        completed = try container.decode(Bool.self, forKey: .completed)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(reps, forKey: .reps)
+        try container.encode(weight, forKey: .weight)
+        try container.encode(completed, forKey: .completed)
     }
 }
 

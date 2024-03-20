@@ -9,11 +9,14 @@ import SwiftUI
 
 struct ActiveWorkoutView: View {
     @EnvironmentObject var routineList: RoutineList
+    @Environment(\.sizeCategory) var sizeCategory
     @ObservedObject var workout: Workout
+    @State var workoutDisplay: ActiveWorkoutDisplay = ActiveWorkoutDisplay(workoutID: nil)
     @State private var startTime = Date()
     @State private var timerString = "00:00:00"
     @State private var isTimerRunning = false
     @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var workoutRecord: WorkoutRecord = WorkoutRecord(userID: "ExampleUser", date: Date())
     
     @State private var temp: Double?
     @FocusState var numPadFocus: Bool
@@ -21,6 +24,7 @@ struct ActiveWorkoutView: View {
     var body: some View {
         ZStack {
             Color("Background")
+                .ignoresSafeArea(.container, edges: .top)
             
             // TITLE/TOP OF SCREEN
             VStack {
@@ -47,43 +51,66 @@ struct ActiveWorkoutView: View {
                 }
                 
                 Spacer()
-                
-                // LIST OF EVERY EXERCISE
-                List {
-                    ForEach(workout.exercises) { exerciseSet in
-                        Section {
-                            var displaySet = getDisplaySet(eset: exerciseSet)
-                            Table(displaySet) {
-                                TableColumn("target reps") { set in
-                                    Text("\(set.targetReps)")
+                GeometryReader { geometry in
+                    ScrollView {
+                        ForEach(workoutDisplay.exercises.indices, id: \.self) { woIndex in
+                            var eSetDisplay = workoutDisplay.exercises[woIndex]
+                            Section {
+                                HStack {
+                                    Text("target")
+                                        .frame(width: geometry.size.width / 4, alignment: .leading)
+                                    Text("intensity")
+                                        .frame(width: geometry.size.width / 4, alignment: .leading)
+                                    Text("reps")
+                                        .frame(width: geometry.size.width / 4, alignment: .leading)
+                                    Text("weight")
+                                        .frame(width: geometry.size.width / 4, alignment: .leading)
                                 }
-                                TableColumn("intensity") { set in
-                                    Text("\(set.intensity)")
+                                
+                                ForEach(eSetDisplay.sets.indices, id: \.self) { sindex in
+                                    var set = eSetDisplay.sets[sindex]
+                                        //var setRecord :
+                                    HStack {
+                                        Text("\(set.targetReps)")
+                                            .frame(width: geometry.size.width / 4, alignment: .leading)
+                                        Text("\(set.intensity)")
+                                            .frame(width: geometry.size.width / 4, alignment: .leading)
+                                        TextField("0", value: $workoutDisplay.exercises[woIndex].sets[sindex].achievedReps, format: .number)
+                                            .keyboardType(.numberPad)
+                                            .frame(width: geometry.size.width / 4, alignment: .leading)
+                                        TextField("0", value: $workoutDisplay.exercises[woIndex].sets[sindex].weight, format: .number)
+                                            .keyboardType(.numberPad)
+                                            .frame(width: geometry.size.width / 4, alignment: .leading)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .ignoresSafeArea(.all)
                                 }
-                                TableColumn("reps") { set in
-                                    Text("\(set.achievedReps)")
-                                }
-                                TableColumn("weight") { set in
-                                    Text("\(set.weight)")
+                            } header: {
+                                Text(eSetDisplay.exercise.name)
+                                    .scaleEffect(1.0)
+                                    .bold()
+                                    .frame(alignment: .leading)
+                                // IF ALL EXERCISES ARE SAME INTENSITY, NO NEED FOR A NEW COLUMN
+                                if (eSetDisplay.intensityForm != IntensityType.None
+                                    && allSameIntensity(exerciseSet: eSetDisplay)) {
+                                    if (eSetDisplay.intensityForm == IntensityType.RPE) {
+                                        Text("@ RPE \(eSetDisplay.sets[0].intensity)")
+                                    } else {
+                                        Text("@ \(eSetDisplay.sets[0].intensity)% 1RPM")
+                                    }
                                 }
                             }
-                            .scaledToFit()
-                        } header: {
-                            Text(exerciseSet.exerciseInfo.name)
-                                .scaleEffect(1.3)
-                                .bold()
-                            // IF ALL EXERCISES ARE SAME INTENSITY, NO NEED FOR A NEW COLUMN
-                            if (exerciseSet.intensityForm != IntensityType.None
-                            && allSameIntensity(exerciseSet: exerciseSet)) {
-                                if (exerciseSet.intensityForm == IntensityType.RPE) {
-                                    Text("@ RPE \(exerciseSet.sets[0].intensity)")
-                                } else {
-                                    Text("@ \(exerciseSet.sets[0].intensity)% 1RPM")
-                                }
-                            }
+                            .frame(width: geometry.size.width, alignment: .leading)
+                            .listSectionSeparator(.hidden, edges: .bottom)
+                            
                         }
                     }
+                    //.environment(\.sizeCategory, .large)
+                    .frame(maxWidth: .infinity)
+                    .ignoresSafeArea(.all)
                 }
+                
+                
                 
                 Spacer()
                 Button (action: {
@@ -102,6 +129,11 @@ struct ActiveWorkoutView: View {
                 
             }
         }
+        .onAppear {
+            if workoutDisplay.workoutID == nil {
+                self.workoutDisplay = getActiveWorkoutDisplay(workout: workout)
+            }
+        }
     }
     
     func stopTimer() {
@@ -114,7 +146,7 @@ struct ActiveWorkoutView: View {
         self.isTimerRunning = true
     }
     
-    func allSameIntensity(exerciseSet: ExerciseSet) -> Bool{
+    func allSameIntensity(exerciseSet: ActiveExerciseSetDisplay) -> Bool{
         if (!exerciseSet.sets.isEmpty) {
             let firstIntensity = exerciseSet.sets[0].intensity
             for index in 0..<exerciseSet.sets.count {
@@ -138,24 +170,56 @@ struct ActiveWorkoutView: View {
         return out
     }
     
-    func getDisplaySet(eset: ExerciseSet) -> [SetDisplay]{
-        var out: [SetDisplay] = []
+    func getDisplaySet(eset: ExerciseSet) -> [ActiveSetDisplay]{
+        var out: [ActiveSetDisplay] = []
         
         for set in eset.sets {
-            out.append(SetDisplay(targetReps: set.reps, intensity: set.intensity))
+            out.append(ActiveSetDisplay(targetReps: set.reps, intensity: set.intensity))
         }
         
         return out
     }
+    
+    func getActiveWorkoutDisplay(workout: Workout) -> ActiveWorkoutDisplay {
+        var out = ActiveWorkoutDisplay(workoutID: workout.id)
+        for eSet in workout.exercises {
+            var newESD = ActiveExerciseSetDisplay(exercise: eSet.exerciseInfo, intensityForm: eSet.intensityForm)
+            newESD.sets = getDisplaySet(eset: eSet)
+            out.exercises.append(newESD)
+        }
+        return out
+    }
 }
 
-class SetDisplay: Identifiable {
-    let targetReps: Int
-    let intensity: Int
-    var achievedReps: Int
-    var weight: Int
+class ActiveWorkoutDisplay: Identifiable, ObservableObject {
+    @Published var workoutID: UUID?
+    @Published var exercises: [ActiveExerciseSetDisplay] = []
     
-    init(targetReps: Int, intensity: Int, achievedReps: Int = 0, weight: Int = 0) {
+    init (workoutID: UUID?) {
+        self.workoutID = workoutID
+    }
+}
+
+class ActiveExerciseSetDisplay: Identifiable, ObservableObject {
+    @Published var exercise: Exercise
+    @Published var intensityForm: IntensityType
+    @Published var sets: [ActiveSetDisplay] = []
+    
+    init(exercise: Exercise, intensityForm: IntensityType) {
+        self.exercise = exercise
+        self.intensityForm = intensityForm
+    }
+}
+
+class ActiveSetDisplay: Identifiable, ObservableObject {
+    @Published var targetReps: Int
+    @Published var intensity: Int
+    @Published var achievedReps: Double?
+    @Published var weight: Double?
+    @Published var completed: Bool = false
+    
+    
+    init(targetReps: Int, intensity: Int, achievedReps: Double? = nil, weight: Double? = nil) {
         self.targetReps = targetReps
         self.intensity = intensity
         self.achievedReps = achievedReps

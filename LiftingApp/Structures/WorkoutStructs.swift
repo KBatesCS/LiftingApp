@@ -499,8 +499,14 @@ class SetRecord: Identifiable, Codable {
 enum Muscles: Codable {
     case quad, hamstring, calf,
         chest, tricep, shoulder,
-        back, bicep
+        back, bicep, frontdeltoid,
+         abdominal, reardeltoid, trapezius,
+    rotatorcuff, forearmflexor, lateraldeltoid,
+    lat, glute, lowback, adductor,
+  forearmextensor, oblique
 }
+
+
 
 enum IntensityType: Codable {
     case RPE, PercentOfMax, None

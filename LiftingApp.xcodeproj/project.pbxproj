@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C7497919EC49BF9495216855 /* Pods_LiftingApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C72E220A79BBF9067BF1A9D2 /* Pods_LiftingApp.framework */; };
+		D63DF7AF2BAC7BA90036C9D0 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63DF7AE2BAC7BA90036C9D0 /* AnalyticsView.swift */; };
 		D65E4E982BA49BF000E41D38 /* ActiveWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65E4E972BA49BF000E41D38 /* ActiveWorkoutView.swift */; };
 		D665A1352B8BF29500FB2043 /* defaultData.json in Resources */ = {isa = PBXBuildFile; fileRef = D665A1342B8BF29500FB2043 /* defaultData.json */; };
 		D665A1372B8FB08B00FB2043 /* RegisterAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D665A1362B8FB08B00FB2043 /* RegisterAccountView.swift */; };
@@ -31,6 +32,7 @@
 		121C65806067097B55E0FE6A /* Pods-LiftingApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LiftingApp.debug.xcconfig"; path = "Target Support Files/Pods-LiftingApp/Pods-LiftingApp.debug.xcconfig"; sourceTree = "<group>"; };
 		3A5C07DB321520577D3D6B9F /* Pods-LiftingApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LiftingApp.release.xcconfig"; path = "Target Support Files/Pods-LiftingApp/Pods-LiftingApp.release.xcconfig"; sourceTree = "<group>"; };
 		C72E220A79BBF9067BF1A9D2 /* Pods_LiftingApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LiftingApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D63DF7AE2BAC7BA90036C9D0 /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
 		D65E4E972BA49BF000E41D38 /* ActiveWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveWorkoutView.swift; sourceTree = "<group>"; };
 		D665A1342B8BF29500FB2043 /* defaultData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = defaultData.json; sourceTree = "<group>"; };
 		D665A1362B8FB08B00FB2043 /* RegisterAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterAccountView.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 				D69769122B868FCA00458370 /* EditWorkoutView.swift */,
 				D665A1362B8FB08B00FB2043 /* RegisterAccountView.swift */,
 				D665A1382B965EF500FB2043 /* SelectNewWorkoutView.swift */,
+				D63DF7AE2BAC7BA90036C9D0 /* AnalyticsView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -284,6 +287,7 @@
 				D6D56FDD2B4CADA70040D4C4 /* MainTemp.swift in Sources */,
 				D6A7CE052B62D5CB005ED2BA /* StartWorkoutView.swift in Sources */,
 				D6F255CA2BA513F4006D7AC2 /* WorkoutStructs.swift in Sources */,
+				D63DF7AF2BAC7BA90036C9D0 /* AnalyticsView.swift in Sources */,
 				D6F255C92BA513F4006D7AC2 /* CustomViewObjects.swift in Sources */,
 				D65E4E982BA49BF000E41D38 /* ActiveWorkoutView.swift in Sources */,
 				D69769132B868FCA00458370 /* EditWorkoutView.swift in Sources */,

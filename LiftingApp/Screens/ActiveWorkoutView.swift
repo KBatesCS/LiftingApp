@@ -57,7 +57,7 @@ struct ActiveWorkoutView: View {
                             let eSetDisplay = workoutDisplay.exercises[woIndex]
                             Section {
                                 let displayIntensity = (eSetDisplay.intensityForm != IntensityType.None
-                                    && !allSameIntensity(exerciseSet: eSetDisplay))
+                                                        && !allSameIntensity(exerciseSet: eSetDisplay))
                                 let numCols = displayIntensity ? 5.0:4.0
                                 HStack {
                                     Text("target")
@@ -75,8 +75,8 @@ struct ActiveWorkoutView: View {
                                 }
                                 
                                 ForEach(eSetDisplay.sets.indices, id: \.self) { sindex in
-                                    let set = eSetDisplay.sets[sindex]
-                                        //var setRecord :
+                                    let set = workoutDisplay.exercises[woIndex].sets[sindex]
+                                    //var setRecord :
                                     HStack {
                                         Text("\(set.targetReps)")
                                             .frame(width: geometry.size.width / numCols, alignment: .leading)
@@ -90,18 +90,29 @@ struct ActiveWorkoutView: View {
                                         TextField("0", value: $workoutDisplay.exercises[woIndex].sets[sindex].weight, format: .number)
                                             .keyboardType(.numberPad)
                                             .frame(width: geometry.size.width / numCols, alignment: .leading)
-                                        RoundedRectangle(cornerRadius: 5.0)
-                                            .stroke(lineWidth: 2)
-                                            .frame(width: 25, height: 25, alignment: .leading)
-                                            .cornerRadius(5.0)
-                                            .overlay {
-                                                Image(systemName: workoutDisplay.exercises[woIndex].sets[sindex].completed ? "checkmark" : "")
+                                        /*
+                                         RoundedRectangle(cornerRadius: 5.0)
+                                         .stroke(lineWidth: 2)
+                                         .frame(width: 25, height: 25, alignment: .leading)
+                                         .cornerRadius(5.0)
+                                         .overlay {
+                                         Image(systemName: set.completed ? "checkmark" : "")
+                                         }
+                                         .onTapGesture {
+                                         //withAnimation(.spring()) {
+                                         set.completed.toggle()
+                                         //}
+                                         }
+                                         */
+                                        Button(action: {
+                                            set.completed.toggle()
+                                        }) {
+                                            HStack {
+                                                Image(systemName: set.completed ? "checkmark.square.fill" : "square")
+                                                    .foregroundColor(set.completed ? .accentColor : .secondary)
+                                                    .imageScale(.large)
                                             }
-                                            .onTapGesture {
-                                                //withAnimation(.spring()) {
-                                                    workoutDisplay.exercises[woIndex].sets[sindex].completed.toggle()
-                                                //}
-                                            }
+                                        }
                                     }
                                     .frame(maxWidth: .infinity)
                                     .ignoresSafeArea(.all)
@@ -185,7 +196,7 @@ struct ActiveWorkoutView: View {
         let hours = Int(currentTimeInterval / 3600)
         let minutes = Int((currentTimeInterval.truncatingRemainder(dividingBy: 3600)) / 60)
         let seconds = Int(currentTimeInterval.truncatingRemainder(dividingBy: 60))
-
+        
         let out = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
         
         return out
@@ -209,6 +220,10 @@ struct ActiveWorkoutView: View {
             out.exercises.append(newESD)
         }
         return out
+    }
+    
+    func saveToRecord() {
+        
     }
 }
 
@@ -249,7 +264,7 @@ class ActiveSetDisplay: Identifiable, ObservableObject {
 }
 
 /*
-#Preview {
-    ActiveWorkoutView()
-}
-*/
+ #Preview {
+ ActiveWorkoutView()
+ }
+ */

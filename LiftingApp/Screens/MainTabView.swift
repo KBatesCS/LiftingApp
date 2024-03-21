@@ -37,7 +37,7 @@ struct MainTabView: View {
                         
             // Screen 3
             //replace with whatever you need for now.
-            EmptyView()
+            AnalyticsView()
                 .tabItem {
                     Image(systemName: "chart.xyaxis.line")
                 }.tag(3)

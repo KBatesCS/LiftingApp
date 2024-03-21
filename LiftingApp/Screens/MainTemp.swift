@@ -79,7 +79,7 @@ struct MainTemp: View {
                 Spacer()
             }
         }
-        .environmentObject(routineList)
+        //.environmentObject(routineList)
     }
     
     

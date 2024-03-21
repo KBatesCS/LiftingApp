@@ -10,6 +10,8 @@
 		31D1B17D2BA6907D0002D615 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D1B17C2BA6907D0002D615 /* SettingsView.swift */; };
 		C7497919EC49BF9495216855 /* Pods_LiftingApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C72E220A79BBF9067BF1A9D2 /* Pods_LiftingApp.framework */; };
 		D63DF7AF2BAC7BA90036C9D0 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63DF7AE2BAC7BA90036C9D0 /* AnalyticsView.swift */; };
+		D63DF7B12BAC8CD50036C9D0 /* VideoAnalysisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63DF7B02BAC8CD50036C9D0 /* VideoAnalysisView.swift */; };
+		D63DF7B42BAC9A230036C9D0 /* Bundle-Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63DF7B32BAC9A230036C9D0 /* Bundle-Decodable.swift */; };
 		D65E4E982BA49BF000E41D38 /* ActiveWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65E4E972BA49BF000E41D38 /* ActiveWorkoutView.swift */; };
 		D665A1352B8BF29500FB2043 /* defaultData.json in Resources */ = {isa = PBXBuildFile; fileRef = D665A1342B8BF29500FB2043 /* defaultData.json */; };
 		D665A1372B8FB08B00FB2043 /* RegisterAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D665A1362B8FB08B00FB2043 /* RegisterAccountView.swift */; };
@@ -35,6 +37,8 @@
 		3A5C07DB321520577D3D6B9F /* Pods-LiftingApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LiftingApp.release.xcconfig"; path = "Target Support Files/Pods-LiftingApp/Pods-LiftingApp.release.xcconfig"; sourceTree = "<group>"; };
 		C72E220A79BBF9067BF1A9D2 /* Pods_LiftingApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LiftingApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D63DF7AE2BAC7BA90036C9D0 /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
+		D63DF7B02BAC8CD50036C9D0 /* VideoAnalysisView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoAnalysisView.swift; sourceTree = "<group>"; };
+		D63DF7B32BAC9A230036C9D0 /* Bundle-Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle-Decodable.swift"; sourceTree = "<group>"; };
 		D65E4E972BA49BF000E41D38 /* ActiveWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveWorkoutView.swift; sourceTree = "<group>"; };
 		D665A1342B8BF29500FB2043 /* defaultData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = defaultData.json; sourceTree = "<group>"; };
 		D665A1362B8FB08B00FB2043 /* RegisterAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterAccountView.swift; sourceTree = "<group>"; };
@@ -98,6 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				D67369452B8BDD3D00187549 /* createExerciseScript.playground */,
+				D63DF7B32BAC9A230036C9D0 /* Bundle-Decodable.swift */,
 			);
 			path = Scripts;
 			sourceTree = "<group>";
@@ -125,6 +130,7 @@
 				D665A1362B8FB08B00FB2043 /* RegisterAccountView.swift */,
 				D665A1382B965EF500FB2043 /* SelectNewWorkoutView.swift */,
 				D63DF7AE2BAC7BA90036C9D0 /* AnalyticsView.swift */,
+				D63DF7B02BAC8CD50036C9D0 /* VideoAnalysisView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -300,6 +306,7 @@
 				D6F255CA2BA513F4006D7AC2 /* WorkoutStructs.swift in Sources */,
 				D63DF7AF2BAC7BA90036C9D0 /* AnalyticsView.swift in Sources */,
 				D6F255C92BA513F4006D7AC2 /* CustomViewObjects.swift in Sources */,
+				D63DF7B42BAC9A230036C9D0 /* Bundle-Decodable.swift in Sources */,
 				D65E4E982BA49BF000E41D38 /* ActiveWorkoutView.swift in Sources */,
 				D69769132B868FCA00458370 /* EditWorkoutView.swift in Sources */,
 				D6D56FCE2B4C82F20040D4C4 /* LoginView.swift in Sources */,
@@ -311,6 +318,7 @@
 				D6A7CE032B62C8F7005ED2BA /* MainTabView.swift in Sources */,
 				D69769112B8539A500458370 /* EditRoutineView.swift in Sources */,
 				31D1B17D2BA6907D0002D615 /* SettingsView.swift in Sources */,
+				D63DF7B12BAC8CD50036C9D0 /* VideoAnalysisView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

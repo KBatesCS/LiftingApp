@@ -1,6 +1,14 @@
 [
   {
+    "primaryMusclesWorked" : [
+      {
+        "chest" : {
+
+        }
+      }
+    ],
     "name" : "BenchPress",
+    "id" : "2ABFB8CA-E493-4EC8-B04A-45FDDF7D92A4",
     "secondaryMusclesWorked" : [
       {
         "shoulder" : {
@@ -12,19 +20,9 @@
 
         }
       }
-    ],
-    "id" : "901C1639-5917-439A-923E-A30D372FAE45",
-    "primaryMusclesWorked" : [
-      {
-        "chest" : {
-
-        }
-      }
     ]
   },
   {
-    "name" : "Pullup",
-    "id" : "7F67B659-6333-4E96-816F-DB96DF9780C7",
     "primaryMusclesWorked" : [
       {
         "back" : {
@@ -38,6 +36,781 @@
 
         }
       }
+    ],
+    "name" : "Pullup",
+    "id" : "D14A4EFA-C9B3-479A-ACAA-0668190CDB41"
+  },
+  {
+    "primaryMusclesWorked" : [
+      {
+        "chest" : {
+
+        }
+      }
+    ],
+    "id" : "14628BB1-1155-4EA4-A36B-2E97F8C3DBEC",
+    "name" : "Chest Press",
+    "secondaryMusclesWorked" : [
+      {
+        "frontdeltoid" : {
+
+        }
+      },
+      {
+        "tricep" : {
+
+        }
+      }
     ]
+  },
+  {
+    "secondaryMusclesWorked" : [
+      {
+        "frontdeltoid" : {
+
+        }
+      }
+    ],
+    "name" : "Chest Fly",
+    "id" : "9EACD23A-F153-45BD-9382-02C58E1A7A89",
+    "primaryMusclesWorked" : [
+      {
+        "chest" : {
+
+        }
+      }
+    ]
+  },
+  {
+    "primaryMusclesWorked" : [
+      {
+        "chest" : {
+
+        }
+      },
+      {
+        "frontdeltoid" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+      {
+        "tricep" : {
+
+        }
+      }
+    ],
+    "name" : "Dip",
+    "id" : "D51D5334-871D-482B-94C0-097F98E39E2C"
+  },
+  {
+    "secondaryMusclesWorked" : [
+      {
+        "tricep" : {
+
+        }
+      },
+      {
+        "abdominal" : {
+
+        }
+      }
+    ],
+    "id" : "5461CEE3-F61F-4738-B230-9AF06964EB9F",
+    "name" : "Pushup",
+    "primaryMusclesWorked" : [
+      {
+        "chest" : {
+
+        }
+      },
+      {
+        "frontdeltoid" : {
+
+        }
+      }
+    ]
+  },
+  {
+    "primaryMusclesWorked" : [
+      {
+        "reardeltoid" : {
+
+        }
+      },
+      {
+        "trapezius" : {
+
+        }
+      }
+    ],
+    "id" : "F04027B1-AB0D-4974-9495-4C436395D879",
+    "secondaryMusclesWorked" : [
+      {
+        "rotatorcuff" : {
+
+        }
+      },
+      {
+        "bicep" : {
+
+        }
+      },
+      {
+        "forearmflexor" : {
+
+        }
+      }
+    ],
+    "name" : "Rear Delt Row"
+  },
+  {
+    "id" : "B2CEE9DD-DE67-40C6-A41D-101C7AFEC1AF",
+    "primaryMusclesWorked" : [
+      {
+        "frontdeltoid" : {
+
+        }
+      }
+    ],
+    "name" : "Shoulder Press",
+    "secondaryMusclesWorked" : [
+      {
+        "tricep" : {
+
+        }
+      },
+      {
+        "lateraldeltoid" : {
+
+        }
+      }
+    ]
+  },
+  {
+    "id" : "6C05802B-BFC0-4210-BE3D-DF44A5A137D9",
+    "name" : "Overhead Press",
+    "primaryMusclesWorked" : [
+      {
+        "frontdeltoid" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+      {
+        "tricep" : {
+
+        }
+      },
+      {
+        "lateraldeltoid" : {
+
+        }
+      }
+    ]
+  },
+  {
+    "name" : "Reverse Cable Fly",
+    "id" : "17B0F24B-760C-4CFA-A414-F519B20ACB29",
+    "primaryMusclesWorked" : [
+      {
+        "reardeltoid" : {
+
+        }
+      },
+      {
+        "rotatorcuff" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+      {
+        "trapezius" : {
+
+        }
+      }
+    ]
+  },
+  {
+    "primaryMusclesWorked" : [
+      {
+        "frontdeltoid" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+      {
+        "reardeltoid" : {
+
+        }
+      }
+    ],
+    "id" : "55FF16A1-0497-46FB-8CAE-60A2B5FA66CD",
+    "name" : "Dumbell front Raise"
+  },
+  {
+    "id" : "BD006A50-202A-42C3-B126-FE333A60EA7C",
+    "primaryMusclesWorked" : [
+      {
+        "lat" : {
+
+        }
+      },
+      {
+        "trapezius" : {
+
+        }
+      },
+      {
+        "reardeltoid" : {
+
+        }
+      }
+    ],
+    "name" : "Seated Row",
+    "secondaryMusclesWorked" : [
+      {
+        "bicep" : {
+
+        }
+      },
+      {
+        "forearmflexor" : {
+
+        }
+      },
+      {
+        "rotatorcuff" : {
+
+        }
+      }
+    ]
+  },
+  {
+    "primaryMusclesWorked" : [
+      {
+        "glute" : {
+
+        }
+      },
+      {
+        "lowback" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+      {
+        "quad" : {
+
+        }
+      },
+      {
+        "hamstring" : {
+
+        }
+      },
+      {
+        "adductor" : {
+
+        }
+      },
+      {
+        "trapezius" : {
+
+        }
+      },
+      {
+        "forearmflexor" : {
+
+        }
+      }
+    ],
+    "name" : "Deadlift",
+    "id" : "ADC8E4E5-CD19-480A-B20E-BAF48CE368DA"
+  },
+  {
+    "secondaryMusclesWorked" : [
+      {
+        "reardeltoid" : {
+
+        }
+      },
+      {
+        "bicep" : {
+
+        }
+      },
+      {
+        "rotatorcuff" : {
+
+        }
+      }
+    ],
+    "primaryMusclesWorked" : [
+      {
+        "lat" : {
+
+        }
+      }
+    ],
+    "id" : "1728A2B4-2501-416F-AA63-D23269E232A8",
+    "name" : "Lat Pulldown"
+  },
+  {
+    "primaryMusclesWorked" : [
+      {
+        "lowback" : {
+
+        }
+      }
+    ],
+    "name" : "Jefferson Curl",
+    "id" : "FD12E018-D979-48FC-90C8-BFEFAE60693B",
+    "secondaryMusclesWorked" : [
+      {
+        "adductor" : {
+
+        }
+      },
+      {
+        "glute" : {
+
+        }
+      },
+      {
+        "hamstring" : {
+
+        }
+      }
+    ]
+  },
+  {
+    "id" : "6415611F-D329-4AB3-8161-EB9C593722E9",
+    "primaryMusclesWorked" : [
+      {
+        "quad" : {
+
+        }
+      },
+      {
+        "glute" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+      {
+        "adductor" : {
+
+        }
+      }
+    ],
+    "name" : "Lunge"
+  },
+  {
+    "id" : "A96D99F5-D5F9-4436-AE0D-84AA517D1334",
+    "name" : "Squat",
+    "primaryMusclesWorked" : [
+      {
+        "quad" : {
+
+        }
+      },
+      {
+        "adductor" : {
+
+        }
+      },
+      {
+        "glute" : {
+
+        }
+      },
+      {
+        "lowback" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+      {
+        "calf" : {
+
+        }
+      }
+    ]
+  },
+  {
+    "name" : "Leg Extension",
+    "id" : "9975BF7B-B30D-41AF-B767-EA37BDB86614",
+    "primaryMusclesWorked" : [
+      {
+        "quad" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+
+    ]
+  },
+  {
+    "primaryMusclesWorked" : [
+      {
+        "quad" : {
+
+        }
+      },
+      {
+        "glute" : {
+
+        }
+      },
+      {
+        "adductor" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+      {
+        "hamstring" : {
+
+        }
+      }
+    ],
+    "id" : "38AB262B-F0B3-4778-A230-92179E3F91CE",
+    "name" : "Leg Press"
+  },
+  {
+    "primaryMusclesWorked" : [
+      {
+        "hamstring" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+
+    ],
+    "name" : "Leg Curl",
+    "id" : "1F9A33EB-DDED-4D82-8D1B-3012792DD00A"
+  },
+  {
+    "name" : "Romanian Deadlift",
+    "secondaryMusclesWorked" : [
+      {
+        "adductor" : {
+
+        }
+      },
+      {
+        "trapezius" : {
+
+        }
+      }
+    ],
+    "primaryMusclesWorked" : [
+      {
+        "glute" : {
+
+        }
+      },
+      {
+        "lowback" : {
+
+        }
+      },
+      {
+        "hamstring" : {
+
+        }
+      }
+    ],
+    "id" : "32BBAA15-57F2-4400-90F9-0958A518B0B3"
+  },
+  {
+    "id" : "418BE043-F885-413D-B7B0-1F75784F89F8",
+    "name" : "Calf Raise",
+    "primaryMusclesWorked" : [
+      {
+        "calf" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+
+    ]
+  },
+  {
+    "id" : "77B5FEBB-8A04-4D6B-9AC1-54A67F6FFF2D",
+    "name" : "Heel Drop",
+    "primaryMusclesWorked" : [
+      {
+        "calf" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+
+    ]
+  },
+  {
+    "primaryMusclesWorked" : [
+      {
+        "calf" : {
+
+        }
+      }
+    ],
+    "name" : "Heel Raise",
+    "id" : "46A7EA8B-D590-4CB3-ABBE-2013E1D5C532",
+    "secondaryMusclesWorked" : [
+
+    ]
+  },
+  {
+    "id" : "43824977-A21E-4ADE-94F0-912576263FEC",
+    "primaryMusclesWorked" : [
+      {
+        "bicep" : {
+
+        }
+      }
+    ],
+    "name" : "Bicep Curl",
+    "secondaryMusclesWorked" : [
+      {
+        "forearmflexor" : {
+
+        }
+      }
+    ]
+  },
+  {
+    "id" : "0B91A042-38EC-43E6-B64E-5525A0AECF2F",
+    "name" : "Hammer Curl",
+    "secondaryMusclesWorked" : [
+
+    ],
+    "primaryMusclesWorked" : [
+      {
+        "bicep" : {
+
+        }
+      },
+      {
+        "forearmflexor" : {
+
+        }
+      }
+    ]
+  },
+  {
+    "primaryMusclesWorked" : [
+      {
+        "bicep" : {
+
+        }
+      }
+    ],
+    "name" : "Preacher Curl",
+    "id" : "110DBFD9-6D52-4059-B079-585449E1D9A7",
+    "secondaryMusclesWorked" : [
+      {
+        "forearmflexor" : {
+
+        }
+      }
+    ]
+  },
+  {
+    "secondaryMusclesWorked" : [
+      {
+        "chest" : {
+
+        }
+      }
+    ],
+    "primaryMusclesWorked" : [
+      {
+        "tricep" : {
+
+        }
+      }
+    ],
+    "id" : "948DCF99-F41A-4FDE-9CD8-F264B1A97431",
+    "name" : "Bench Dip"
+  },
+  {
+    "primaryMusclesWorked" : [
+      {
+        "tricep" : {
+
+        }
+      }
+    ],
+    "id" : "148727BB-FAA5-4EA8-96AE-0ACC094A92B9",
+    "secondaryMusclesWorked" : [
+
+    ],
+    "name" : "Tricep Pushdown"
+  },
+  {
+    "id" : "B00B1008-0B49-4E47-BCB3-564E0EF3FC27",
+    "secondaryMusclesWorked" : [
+      {
+        "forearmflexor" : {
+
+        }
+      }
+    ],
+    "primaryMusclesWorked" : [
+      {
+        "tricep" : {
+
+        }
+      }
+    ],
+    "name" : "Tricep Extension"
+  },
+  {
+    "id" : "BCAD6B51-76D2-46DC-9CFB-BE3AE3B25416",
+    "name" : "Plate Pinch",
+    "primaryMusclesWorked" : [
+      {
+        "forearmflexor" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+
+    ]
+  },
+  {
+    "secondaryMusclesWorked" : [
+
+    ],
+    "name" : "Wrist Curl",
+    "id" : "C42BAE2B-D77C-4B7F-BE0B-3997B61D3128",
+    "primaryMusclesWorked" : [
+      {
+        "forearmflexor" : {
+
+        }
+      }
+    ]
+  },
+  {
+    "name" : "Wrist Extension",
+    "id" : "9939D7AE-C4A7-4048-9453-A25960F30BE5",
+    "primaryMusclesWorked" : [
+      {
+        "forearmextensor" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+
+    ]
+  },
+  {
+    "name" : "Crunch",
+    "primaryMusclesWorked" : [
+      {
+        "abdominal" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+      {
+        "oblique" : {
+
+        }
+      }
+    ],
+    "id" : "7F1004CE-24F7-4F2B-823D-F973E8F02405"
+  },
+  {
+    "primaryMusclesWorked" : [
+      {
+        "abdominal" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+      {
+        "oblique" : {
+
+        }
+      }
+    ],
+    "id" : "15290AF1-92AD-4245-92BC-E2EF6C28BF41",
+    "name" : "Plank"
+  },
+  {
+    "name" : "Leg Raise",
+    "id" : "0D7A0E06-9F51-45B5-A343-6802A1371BBA",
+    "primaryMusclesWorked" : [
+      {
+        "abdominal" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+      {
+        "oblique" : {
+
+        }
+      }
+    ]
+  },
+  {
+    "id" : "AB5A33BB-7D29-4A24-B404-F3ADBA9691B3",
+    "primaryMusclesWorked" : [
+      {
+        "abdominal" : {
+
+        }
+      }
+    ],
+    "name" : "Suitcases",
+    "secondaryMusclesWorked" : [
+      {
+        "oblique" : {
+
+        }
+      }
+    ]
+  },
+  {
+    "name" : "Windshield Wiper",
+    "primaryMusclesWorked" : [
+      {
+        "oblique" : {
+
+        }
+      }
+    ],
+    "secondaryMusclesWorked" : [
+      {
+        "abdominal" : {
+
+        }
+      }
+    ],
+    "id" : "80D63F5E-6883-48CF-A8D2-AC6EF2E9D484"
   }
 ]

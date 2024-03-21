@@ -150,13 +150,13 @@
 		D6D56FCA2B4C82F20040D4C4 /* LiftingApp */ = {
 			isa = PBXGroup;
 			children = (
+				31D1B17B2BA690590002D615 /* Settings */,
 				D6F255C72BA513F3006D7AC2 /* Structures */,
 				D67369432B8BD5F600187549 /* LoadableData */,
 				D67369402B8BD53C00187549 /* Scripts */,
 				D697690D2B8536DE00458370 /* Screens */,
 				D6D56FCF2B4C82F40040D4C4 /* Assets.xcassets */,
 				D6D56FD12B4C82F40040D4C4 /* LiftingApp.entitlements */,
-				31D1B17B2BA690590002D615 /* Settings */,
 				D6D56FD22B4C82F40040D4C4 /* Preview Content */,
 			);
 			path = LiftingApp;
@@ -436,7 +436,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"LiftingApp/Preview Content\"";
-				DEVELOPMENT_TEAM = 5K62M79JQ5;
+				DEVELOPMENT_TEAM = AC6V234L6Y;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -474,7 +474,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"LiftingApp/Preview Content\"";
-				DEVELOPMENT_TEAM = 5K62M79JQ5;
+				DEVELOPMENT_TEAM = AC6V234L6Y;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;

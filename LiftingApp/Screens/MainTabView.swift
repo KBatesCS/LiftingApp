@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @State private var defaultTab = 2
+    @State private var defaultTab = 3
     @StateObject private var routineList: RoutineList
     //@State public var routineList: [Routine] = []
     
@@ -50,6 +50,7 @@ struct MainTabView: View {
                     Image(systemName: "gearshape")
                 }.tag(5)
         }
+        .padding(.top, 10)
         .environmentObject(routineList)
     }
 }

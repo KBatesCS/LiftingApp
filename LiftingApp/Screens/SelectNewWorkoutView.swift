@@ -52,16 +52,7 @@ struct SelectNewWorkoutView: View {
 
     
     func getExercises() -> [Exercise] {
-        
-        //guard let url = self.url(forResou)
         return Bundle.main.decode("defaultData.json")
-        /*
-        
-        let e1 = Exercise(name: "BenchPress", primaryMusclesWorked: [Muscles.chest], secondaryMusclesWorked: [Muscles.shoulder, Muscles.tricep])
-        let e2 = Exercise(name: "Pullup", primaryMusclesWorked: [Muscles.back], secondaryMusclesWorked: [Muscles.bicep])
-        let lout: [Exercise] = [e1, e2]
-        return lout
-         */
     }
 }
 

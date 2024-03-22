@@ -41,16 +41,9 @@ struct EditWorkoutView: View {
             */
             
             List(workout.exercises, id: \.self) { exerciseSet in
-                    Section {
-                        ExerciseSetDisplay(eset: exerciseSet)
-                    } header: {
-                        NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: exerciseSet)) {
-                            Text(exerciseSet.exerciseInfo.name)
-                        }
-                    }
-                
+                ExerciseSetDisplay(workout: workout, eset: exerciseSet)
             }
-            .listRowSpacing(10)
+            //.listRowSpacing(10)
              
             Spacer()
             
@@ -73,42 +66,82 @@ struct EditWorkoutView: View {
          */
     }
 }
-
 struct ExerciseSetDisplay: View {
     @EnvironmentObject var routineList: RoutineList
+    @ObservedObject var workout: Workout
     @ObservedObject var eset: ExerciseSet
     
     var body: some View {
-        VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
-            ForEach(eset.sets.indices, id: \.self) { index in
-                var curSet = eset.sets[index]
-                HStack {
-                    Text("Set \(index):")
-                    Spacer()
-                    
-                    Button (action: {
-                        if (curSet.reps >= 1) {
-                            curSet.reps -= 1
-                            routineList.refreshAndSave()
+        Section {
+                let displayIntensity = eset.intensityForm != IntensityType.None
+                ForEach(eset.sets.indices, id: \.self) { index in
+                    let curSet = eset.sets[index]
+                    HStack {
+                        Text("Set \(index):")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        
+                        Spacer()
+                        
+                        if displayIntensity {
+                            TextField("0", value: $eset.sets[index].intensity, format: .number)
+                                .keyboardType(.numberPad)
+                                .onChange(of: eset.sets[index].intensity) { _ in
+                                    routineList.refreshAndSave()
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
                         }
-                    }, label: {
-                        Text("-")
-                    })
-                    .buttonStyle(BorderlessButtonStyle())
-                    
-                    Text("\(curSet.reps)")
-                    
-                    Button (action: {
-                        curSet.reps += 1
-                        routineList.refreshAndSave()
-                    }, label: {
-                        Text("+")
-                    })
-                    .buttonStyle(BorderlessButtonStyle())
+                        Spacer()
+                        HStack {
+                            Button(action: {
+                                if curSet.reps >= 1 {
+                                    curSet.reps -= 1
+                                    routineList.refreshAndSave()
+                                }
+                            }) {
+                                Text("-")
+                            }
+                            .buttonStyle(BorderlessButtonStyle())
+                            
+                            Text("\(curSet.reps)")
+                            
+                            Button(action: {
+                                curSet.reps += 1
+                                routineList.refreshAndSave()
+                            }) {
+                                Text("+")
+                            }
+                            .buttonStyle(BorderlessButtonStyle())
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                    }
+                    //.padding(.horizontal) // Add horizontal padding for better spacing
+                }
+                .foregroundColor(Color("Text"))
+                //.listRowBackground(Color("Accent"))
+            
+        } header: {
+            HStack {
+                NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: eset)) {
+                    Text(eset.exerciseInfo.name)
+                        .foregroundStyle(Color("Text"))
+                        .bold()
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity)
+                Spacer()
+                Picker("", selection: $eset.intensityForm) {
+                    Text("RPE").tag(IntensityType.RPE)
+                    Text("None").tag(IntensityType.None)
+                    Text("%RPM").tag(IntensityType.PercentOfMax)
+                }
+                .pickerStyle(.segmented)
+                .onChange(of: eset.intensityForm) { _ in
+                    routineList.refreshAndSave()
                 }
             }
-            .foregroundColor(Color("Text"))
-            .listRowBackground(Color("Accent"))
         }
     }
 }

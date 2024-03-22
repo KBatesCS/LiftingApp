@@ -51,46 +51,54 @@ struct ActiveWorkoutView: View {
                 }
                 
                 Spacer()
-                GeometryReader { geometry in
-                    ScrollView {
+                    List {
                         ForEach(workoutDisplay.exercises.indices, id: \.self) { woIndex in
                             let eSetDisplay = workoutDisplay.exercises[woIndex]
                             Section {
                                 let displayIntensity = (eSetDisplay.intensityForm != IntensityType.None
                                                         && !allSameIntensity(exerciseSet: eSetDisplay))
-                                let numCols = displayIntensity ? 5.0:4.0
+                                //Column headers
                                 HStack {
                                     Text("target")
-                                        .frame(width: geometry.size.width / numCols, alignment: .leading)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    Spacer()
                                     if displayIntensity {
-                                        Text("intensity")
-                                            .frame(width: geometry.size.width / numCols, alignment: .leading)
+                                        Text(eSetDisplay.intensityForm == IntensityType.RPE ? "RPE" : "%1RPM")
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        Spacer()
                                     }
                                     Text("reps")
-                                        .frame(width: geometry.size.width / numCols, alignment: .leading)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    Spacer()
                                     Text("weight")
-                                        .frame(width: geometry.size.width / numCols, alignment: .leading)
-                                    Text("")
-                                        .frame(width: geometry.size.width / numCols, alignment: .leading)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    Spacer()
+                                    RoundedRectangle(cornerRadius: 5.0)
+                                        .stroke(Color.clear, lineWidth: 2)
+                                        .frame(width: 25, height: 25, alignment: .leading)
                                 }
                                 
                                 ForEach(eSetDisplay.sets.indices, id: \.self) { sindex in
                                     let set = workoutDisplay.exercises[woIndex].sets[sindex]
-                                    //var setRecord :
+                                    //each row
                                     HStack {
                                         Text("\(set.targetReps)")
-                                            .frame(width: geometry.size.width / numCols, alignment: .leading)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        Spacer()
                                         if displayIntensity {
                                             Text("\(set.intensity)")
-                                                .frame(width: geometry.size.width / numCols, alignment: .leading)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                            Spacer()
                                         }
                                         TextField("0", value: $workoutDisplay.exercises[woIndex].sets[sindex].achievedReps, format: .number)
                                             .keyboardType(.numberPad)
-                                            .frame(width: geometry.size.width / numCols, alignment: .leading)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        Spacer()
                                         TextField("0", value: $workoutDisplay.exercises[woIndex].sets[sindex].weight, format: .number)
                                             .keyboardType(.numberPad)
-                                            .frame(width: geometry.size.width / numCols, alignment: .leading)
-                                        /*
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        Spacer()
+                                        
                                          RoundedRectangle(cornerRadius: 5.0)
                                          .stroke(lineWidth: 2)
                                          .frame(width: 25, height: 25, alignment: .leading)
@@ -99,27 +107,17 @@ struct ActiveWorkoutView: View {
                                          Image(systemName: set.completed ? "checkmark" : "")
                                          }
                                          .onTapGesture {
-                                         //withAnimation(.spring()) {
-                                         set.completed.toggle()
-                                         //}
+                                             withAnimation(.spring(duration: 2)) {
+                                                 set.completed.toggle()
+                                             }
                                          }
-                                         */
-                                        Button(action: {
-                                            set.completed.toggle()
-                                        }) {
-                                            HStack {
-                                                Image(systemName: set.completed ? "checkmark.square.fill" : "square")
-                                                    .foregroundColor(set.completed ? .accentColor : .secondary)
-                                                    .imageScale(.large)
-                                            }
-                                        }
                                     }
                                     .frame(maxWidth: .infinity)
                                     .ignoresSafeArea(.all)
                                 }
                             } header: {
                                 Text(eSetDisplay.exercise.name)
-                                    .scaleEffect(1.0)
+                                    .font(.system(size: 18))
                                     .bold()
                                     .frame(alignment: .leading)
                                 // IF ALL EXERCISES ARE SAME INTENSITY, NO NEED FOR A NEW COLUMN
@@ -132,32 +130,27 @@ struct ActiveWorkoutView: View {
                                     }
                                 }
                             }
-                            .frame(width: geometry.size.width, alignment: .leading)
-                            .listSectionSeparator(.hidden, edges: .bottom)
                             
-                        }
                     }
-                    //.environment(\.sizeCategory, .large)
-                    .frame(maxWidth: .infinity)
-                    .ignoresSafeArea(.all)
                 }
+                    .overlay {
+                        Spacer()
+                        Button (action: {
+                            stopTimer()
+                        }, label: {
+                            Text("Finish Workout")
+                                .frame(alignment: .bottom)
+                                .font(.title2)
+                                .foregroundColor(Color("Text"))
+                                .bold()
+                                .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
+                                .background(Color("Accent"))
+                                .cornerRadius(21)
+                                .padding(.bottom, 6)
+                        })
+                        .frame(maxHeight: .infinity, alignment: .bottom)
+                    }
                 
-                
-                
-                Spacer()
-                Button (action: {
-                    stopTimer()
-                }, label: {
-                    Text("Finish Workout")
-                        .frame(alignment: .bottom)
-                        .font(.title2)
-                        .foregroundColor(Color("Text"))
-                        .bold()
-                        .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
-                        .background(Color("Accent"))
-                        .cornerRadius(21)
-                        .padding()
-                })
                 
             }
         }

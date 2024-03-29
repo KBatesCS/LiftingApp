@@ -14,7 +14,7 @@ struct RoundedTextFieldStyle: TextFieldStyle {
             configuration
                 .padding(.horizontal, 10)
                 .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
-                .overlay(RoundedRectangle(cornerSize: CGSize(width: 25, height: 25)).stroke(Color("Accent"), lineWidth: 2))
+                .overlay(RoundedRectangle(cornerSize: CGSize(width: 5, height: 5)).stroke(Color("Accent"), lineWidth: 2))
                 .foregroundStyle(.white)
     }
 }
@@ -24,6 +24,21 @@ struct testView: View {
     var body: some View {
         TextField("test", text: $tempString)
             .textFieldStyle(RoundedTextFieldStyle())
+    }
+}
+
+struct CheckboxToggleStyle: ToggleStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        Button {
+            configuration.isOn.toggle()
+        } label: {
+            HStack {
+                Image(systemName: configuration.isOn ? "checkmark.square" : "square")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                configuration.label
+            }
+        }
     }
 }
 

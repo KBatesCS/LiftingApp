@@ -383,17 +383,57 @@ struct Exercise: Identifiable, Codable {
     }
 }
 
-class WorkoutRecord: ObservableObject {
+class RecordList: ObservableObject, Codable {
+    @Published var id: UUID
+    @Published var userID: String
+    @Published var workoutRecords: [WorkoutRecord]
+    
+    init(id: UUID = UUID(), userID: String, workoutRecords: [WorkoutRecord] = []) {
+        self.id = id
+        self.userID = userID
+        self.workoutRecords = workoutRecords
+    }
+    
+    enum CodingKeys: CodingKey {
+        case id
+        case userID
+        case workoutRecords
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        userID = try container.decode(String.self, forKey: .userID)
+        workoutRecords = try container.decode([WorkoutRecord].self, forKey: .workoutRecords)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(userID, forKey: .userID)
+        try container.encode(workoutRecords, forKey: .workoutRecords)
+    }
+    
+    func save() {
+        if let encoded = try? JSONEncoder().encode(self) {
+            UserDefaults.standard.set(encoded, forKey: "\(userID)/RecordList")
+        }
+    }
+}
+
+class WorkoutRecord: ObservableObject, Codable {
     @Published var id: UUID
     @Published var userID: String
     
     @Published var date: Date
+    @Published var notes: String?
     @Published var exercises: [ExerciseRecord]
     
-    init(id: UUID = UUID(), userID: String, date: Date, exercises: [ExerciseRecord] = []) {
+    init(id: UUID = UUID(), userID: String, date: Date = Date(), exercises: [ExerciseRecord] = [], notes: String? = nil) {
         self.id = id
         self.userID = userID
         self.date = date
+        self.notes = notes
         self.exercises = exercises
     }
     
@@ -401,6 +441,7 @@ class WorkoutRecord: ObservableObject {
         case id
         case userID
         case date
+        case notes
         case exercises
     }
 
@@ -408,6 +449,7 @@ class WorkoutRecord: ObservableObject {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
         userID = try container.decode(String.self, forKey: .userID)
+        notes = try container.decode(String.self, forKey: .notes)
         date = try container.decode(Date.self, forKey: .date)
         exercises = try container.decode([ExerciseRecord].self, forKey: .exercises)
     }
@@ -417,6 +459,7 @@ class WorkoutRecord: ObservableObject {
         try container.encode(id, forKey: .id)
         try container.encode(userID, forKey: .userID)
         try container.encode(date, forKey: .date)
+        try container.encode(date, forKey: .notes)
         try container.encode(exercises, forKey: .exercises)
     }
     
@@ -427,20 +470,23 @@ class WorkoutRecord: ObservableObject {
 
 class ExerciseRecord: Identifiable, Codable {
     @Published var id: UUID
+    @Published var inLBs: Bool
     
     @Published var exercise: Exercise
     @Published var sets: [SetRecord]
     
-    init(id: UUID = UUID(), exercise: Exercise, sets: [SetRecord] = []) {
+    init(id: UUID = UUID(), exercise: Exercise, sets: [SetRecord] = [], inLBs: Bool = true) {
         self.id = id
         self.exercise = exercise
         self.sets = sets
+        self.inLBs = inLBs
     }
     
     enum CodingKeys: CodingKey {
         case id
         case exercise
         case sets
+        case inLBs
     }
 
     required init(from decoder: Decoder) throws {
@@ -448,6 +494,7 @@ class ExerciseRecord: Identifiable, Codable {
         id = try container.decode(UUID.self, forKey: .id)
         exercise = try container.decode(Exercise.self, forKey: .exercise)
         sets = try container.decode([SetRecord].self, forKey: .sets)
+        inLBs = try container.decode(Bool.self, forKey: .inLBs)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -455,6 +502,7 @@ class ExerciseRecord: Identifiable, Codable {
         try container.encode(id, forKey: .id)
         try container.encode(exercise, forKey: .exercise)
         try container.encode(sets, forKey: .sets)
+        try container.encode(inLBs, forKey: .inLBs)
     }
 }
 
@@ -462,10 +510,10 @@ class SetRecord: Identifiable, Codable {
     @Published var id: UUID
     
     @Published var reps: Int
-    @Published var weight: Int
+    @Published var weight: Double
     @Published var completed: Bool
     
-    init(id: UUID = UUID(), reps: Int, weight: Int, completed: Bool) {
+    init(id: UUID = UUID(), reps: Int, weight: Double, completed: Bool) {
         self.id = id
         self.reps = reps
         self.weight = weight
@@ -483,7 +531,7 @@ class SetRecord: Identifiable, Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
         reps = try container.decode(Int.self, forKey: .reps)
-        weight = try container.decode(Int.self, forKey: .weight)
+        weight = try container.decode(Double.self, forKey: .weight)
         completed = try container.decode(Bool.self, forKey: .completed)
     }
 

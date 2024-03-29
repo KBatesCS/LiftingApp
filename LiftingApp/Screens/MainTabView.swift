@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @State private var defaultTab = 3
+    @State private var selectedTab = 3
     @StateObject private var routineList: RoutineList
+    @StateObject private var recordList: RecordList
     //@State public var routineList: [Routine] = []
     
     init() {
@@ -17,12 +18,17 @@ struct MainTabView: View {
             _routineList = StateObject(wrappedValue: loadedRL)
         } else {
             _routineList = StateObject(wrappedValue: RoutineList(user: "ExampleUser"))
-            routineList.save()
+        }
+        
+        if let loadedRecL: RecordList = load(key: "ExampleUser/RecordList") {
+            _recordList = StateObject(wrappedValue: loadedRecL)
+        } else {
+            _recordList = StateObject(wrappedValue: RecordList(userID: "ExampleUser"))
         }
     }
     
     var body: some View {
-        TabView (selection: $defaultTab){
+        TabView (selection: $selectedTab){
             // screen 1
             MainTemp()
                 .tabItem {
@@ -31,27 +37,40 @@ struct MainTabView: View {
              
             VideoAnalysisView()
                 .tabItem {
+                    selectedTab == 2 ?
+                    Image(systemName: "camera.fill") :
                     Image(systemName: "camera")
                 }.tag(2)
             
             StartWorkoutView()
                 .tabItem {
+                    selectedTab == 3 ?
+                    Image(systemName: "dumbbell.fill") :
                     Image(systemName: "dumbbell")
                 }.tag(3)
                         
             AnalyticsView()
                 .tabItem {
+                    selectedTab == 4 ?
+                    Image(systemName: "chart.xyaxis.line") :
                     Image(systemName: "chart.xyaxis.line")
                 }.tag(4)
             
             
             SettingsView()
                 .tabItem {
+                    selectedTab == 5 ?
+                    Image(systemName: "gearshape") :
                     Image(systemName: "gearshape")
                 }.tag(5)
         }
-        .padding(.top, 10)
+        .onAppear {
+            let appearance = UITabBarAppearance()
+            let itemAppearance = UITabBarItemAppearance()
+            // edit tab appearances here
+        }
         .environmentObject(routineList)
+        .environmentObject(recordList)
     }
 }
 

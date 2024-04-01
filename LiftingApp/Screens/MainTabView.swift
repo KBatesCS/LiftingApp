@@ -11,6 +11,7 @@ struct MainTabView: View {
     @State private var selectedTab = 3
     @StateObject private var routineList: RoutineList
     @StateObject private var recordList: RecordList
+    @StateObject private var activeWorkoutInfo: ActiveWorkoutViewData
     //@State public var routineList: [Routine] = []
     
     init() {
@@ -25,6 +26,7 @@ struct MainTabView: View {
         } else {
             _recordList = StateObject(wrappedValue: RecordList(userID: "ExampleUser"))
         }
+        _activeWorkoutInfo = StateObject(wrappedValue: ActiveWorkoutViewData())
     }
     
     var body: some View {
@@ -71,6 +73,7 @@ struct MainTabView: View {
         }
         .environmentObject(routineList)
         .environmentObject(recordList)
+        .environmentObject(activeWorkoutInfo)
     }
 }
 

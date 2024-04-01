@@ -10,10 +10,15 @@ import SwiftUI
 struct StartWorkoutView: View {
     
     @EnvironmentObject private var routineList: RoutineList
+    @EnvironmentObject private var activeWorkoutInfo: ActiveWorkoutViewData
     
     @State private var selectedRoutine: Routine = Routine(name: "Select A Routine", saveOnCreate: false)
     
     @State private var selectedWorkout: Workout = Workout(name: "no workout selected", saveOnCreate: false)
+    
+    @State private var isShowingActiveWorkout = false
+//    @State private var activeViewHolder: ActiveWorkoutViewHolder
+    @State var currActiveWorkoutView: ActiveWorkoutView? = nil
     
     var body: some View {
         ZStack {
@@ -86,7 +91,57 @@ struct StartWorkoutView: View {
                     
                     Spacer()
                     
-                    NavigationLink(destination: ActiveWorkoutView(workout: selectedWorkout)) {
+                    if activeWorkoutInfo.workoutName == nil || activeWorkoutInfo.startTime == nil || activeWorkoutInfo.displayInfo == nil {
+                        NavigationLink(destination: ActiveWorkoutView(workout: selectedWorkout)) {
+                            Text("Begin")
+                                .font(.title2)
+                                .foregroundColor(Color("Text"))
+                                .bold()
+                                .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
+                                .background(Color("Accent"))
+                                .cornerRadius(21)
+                                .padding()
+                        }
+                    } else {
+                        NavigationLink(destination: ActiveWorkoutView(workoutDisplay: activeWorkoutInfo.displayInfo!, startTime: activeWorkoutInfo.startTime!, workoutName: activeWorkoutInfo.workoutName!)) {
+                            Text("Continue")
+                                .font(.title2)
+                                .foregroundColor(Color("Text"))
+                                .bold()
+                                .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
+                                .background(Color("Accent"))
+                                .cornerRadius(21)
+                                .padding()
+                        }
+                    }
+                    /*
+                    
+                    if activeWorkoutInfo.workoutName == nil {
+                        Button(action: {
+                            if currActiveWorkoutView == nil {
+                                currActiveWorkoutView = ActiveWorkoutView(workout: selectedWorkout)
+                            }
+                            isShowingActiveWorkout = true
+                        }) {
+                            Text("Begin")
+                                .font(.title2)
+                                .foregroundColor(Color("Text"))
+                                .bold()
+                                .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
+                                .background(Color("Accent"))
+                                .cornerRadius(21)
+                                .padding()
+                        }
+                    }
+                     */
+                    
+                    /*
+                    Button(action: {
+                        if activeViewHolder.currActiveWorkoutView == nil {
+                            currentActiveWorkoutView = ActiveWorkoutView(workout: selectedWorkout, activeViewHolder: activeViewHolder)
+                        }
+                        isShowingActiveWorkout = true
+                    }) {
                         Text("Begin")
                             .font(.title2)
                             .foregroundColor(Color("Text"))
@@ -96,14 +151,32 @@ struct StartWorkoutView: View {
                             .cornerRadius(21)
                             .padding()
                     }
+                    .sheet(isPresented: $isShowingActiveWorkout, onDismiss: {
+                        // Perform actions upon dismissal of ActiveWorkoutView
+                    }) {
+                        ActiveWorkoutView(workout: selectedWorkout)
+                    }
+                     */
                 }
             }
         }
     }
-    
-    
 }
 
+class ActiveWorkoutViewData: ObservableObject {
+    @Published var displayInfo: ActiveWorkoutDisplay?
+    @Published var startTime: Date?
+    @Published var workoutName: String?
+    
+    init(displayInfo: ActiveWorkoutDisplay? = nil, startTime: Date? = nil, workoutName: String? = nil) {
+        self.displayInfo = displayInfo
+        self.startTime = startTime
+        self.workoutName = workoutName
+    }
+}
+
+/*
 #Preview {
     StartWorkoutView()
 }
+*/

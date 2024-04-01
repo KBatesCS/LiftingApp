@@ -11,13 +11,13 @@ import Combine
 struct ActiveWorkoutView: View {
     @EnvironmentObject var routineList: RoutineList
     @EnvironmentObject var recordList: RecordList
-    @Environment(\.sizeCategory) var sizeCategory
+    @EnvironmentObject var activeWorkoutInfo: ActiveWorkoutViewData
+    
     @ObservedObject private var workoutDisplay: ActiveWorkoutDisplay
     @State private var timerString = "00:00:00"
-    @State private var activeNotes: String = ""
     private var workoutName: String
     
-    @State private var startTime = Date()
+    @State private var startTime: Date
     @State private var elapsedTime = TimeInterval(0)
     @State private var timer: Timer?
     
@@ -35,6 +35,7 @@ struct ActiveWorkoutView: View {
     init(workout: Workout) {
         self.workoutName = workout.name
         self.workoutDisplay = ActiveWorkoutDisplay(workoutID: workout.id)
+        self.startTime = Date()
         
         for eSet in workout.exercises {
             let newESD = ActiveExerciseSetDisplay(exercise: eSet.exerciseInfo, intensityForm: eSet.intensityForm, inLBs: true)
@@ -43,6 +44,12 @@ struct ActiveWorkoutView: View {
             }
             self.workoutDisplay.exercises.append(newESD)
         }
+    }
+    
+    init(workoutDisplay: ActiveWorkoutDisplay, startTime: Date, workoutName: String) {
+        self.workoutDisplay = workoutDisplay
+        self.startTime = startTime
+        self.workoutName = workoutName
     }
     
     
@@ -166,7 +173,7 @@ struct ActiveWorkoutView: View {
                 }
             }
             Section {
-                TextField("Notes for next time", text: $activeNotes, axis: .vertical)
+                TextField("Notes for next time", text: $workoutDisplay.notes, axis: .vertical)
                     .frame(maxWidth: .infinity, minHeight: 70, alignment: .topLeading)
                     .lineLimit(nil)
                 
@@ -205,12 +212,19 @@ struct ActiveWorkoutView: View {
             // }
         }
         .onAppear {
+            if activeWorkoutInfo.startTime == nil {
+                startTime = Date()
+            }
+            activeWorkoutInfo.displayInfo = self.workoutDisplay
+            activeWorkoutInfo.startTime = self.startTime
+            activeWorkoutInfo.workoutName = self.workoutName
             self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 self.elapsedTime = Date().timeIntervalSince(startTime)
                 if (self.elapsedTime >= 864999) { // should stop the timer right before 10 days hits.
                     self.timer?.invalidate()
                 }
             }
+            
         }
         .onDisappear {
                     self.timer?.invalidate()
@@ -272,7 +286,7 @@ struct ActiveWorkoutView: View {
     }
     
     func saveToRecord(displayInfo: ActiveWorkoutDisplay) {
-        let workoutRecord = WorkoutRecord(userID: "ExampleUser", notes: activeNotes)
+        let workoutRecord = WorkoutRecord(userID: "ExampleUser", notes: displayInfo.notes)
         for esetDisplay in workoutDisplay.exercises {
             let esetRecord: ExerciseRecord = ExerciseRecord(exercise: esetDisplay.exercise)
             esetRecord.inLBs = esetDisplay.inLBs
@@ -305,6 +319,7 @@ class ActiveWorkoutDisplay: Identifiable, ObservableObject {
     let id = UUID()
     @Published var workoutID: UUID?
     @Published var exercises: [ActiveExerciseSetDisplay] = []
+    @Published var notes: String = ""
     
     init (workoutID: UUID?) {
         self.workoutID = workoutID

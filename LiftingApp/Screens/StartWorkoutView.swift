@@ -91,7 +91,7 @@ struct StartWorkoutView: View {
                     
                     Spacer()
                     
-                    if activeWorkoutInfo.workoutName == nil || activeWorkoutInfo.startTime == nil || activeWorkoutInfo.displayInfo == nil {
+                    if activeWorkoutInfo.workoutName == nil || activeWorkoutInfo.startTime == nil || activeWorkoutInfo.displayInfo == nil || activeWorkoutInfo.workoutID == nil {
                         NavigationLink(destination: ActiveWorkoutView(workout: selectedWorkout)) {
                             Text("Begin")
                                 .font(.title2)
@@ -103,7 +103,7 @@ struct StartWorkoutView: View {
                                 .padding()
                         }
                     } else {
-                        NavigationLink(destination: ActiveWorkoutView(workoutDisplay: activeWorkoutInfo.displayInfo!, startTime: activeWorkoutInfo.startTime!, workoutName: activeWorkoutInfo.workoutName!)) {
+                        NavigationLink(destination: ActiveWorkoutView(workoutDisplay: activeWorkoutInfo.displayInfo!, startTime: activeWorkoutInfo.startTime!, workoutName: activeWorkoutInfo.workoutName!, workoutID: activeWorkoutInfo.workoutID!)) {
                             Text("Continue")
                                 .font(.title2)
                                 .foregroundColor(Color("Text"))
@@ -167,11 +167,13 @@ class ActiveWorkoutViewData: ObservableObject {
     @Published var displayInfo: ActiveWorkoutDisplay?
     @Published var startTime: Date?
     @Published var workoutName: String?
+    @Published var workoutID: UUID?
     
-    init(displayInfo: ActiveWorkoutDisplay? = nil, startTime: Date? = nil, workoutName: String? = nil) {
+    init(displayInfo: ActiveWorkoutDisplay? = nil, startTime: Date? = nil, workoutName: String? = nil, workoutID: UUID? = nil) {
         self.displayInfo = displayInfo
         self.startTime = startTime
         self.workoutName = workoutName
+        self.workoutID = workoutID
     }
 }
 

@@ -26,3 +26,14 @@ func save<T: Codable>(key: String, data: T) {
         print("Failed to encode data:", error)
     }
 }
+
+func getWorkoutNameFromID(workoutID: UUID, routineList: RoutineList) -> String {
+    for routine in routineList.routines {
+        for workout in routine.workouts {
+            if workout.id == workoutID {
+                return workout.name
+            }
+        }
+    }
+    return ""
+}

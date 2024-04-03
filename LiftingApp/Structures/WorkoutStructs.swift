@@ -23,14 +23,14 @@ class RoutineList: Identifiable, Codable, ObservableObject {
         case id
         case user
     }
-
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         routines = try container.decode([Routine].self, forKey: .routines)
         id = try container.decode(UUID.self, forKey: .id)
         user = try container.decode(String.self, forKey: .user)
     }
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(routines, forKey: .routines)
@@ -40,7 +40,7 @@ class RoutineList: Identifiable, Codable, ObservableObject {
     
     func save() {
         if let encoded = try? JSONEncoder().encode(self) {
-            UserDefaults.standard.set(encoded, forKey: user)
+            UserDefaults.standard.setValue(encoded, forKey: user)
         }
     }
     
@@ -82,7 +82,7 @@ class Routine: Identifiable, Codable, ObservableObject, Hashable {
         case name
         case workouts
     }
-
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
@@ -90,7 +90,7 @@ class Routine: Identifiable, Codable, ObservableObject, Hashable {
         workouts = try container.decode([Workout].self, forKey: .workouts)
         ownerID = try container.decode(String.self, forKey: .ownerID)
     }
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(name, forKey: .name)
@@ -158,7 +158,7 @@ class Workout: Identifiable, Codable, ObservableObject, Hashable {
     @Published var notes: String
     
     init(id: UUID = UUID(), name: String = "default", exercises: [ExerciseSet] = [ExerciseSet](),
-        saveOnCreate: Bool = true) {
+         saveOnCreate: Bool = true) {
         self.id = id
         self.name = name
         self.notes = ""
@@ -182,7 +182,7 @@ class Workout: Identifiable, Codable, ObservableObject, Hashable {
         case name
         case exercises
     }
-
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
@@ -190,7 +190,7 @@ class Workout: Identifiable, Codable, ObservableObject, Hashable {
         exercises = try container.decode([ExerciseSet].self, forKey: .exercises)
         notes = try container.decode(String.self, forKey: .notes)
     }
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(name, forKey: .name)
@@ -278,7 +278,7 @@ class ExerciseSet: Identifiable, Codable, ObservableObject, Hashable {
         case notes
         case sets
     }
-
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
@@ -288,7 +288,7 @@ class ExerciseSet: Identifiable, Codable, ObservableObject, Hashable {
         sets = try container.decode([Set].self, forKey: .sets)
         intensityForm = try container.decode(IntensityType.self, forKey: .intensityForm)
     }
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(name, forKey: .name)
@@ -304,24 +304,24 @@ class ExerciseSet: Identifiable, Codable, ObservableObject, Hashable {
     }
     
     /*
-    func changeIntensityForm(newIntensityForm: IntensityType) {
-        if self.intensityForm == newIntensityForm {
-            return
-        }
-        
-        self.intensityForm = newIntensityForm
-        self.setIntensityListToDefaults()
-    }
-    
-    func changeIntensity(intensityPos: Int = -1, newIntensity: Int) {
-        if (intensityPos == -1) {
-            for i in intensityList.indices {
-                intensityList[i] = newIntensity
-            }
-        } else if (intensityPos >= -1 && intensityPos < intensityList.count) {
-            intensityList[intensityPos] = newIntensity
-        }
-    }
+     func changeIntensityForm(newIntensityForm: IntensityType) {
+     if self.intensityForm == newIntensityForm {
+     return
+     }
+     
+     self.intensityForm = newIntensityForm
+     self.setIntensityListToDefaults()
+     }
+     
+     func changeIntensity(intensityPos: Int = -1, newIntensity: Int) {
+     if (intensityPos == -1) {
+     for i in intensityList.indices {
+     intensityList[i] = newIntensity
+     }
+     } else if (intensityPos >= -1 && intensityPos < intensityList.count) {
+     intensityList[intensityPos] = newIntensity
+     }
+     }
      */
     
     func addSet() {
@@ -381,9 +381,32 @@ struct Exercise: Identifiable, Codable {
         self.primaryMusclesWorked = primaryMusclesWorked
         self.secondaryMusclesWorked = secondaryMusclesWorked
     }
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case primaryMusclesWorked
+        case secondaryMusclesWorked
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        primaryMusclesWorked = try container.decode([Muscles].self, forKey: .primaryMusclesWorked)
+        secondaryMusclesWorked = try container.decode([Muscles].self, forKey: .secondaryMusclesWorked)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(primaryMusclesWorked, forKey: .primaryMusclesWorked)
+        try container.encode(secondaryMusclesWorked, forKey: .secondaryMusclesWorked)
+    }
 }
 
-class RecordList: ObservableObject, Codable {
+class RecordList: ObservableObject, Codable, Identifiable {
     @Published var id: UUID
     @Published var userID: String
     @Published var workoutRecords: [WorkoutRecord]
@@ -399,14 +422,14 @@ class RecordList: ObservableObject, Codable {
         case userID
         case workoutRecords
     }
-
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
         userID = try container.decode(String.self, forKey: .userID)
         workoutRecords = try container.decode([WorkoutRecord].self, forKey: .workoutRecords)
     }
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -414,24 +437,26 @@ class RecordList: ObservableObject, Codable {
         try container.encode(workoutRecords, forKey: .workoutRecords)
     }
     
-    func save() {
+    func save() -> Bool {
         if let encoded = try? JSONEncoder().encode(self) {
-            UserDefaults.standard.set(encoded, forKey: "\(userID)/RecordList")
+            UserDefaults.standard.setValue(encoded, forKey: "ExampleUser/RecordList")
+            return true
         }
+        return false
     }
 }
 
-class WorkoutRecord: ObservableObject, Codable {
+class WorkoutRecord: ObservableObject, Codable, Identifiable {
     @Published var id: UUID
-    @Published var userID: String
+    @Published var workoutID: UUID
     
     @Published var date: Date
-    @Published var notes: String?
+    @Published var notes: String
     @Published var exercises: [ExerciseRecord]
     
-    init(id: UUID = UUID(), userID: String, date: Date = Date(), exercises: [ExerciseRecord] = [], notes: String? = nil) {
+    init(id: UUID = UUID(), workoutID: UUID, date: Date = Date(), exercises: [ExerciseRecord] = [], notes: String = "") {
         self.id = id
-        self.userID = userID
+        self.workoutID = workoutID
         self.date = date
         self.notes = notes
         self.exercises = exercises
@@ -439,27 +464,27 @@ class WorkoutRecord: ObservableObject, Codable {
     
     enum CodingKeys: CodingKey {
         case id
-        case userID
+        case workoutID
         case date
         case notes
         case exercises
     }
-
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
-        userID = try container.decode(String.self, forKey: .userID)
+        workoutID = try container.decode(UUID.self, forKey: .workoutID)
         notes = try container.decode(String.self, forKey: .notes)
         date = try container.decode(Date.self, forKey: .date)
         exercises = try container.decode([ExerciseRecord].self, forKey: .exercises)
     }
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
-        try container.encode(userID, forKey: .userID)
+        try container.encode(workoutID, forKey: .workoutID)
         try container.encode(date, forKey: .date)
-        try container.encode(date, forKey: .notes)
+        try container.encode(notes, forKey: .notes)
         try container.encode(exercises, forKey: .exercises)
     }
     
@@ -488,7 +513,7 @@ class ExerciseRecord: Identifiable, Codable {
         case sets
         case inLBs
     }
-
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
@@ -496,7 +521,7 @@ class ExerciseRecord: Identifiable, Codable {
         sets = try container.decode([SetRecord].self, forKey: .sets)
         inLBs = try container.decode(Bool.self, forKey: .inLBs)
     }
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -526,7 +551,7 @@ class SetRecord: Identifiable, Codable {
         case weight
         case completed
     }
-
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
@@ -534,7 +559,7 @@ class SetRecord: Identifiable, Codable {
         weight = try container.decode(Double.self, forKey: .weight)
         completed = try container.decode(Bool.self, forKey: .completed)
     }
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -545,13 +570,27 @@ class SetRecord: Identifiable, Codable {
 }
 
 enum Muscles: Codable {
-    case quad, hamstring, calf,
-        chest, tricep, shoulder,
-        back, bicep, frontdeltoid,
-         abdominal, reardeltoid, trapezius,
-    rotatorcuff, forearmflexor, lateraldeltoid,
-    lat, glute, lowback, adductor,
-  forearmextensor, oblique
+    case quad
+    case hamstring
+    case calf
+    case chest
+    case tricep
+    case shoulder
+    case back
+    case bicep
+    case frontdeltoid
+    case abdominal
+    case reardeltoid
+    case trapezius
+    case rotatorcuff
+    case forearmflexor
+    case lateraldeltoid
+    case lat
+    case glute
+    case lowback
+    case adductor
+    case forearmextensor
+    case oblique
 }
 
 

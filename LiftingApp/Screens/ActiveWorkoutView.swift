@@ -13,13 +13,18 @@ struct ActiveWorkoutView: View {
     @EnvironmentObject var recordList: RecordList
     @EnvironmentObject var activeWorkoutInfo: ActiveWorkoutViewData
     
+    @Environment(\.dismiss) private var dismissAction: DismissAction
+    
     @ObservedObject private var workoutDisplay: ActiveWorkoutDisplay
     @State private var timerString = "00:00:00"
     private var workoutName: String
+    private var workoutID: UUID
     
     @State private var startTime: Date
     @State private var elapsedTime = TimeInterval(0)
     @State private var timer: Timer?
+    
+    @State private var isShowingFinishConf: Bool = false
     
     var elapsedTimeString: String {
             let currentTimeInterval = elapsedTime
@@ -36,6 +41,7 @@ struct ActiveWorkoutView: View {
         self.workoutName = workout.name
         self.workoutDisplay = ActiveWorkoutDisplay(workoutID: workout.id)
         self.startTime = Date()
+        self.workoutID = workout.id
         
         for eSet in workout.exercises {
             let newESD = ActiveExerciseSetDisplay(exercise: eSet.exerciseInfo, intensityForm: eSet.intensityForm, inLBs: true)
@@ -46,10 +52,11 @@ struct ActiveWorkoutView: View {
         }
     }
     
-    init(workoutDisplay: ActiveWorkoutDisplay, startTime: Date, workoutName: String) {
+    init(workoutDisplay: ActiveWorkoutDisplay, startTime: Date, workoutName: String, workoutID: UUID) {
         self.workoutDisplay = workoutDisplay
         self.startTime = startTime
         self.workoutName = workoutName
+        self.workoutID = workoutID
     }
     
     
@@ -194,6 +201,13 @@ struct ActiveWorkoutView: View {
             Spacer()
             Button (action: {
                 //stopTimer()
+                if !self.allExercisesComplete(displayInfo: workoutDisplay) {
+                    isShowingFinishConf = true
+                } else {
+                    self.closeActiveWorkoutInfo()
+                    self.saveToRecord(displayInfo: workoutDisplay)
+                    self.dismissAction.callAsFunction()
+                }
             }, label: {
                 Text("Finish Workout")
                     .frame(alignment: .bottom)
@@ -206,6 +220,18 @@ struct ActiveWorkoutView: View {
                     .padding(.bottom, 6)
             })
             .frame(maxHeight: .infinity, alignment: .bottom)
+            .alert(isPresented: $isShowingFinishConf) {
+                Alert(
+                    title: Text("Finish Workout"),
+                    message: Text("Not all exercises were entered, finish anyways?"),
+                    primaryButton: .cancel(),
+                    secondaryButton: .destructive(Text("Finish")) {
+                        self.saveToRecord(displayInfo: workoutDisplay)
+                        self.closeActiveWorkoutInfo()
+                        self.dismissAction.callAsFunction()
+                    }
+                )
+            }
             //  }
             
             
@@ -218,6 +244,7 @@ struct ActiveWorkoutView: View {
             activeWorkoutInfo.displayInfo = self.workoutDisplay
             activeWorkoutInfo.startTime = self.startTime
             activeWorkoutInfo.workoutName = self.workoutName
+            activeWorkoutInfo.workoutID = self.workoutID
             self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 self.elapsedTime = Date().timeIntervalSince(startTime)
                 if (self.elapsedTime >= 864999) { // should stop the timer right before 10 days hits.
@@ -240,6 +267,28 @@ struct ActiveWorkoutView: View {
         self.timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
         self.isTimerRunning = true
     }*/
+    
+    func fillDetails() {
+        
+    }
+    
+    func everyExerciseComplete() -> Bool {
+        for workoutSet in workoutDisplay.exercises {
+            for set in workoutSet.sets {
+                if !set.completed {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    
+    func closeActiveWorkoutInfo() {
+        self.activeWorkoutInfo.displayInfo = nil
+        self.activeWorkoutInfo.startTime = nil
+        self.activeWorkoutInfo.workoutName = nil
+        self.activeWorkoutInfo.workoutID = nil
+    }
     
     func allSameIntensity(exerciseSet: ActiveExerciseSetDisplay) -> Bool{
         if (!exerciseSet.sets.isEmpty) {
@@ -286,7 +335,7 @@ struct ActiveWorkoutView: View {
     }
     
     func saveToRecord(displayInfo: ActiveWorkoutDisplay) {
-        let workoutRecord = WorkoutRecord(userID: "ExampleUser", notes: displayInfo.notes)
+        let workoutRecord = WorkoutRecord(workoutID: workoutID, notes: displayInfo.notes)
         for esetDisplay in workoutDisplay.exercises {
             let esetRecord: ExerciseRecord = ExerciseRecord(exercise: esetDisplay.exercise)
             esetRecord.inLBs = esetDisplay.inLBs
@@ -300,7 +349,6 @@ struct ActiveWorkoutView: View {
         }
         recordList.workoutRecords.append(workoutRecord)
         recordList.save()
-        
     }
     
     func allExercisesComplete(displayInfo: ActiveWorkoutDisplay) -> Bool {

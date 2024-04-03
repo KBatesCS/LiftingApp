@@ -24,7 +24,7 @@ struct MainTabView: View {
         if let loadedRecL: RecordList = load(key: "ExampleUser/RecordList") {
             _recordList = StateObject(wrappedValue: loadedRecL)
         } else {
-            _recordList = StateObject(wrappedValue: RecordList(userID: "ExampleUser"))
+            _recordList = StateObject(wrappedValue: RecordList(userID: "ExampleUgfjjser"))
         }
         _activeWorkoutInfo = StateObject(wrappedValue: ActiveWorkoutViewData())
     }
@@ -51,6 +51,7 @@ struct MainTabView: View {
                     Image(systemName: "dumbbell")
                 }.tag(3)
                         
+            //AnalyticsView()
             AnalyticsView()
                 .tabItem {
                     selectedTab == 4 ?

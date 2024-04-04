@@ -80,14 +80,15 @@ struct ExerciseSetDisplay: View {
     
     var body: some View {
         VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
-            ForEach(eset.repList.indices, id: \.self) { index in
+            ForEach(eset.sets.indices, id: \.self) { index in
+                var curSet = eset.sets[index]
                 HStack {
                     Text("Set \(index):")
                     Spacer()
                     
                     Button (action: {
-                        if (eset.repList[index] >= 1) {
-                            eset.repList[index] -= 1
+                        if (curSet.reps >= 1) {
+                            curSet.reps -= 1
                             routineList.refreshAndSave()
                         }
                     }, label: {
@@ -95,10 +96,10 @@ struct ExerciseSetDisplay: View {
                     })
                     .buttonStyle(BorderlessButtonStyle())
                     
-                    Text("\(eset.repList[index])")
+                    Text("\(curSet.reps)")
                     
                     Button (action: {
-                        eset.repList[index] += 1
+                        curSet.reps += 1
                         routineList.refreshAndSave()
                     }, label: {
                         Text("+")
@@ -106,6 +107,8 @@ struct ExerciseSetDisplay: View {
                     .buttonStyle(BorderlessButtonStyle())
                 }
             }
+            .foregroundColor(Color("Text"))
+            .listRowBackground(Color("Accent"))
         }
     }
 }

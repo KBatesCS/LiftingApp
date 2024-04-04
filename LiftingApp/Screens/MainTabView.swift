@@ -29,18 +29,26 @@ struct MainTabView: View {
                     Image(systemName: "magnifyingglass")
                 }.tag(1)
              
-            // Screen 2
+            VideoAnalysisView()
+                .tabItem {
+                    Image(systemName: "camera")
+                }.tag(2)
+            
             StartWorkoutView()
                 .tabItem {
                     Image(systemName: "dumbbell")
-                }.tag(2)
+                }.tag(3)
                         
-            // Screen 3
-            //replace with whatever you need for now.
-            EmptyView()
+            AnalyticsView()
                 .tabItem {
                     Image(systemName: "chart.xyaxis.line")
-                }.tag(3)
+                }.tag(4)
+            
+            
+            SettingsView()
+                .tabItem {
+                    Image(systemName: "gearshape")
+                }.tag(5)
         }
         .environmentObject(routineList)
     }

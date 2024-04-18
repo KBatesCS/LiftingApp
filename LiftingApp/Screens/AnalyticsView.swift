@@ -6,19 +6,32 @@
 //
 
 import SwiftUI
-import SwiftData
+import CoreData
 
 struct AnalyticsView: View {
-    @EnvironmentObject private var recordList: RecordList
-    @EnvironmentObject private var routineList: RoutineList
+    var body: some View {
+        Text("hello")
+    }
+    /*
+    
+    @FetchRequest(fetchRequest: CDWorkoutRecord.fetch())
+    var workoutRecords: FetchedResults<CDWorkoutRecord>
+    //@EnvironmentObject private var recordList: RecordList
+    //@EnvironmentObject private var routineList: RoutineList
     
     @State private var selectedDate: Date = .now
+    
+    init() {
+        let request = CDWorkoutRecord.fetch()
+        
+        self._workoutRecords = FetchRequest(fetchRequest: request)
+    }
     
     var body: some View {
         ScrollView {
             VStack {
                 Section {
-                    CalendarView()
+                    CalendarView(workoutRecords: workoutRecords)
                 } header: {
                     Text("Workout History")
                         .font(.largeTitle)
@@ -36,7 +49,8 @@ struct DayWrapper: Identifiable {
 }
 
 struct CalendarView: View {
-    @EnvironmentObject var recordList: RecordList
+    //@EnvironmentObject var recordList: RecordList
+    var workoutRecords: FetchedResults<CDWorkoutRecord>
     
     @State var date: Date = Date.now
     let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
@@ -108,14 +122,17 @@ struct CalendarView: View {
                                 .overlay(alignment: .bottomTrailing) {
                                     
                                     if let count = counts[day.dayInt] {
-                                        Image(systemName: count <= 50 ? "\(count).circle.fill" : "plus.circle.fill")
-                                            .foregroundColor(Color(.accent))
-                                            .imageScale(.medium)
-                                            .background(
-                                                Color(.text)
-                                                    .clipShape(.circle)
-                                            )
-                                            .offset(x: 5, y: 5)
+                                        if count > 1 {
+                                            Image(systemName: count <= 50 ? "\(count).circle.fill" : "plus.circle.fill")
+                                                .foregroundColor(Color(.accent))
+                                                .imageScale(.medium)
+                                                .background(
+                                                    Color(.text)
+                                                        .clipShape(.circle)
+                                                    
+                                                )
+                                                .offset(x: 5, y: 5)
+                                        }
                                     }
                                     
                                 }
@@ -134,7 +151,7 @@ struct CalendarView: View {
             setupCounts()
         }
         .sheet(item: $selectedDay) { day in
-            displayDayRecords(date: day.date)
+            DisplayDayRecords(workoutRecords: workoutRecords, date: day.date)
         }
     }
     
@@ -144,24 +161,22 @@ struct CalendarView: View {
     
     func setupCounts() {
         counts.removeAll()
-        let filteredRecords = recordList.workoutRecords.filter {$0.date.yearInt == date.yearInt && $0.date.monthInt == date.monthInt}
+        let filteredRecords = workoutRecords.filter {$0.date.yearInt == date.yearInt && $0.date.monthInt == date.monthInt}
         let mappedItems = filteredRecords.map{($0.date.dayInt, 1)}
         counts = Dictionary(mappedItems, uniquingKeysWith: +)
     }
 }
 
-struct displayDayRecords: View {
-    @EnvironmentObject private var recordList: RecordList
-    @State private var date: Date
+struct DisplayDayRecords: View {
+    //@EnvironmentObject private var recordList: RecordList
+    var workoutRecords: FetchedResults<CDWorkoutRecord>
+    @State var date: Date
     
-    init(date: Date) {
-        self.date = date
-    }
     var body: some View {
         TabView {
-            ForEach(recordList.workoutRecords) { record in
+            ForEach(workoutRecords) { record in
                 if record.date.startOfDay == date.startOfDay {
-                    singleDayRecordDisplay(record: record)
+                    SingleDayRecordDisplay(record: record)
                 }
             }
         }
@@ -169,25 +184,61 @@ struct displayDayRecords: View {
     }
 }
 
-struct singleDayRecordDisplay: View {
-    @EnvironmentObject private var routineList: RoutineList
-    @State var record: WorkoutRecord
-    
+struct SingleDayRecordDisplay: View {
+    //@EnvironmentObject private var routineList: RoutineList
+    var record: CDWorkoutRecord
+
+    var totalWeight: Double {
+        var weight = 0.0
+        for exerciseRecord in record.exercises {
+            for set in exerciseRecord.sets {
+                if set.completed {
+                    // Calculate total weight based on reps and weight
+                    weight += Double(set.reps) * set.weight
+                    // TODO weight a pound conversions
+                }
+            }
+        }
+        return weight
+    }
+
     var body: some View {
         VStack {
             Section {
-                Text("test")
+                List {
+                    ForEach(record.exercises.sorted{$0.uuid.hashValue > $1.uuid.hashValue}) { exerciseRecord in
+                        VStack {
+                            ForEach(exerciseRecord.sets.sorted {$0.uuid.hashValue > $1.uuid.hashValue}) { set in
+                                HStack {
+                                    Text(String(set.completed))
+                                    Spacer()
+                                    Text(String(set.weight))
+                                }
+                            }
+                        }
+                    }
+                    
+                    Text("Total Weight: \(String(format: "%.0f", totalWeight)) LBS") //TODO choose default weight measurement
+                }
             } header: {
-                Text("\(getWorkoutNameFromID(workoutID: record.workoutID, routineList: routineList))")
-                    .font(.largeTitle)
-                    .frame(alignment: .topLeading)
-                
+                HStack {
+                    //Text("\(getWorkoutNameFromID(workoutID: record.workoutID, routineList: routineList))")
+                    Text("Temp Title")
+                        .font(.largeTitle)
+                        .frame(alignment: .leading) // Align text to leading
+                    Spacer()
+                }
             }
-            .navigationTitle("test")
+            .navigationTitle("Test")
+            
+            Spacer()
         }
     }
+     */
 }
 
 #Preview {
     AnalyticsView()
+        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+
 }

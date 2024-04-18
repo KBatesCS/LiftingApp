@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22757" systemVersion="23E224" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="CDExerciseRecord" representedClassName="CDExerciseRecord" syncable="YES" codeGenerationType="class">
+        <attribute name="exercise_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="inLbs" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <attribute name="uuid_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="sets_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDSetRecord"/>
+        <relationship name="workout" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDWorkoutRecord" inverseName="exercises_" inverseEntity="CDWorkoutRecord"/>
+    </entity>
+    <entity name="CDSetRecord" representedClassName="CDSetRecord" syncable="YES" codeGenerationType="class">
+        <attribute name="completed" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="reps" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="uuid_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="weight" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="CDWorkoutRecord" representedClassName="CDWorkoutRecord" syncable="YES" codeGenerationType="class">
+        <attribute name="date_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="notes_" optional="YES" attributeType="String"/>
+        <attribute name="userStr_" optional="YES" attributeType="String"/>
+        <attribute name="uuid_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="workoutUUID_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="exercises_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDExerciseRecord" inverseName="workout" inverseEntity="CDExerciseRecord"/>
+    </entity>
+</model>

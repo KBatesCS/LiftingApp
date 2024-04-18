@@ -243,10 +243,10 @@ class ExerciseSet: Identifiable, Codable, ObservableObject, Hashable {
     @Published var exerciseInfo: Exercise
     @Published var intensityForm: IntensityType
     @Published var notes: String
-    @Published var sets: [Set]
+    @Published var sets: [WOSet]
     
     init(id: UUID = UUID(), exerciseInfo: Exercise = Exercise(),
-         intensityForm: IntensityType = IntensityType.None, saveOnCreate: Bool = true, sets: [Set] = []) {
+         intensityForm: IntensityType = IntensityType.None, saveOnCreate: Bool = true, sets: [WOSet] = []) {
         self.id = id
         self.name = exerciseInfo.name
         self.notes = ""
@@ -254,9 +254,9 @@ class ExerciseSet: Identifiable, Codable, ObservableObject, Hashable {
         self.exerciseInfo = exerciseInfo
         self.intensityForm = intensityForm
         self.sets = sets
-        self.sets.append(Set(reps: 12, intensity: -1, restLength: 90))
-        self.sets.append(Set(reps: 12, intensity: -1, restLength: 90))
-        self.sets.append(Set(reps: 12, intensity: -1, restLength: 90))
+        self.sets.append(WOSet(reps: 12, intensity: -1, restLength: 90))
+        self.sets.append(WOSet(reps: 12, intensity: -1, restLength: 90))
+        self.sets.append(WOSet(reps: 12, intensity: -1, restLength: 90))
         if (saveOnCreate) {
             save()
         }
@@ -285,7 +285,7 @@ class ExerciseSet: Identifiable, Codable, ObservableObject, Hashable {
         name = try container.decode(String.self, forKey: .name)
         notes = try container.decode(String.self, forKey: .notes)
         exerciseInfo = try container.decode(Exercise.self, forKey: .exerciseInfo)
-        sets = try container.decode([Set].self, forKey: .sets)
+        sets = try container.decode([WOSet].self, forKey: .sets)
         intensityForm = try container.decode(IntensityType.self, forKey: .intensityForm)
     }
     
@@ -326,7 +326,7 @@ class ExerciseSet: Identifiable, Codable, ObservableObject, Hashable {
     
     func addSet() {
         let lastSet = sets.last
-        sets.append(Set(reps: lastSet?.reps ?? 12, intensity: lastSet?.intensity ?? -1, restLength: lastSet?.restLength ?? 90))
+        sets.append(WOSet(reps: lastSet?.reps ?? 12, intensity: lastSet?.intensity ?? -1, restLength: lastSet?.restLength ?? 90))
     }
     
     func save() {
@@ -356,7 +356,7 @@ class ExerciseSet: Identifiable, Codable, ObservableObject, Hashable {
     }
 }
 
-class Set: Codable {
+class WOSet: Codable {
     var reps: Int
     var intensity: Int
     var restLength: Int

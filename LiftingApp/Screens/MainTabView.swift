@@ -75,6 +75,7 @@ struct MainTabView: View {
         .environmentObject(routineList)
         .environmentObject(recordList)
         .environmentObject(activeWorkoutInfo)
+        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
 

@@ -12,10 +12,15 @@
 		D63DF7AF2BAC7BA90036C9D0 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63DF7AE2BAC7BA90036C9D0 /* AnalyticsView.swift */; };
 		D63DF7B12BAC8CD50036C9D0 /* VideoAnalysisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63DF7B02BAC8CD50036C9D0 /* VideoAnalysisView.swift */; };
 		D63DF7B42BAC9A230036C9D0 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63DF7B32BAC9A230036C9D0 /* Extensions.swift */; };
+		D653A4AE2BCEF3060056C7B9 /* LiftingApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D653A4AC2BCEF3060056C7B9 /* LiftingApp.xcdatamodeld */; };
+		D653A4B12BCF09750056C7B9 /* CD Records + helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D653A4B02BCF09750056C7B9 /* CD Records + helper.swift */; };
 		D65E4E982BA49BF000E41D38 /* ActiveWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65E4E972BA49BF000E41D38 /* ActiveWorkoutView.swift */; };
 		D665A1352B8BF29500FB2043 /* defaultData.json in Resources */ = {isa = PBXBuildFile; fileRef = D665A1342B8BF29500FB2043 /* defaultData.json */; };
 		D665A1372B8FB08B00FB2043 /* RegisterAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D665A1362B8FB08B00FB2043 /* RegisterAccountView.swift */; };
 		D665A1392B965EF500FB2043 /* SelectNewWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D665A1382B965EF500FB2043 /* SelectNewWorkoutView.swift */; };
+		D679F47E2BD068C100377A12 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D679F47D2BD068C100377A12 /* PersistenceController.swift */; };
+		D679F4802BD06C9400377A12 /* NSSPredicate + Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D679F47F2BD06C9400377A12 /* NSSPredicate + Helper.swift */; };
+		D679F4822BD07F2D00377A12 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D679F4812BD07F2D00377A12 /* SwiftUIView.swift */; };
 		D69769112B8539A500458370 /* EditRoutineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69769102B8539A500458370 /* EditRoutineView.swift */; };
 		D69769132B868FCA00458370 /* EditWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69769122B868FCA00458370 /* EditWorkoutView.swift */; };
 		D6A7CE032B62C8F7005ED2BA /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A7CE022B62C8F7005ED2BA /* MainTabView.swift */; };
@@ -39,11 +44,16 @@
 		D63DF7AE2BAC7BA90036C9D0 /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
 		D63DF7B02BAC8CD50036C9D0 /* VideoAnalysisView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoAnalysisView.swift; sourceTree = "<group>"; };
 		D63DF7B32BAC9A230036C9D0 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		D653A4AD2BCEF3060056C7B9 /* LiftingApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LiftingApp.xcdatamodel; sourceTree = "<group>"; };
+		D653A4B02BCF09750056C7B9 /* CD Records + helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CD Records + helper.swift"; sourceTree = "<group>"; };
 		D65E4E972BA49BF000E41D38 /* ActiveWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveWorkoutView.swift; sourceTree = "<group>"; };
 		D665A1342B8BF29500FB2043 /* defaultData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = defaultData.json; sourceTree = "<group>"; };
 		D665A1362B8FB08B00FB2043 /* RegisterAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterAccountView.swift; sourceTree = "<group>"; };
 		D665A1382B965EF500FB2043 /* SelectNewWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectNewWorkoutView.swift; sourceTree = "<group>"; };
 		D67369452B8BDD3D00187549 /* createExerciseScript.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = createExerciseScript.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		D679F47D2BD068C100377A12 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
+		D679F47F2BD06C9400377A12 /* NSSPredicate + Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSSPredicate + Helper.swift"; sourceTree = "<group>"; };
+		D679F4812BD07F2D00377A12 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		D69769102B8539A500458370 /* EditRoutineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRoutineView.swift; sourceTree = "<group>"; };
 		D69769122B868FCA00458370 /* EditWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditWorkoutView.swift; sourceTree = "<group>"; };
 		D6A7CE022B62C8F7005ED2BA /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
@@ -96,6 +106,17 @@
 				C72E220A79BBF9067BF1A9D2 /* Pods_LiftingApp.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D653A4AF2BCF09360056C7B9 /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				D653A4B02BCF09750056C7B9 /* CD Records + helper.swift */,
+				D679F47D2BD068C100377A12 /* PersistenceController.swift */,
+				D679F47F2BD06C9400377A12 /* NSSPredicate + Helper.swift */,
+				D679F4812BD07F2D00377A12 /* SwiftUIView.swift */,
+			);
+			path = "Core Data";
 			sourceTree = "<group>";
 		};
 		D67369402B8BD53C00187549 /* Scripts */ = {
@@ -160,7 +181,9 @@
 				D67369432B8BD5F600187549 /* LoadableData */,
 				D67369402B8BD53C00187549 /* Scripts */,
 				D697690D2B8536DE00458370 /* Screens */,
+				D653A4AF2BCF09360056C7B9 /* Core Data */,
 				D6D56FCF2B4C82F40040D4C4 /* Assets.xcassets */,
+				D653A4AC2BCEF3060056C7B9 /* LiftingApp.xcdatamodeld */,
 				D6D56FD12B4C82F40040D4C4 /* LiftingApp.entitlements */,
 				D6D56FD22B4C82F40040D4C4 /* Preview Content */,
 			);
@@ -301,11 +324,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D653A4B12BCF09750056C7B9 /* CD Records + helper.swift in Sources */,
 				D6D56FDD2B4CADA70040D4C4 /* MainTemp.swift in Sources */,
+				D679F4802BD06C9400377A12 /* NSSPredicate + Helper.swift in Sources */,
 				D6A7CE052B62D5CB005ED2BA /* StartWorkoutView.swift in Sources */,
 				D6F255CA2BA513F4006D7AC2 /* WorkoutStructs.swift in Sources */,
 				D63DF7AF2BAC7BA90036C9D0 /* AnalyticsView.swift in Sources */,
+				D679F4822BD07F2D00377A12 /* SwiftUIView.swift in Sources */,
 				D6F255C92BA513F4006D7AC2 /* CustomViewObjects.swift in Sources */,
+				D653A4AE2BCEF3060056C7B9 /* LiftingApp.xcdatamodeld in Sources */,
 				D63DF7B42BAC9A230036C9D0 /* Extensions.swift in Sources */,
 				D65E4E982BA49BF000E41D38 /* ActiveWorkoutView.swift in Sources */,
 				D69769132B868FCA00458370 /* EditWorkoutView.swift in Sources */,
@@ -314,6 +341,7 @@
 				D6F255C82BA513F4006D7AC2 /* CustomFunctions.swift in Sources */,
 				D665A1372B8FB08B00FB2043 /* RegisterAccountView.swift in Sources */,
 				D6D56FCC2B4C82F20040D4C4 /* LiftingAppApp.swift in Sources */,
+				D679F47E2BD068C100377A12 /* PersistenceController.swift in Sources */,
 				D6D56FDB2B4CABF00040D4C4 /* SplashScreenView.swift in Sources */,
 				D6A7CE032B62C8F7005ED2BA /* MainTabView.swift in Sources */,
 				D69769112B8539A500458370 /* EditRoutineView.swift in Sources */,
@@ -538,6 +566,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		D653A4AC2BCEF3060056C7B9 /* LiftingApp.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				D653A4AD2BCEF3060056C7B9 /* LiftingApp.xcdatamodel */,
+			);
+			currentVersion = D653A4AD2BCEF3060056C7B9 /* LiftingApp.xcdatamodel */;
+			name = LiftingApp.xcdatamodeld;
+			path = "/Users/kevinbates/Documents/GitHub Repositories/LiftingApp/LiftingApp/LiftingApp.xcdatamodeld";
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = D6D56FC02B4C82F20040D4C4 /* Project object */;
 }

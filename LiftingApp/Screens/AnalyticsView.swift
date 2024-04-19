@@ -9,10 +9,7 @@ import SwiftUI
 import CoreData
 
 struct AnalyticsView: View {
-    var body: some View {
-        Text("hello")
-    }
-    /*
+    
     
     @FetchRequest(fetchRequest: CDWorkoutRecord.fetch())
     var workoutRecords: FetchedResults<CDWorkoutRecord>
@@ -206,9 +203,10 @@ struct SingleDayRecordDisplay: View {
         VStack {
             Section {
                 List {
-                    ForEach(record.exercises.sorted{$0.uuid.hashValue > $1.uuid.hashValue}) { exerciseRecord in
+                    ForEach(record.exercises) { exerciseRecord in
                         VStack {
-                            ForEach(exerciseRecord.sets.sorted {$0.uuid.hashValue > $1.uuid.hashValue}) { set in
+                            Text(exerciseRecord.exercise.name)
+                            ForEach(exerciseRecord.sets) { set in
                                 HStack {
                                     Text(String(set.completed))
                                     Spacer()
@@ -234,7 +232,7 @@ struct SingleDayRecordDisplay: View {
             Spacer()
         }
     }
-     */
+     
 }
 
 #Preview {

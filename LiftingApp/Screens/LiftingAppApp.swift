@@ -9,9 +9,15 @@ import SwiftUI
 
 @main
 struct LiftingAppApp: App {
+    
+    @Environment(\.scenePhase) var scenePhase
     var body: some Scene {
         WindowGroup {
             SplashScreenView()
+                .onChange(of: scenePhase) { _ in
+                    PersistenceController.shared.save()
+                }
+                .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
         }
     }
 }

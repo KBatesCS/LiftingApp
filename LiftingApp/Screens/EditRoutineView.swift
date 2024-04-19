@@ -8,20 +8,19 @@
 import SwiftUI
 
 struct EditRoutineView: View {
-    @EnvironmentObject var routineList: RoutineList
-    @ObservedObject var routine: Routine
+//    @EnvironmentObject var routineList: RoutineList
+//    @ObservedObject var routine: Routine
     @State var refresh: Bool = true
     
     @State private var isShowingDeleteConfirmation = false
     @State private var deletionIndexSet: IndexSet?
+
+    @Environment(\.managedObjectContext) var context
+    @ObservedObject var routine: CDWorkoutRoutine
     
-    
-    /*
-     @ObservedObject var routine: Routine
-     init(routine: Routine) {
-     self.routine = routine
-     }
-     */
+    init (routine: CDWorkoutRoutine) {
+        self.routine = routine
+    }
     
     var body: some View {
         NavigationStack {
@@ -32,25 +31,22 @@ struct EditRoutineView: View {
                     .foregroundColor(Color("Accent"))
                     .textFieldStyle(RoundedTextFieldStyle())
                     .padding()
-                    .onChange(of: routine.name) { _ in
-                        routineList.refreshAndSave()
-                    }
-                
                 
                 List {
-                    ForEach(routine.workouts) { workout in
+                    ForEach(routine.workouts, id: \.self) { workout in
                         NavigationLink(destination: EditWorkoutView(workout: workout)) {
                             Text(workout.name)
                         }
                         .foregroundColor(Color("Text"))
-                        .listRowBackground(Color("Accent"))
+                        //.listRowBackground(Color("Accent"))
+                         
                     }
                     .onDelete { indexSet in
                         deletionIndexSet = indexSet
                         isShowingDeleteConfirmation = true
                     }
                 }
-                .listRowSpacing(10)
+                .listStyle(.inset)
                 .alert(isPresented: $isShowingDeleteConfirmation) {
                     Alert(
                         title: Text("Delete Workout"),
@@ -58,7 +54,6 @@ struct EditRoutineView: View {
                         primaryButton: .destructive(Text("Delete")) {
                             if let indexSet = deletionIndexSet {
                                 routine.workouts.remove(atOffsets: indexSet)
-                                routineList.refreshAndSave()
                             }
                             // Reset deletion state
                             deletionIndexSet = nil
@@ -67,17 +62,14 @@ struct EditRoutineView: View {
                     )
                 }
                 
-                
                 Button (action: {
-                    //routine.addWorkout(newWorkout: Workout(name: "Day \(routine.workouts.count + 1)"))
-                    routine.workouts.append(Workout(name: "Day \(routine.workouts.count + 1)"))
-                    routineList.refreshAndSave()
-                    //refresh.toggle()
+                    let newOrderLoc = routine.workouts.count + 1
+                    routine.workouts.append(CDWorkout(name: "Day \(newOrderLoc)", orderLoc: newOrderLoc, context: context))
                     
                 }, label: {
                     Text("+ workout")
                         .font(.title2)
-                        .foregroundColor(Color("Background"))
+                        .foregroundColor(Color(.text))
                         .bold()
                 })
                 .frame(alignment: .topLeading)
@@ -89,6 +81,8 @@ struct EditRoutineView: View {
             Spacer()
         }
     }
+        
+        
 }
 
 
@@ -106,9 +100,30 @@ struct WorkoutMetaDislay: View {
     
 }
 
-/*
- #Preview {
- //EditRoutineView(curRoutine: Routine(name: "new routine"))
- //.environment(Routine())
- }
- */
+struct erPreviewView: View {
+    @FetchRequest(fetchRequest: CDWorkoutRoutine.fetch())
+    var workouts: FetchedResults<CDWorkoutRoutine>
+    
+    @State var workout: CDWorkoutRoutine?
+    
+    init() {
+        let request = CDWorkoutRoutine.fetch()
+        _workouts = FetchRequest(fetchRequest: request)
+    }
+    var body: some View {
+        VStack {
+            if workout != nil {
+                EditRoutineView(routine: workout!)
+            }
+        } .onAppear {
+            workout = workouts[0]
+        }
+    }
+}
+
+struct EditRoutinePreview: PreviewProvider {
+    static var previews: some View {
+        return erPreviewView()
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    }
+}

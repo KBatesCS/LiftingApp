@@ -9,23 +9,15 @@ import SwiftUI
 
 struct SelectNewWorkoutView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @EnvironmentObject var routineList: RoutineList
+    //@EnvironmentObject var routineList: RoutineList
     
     private var exerciseList: [Exercise] = []
-    @ObservedObject var eSet: ExerciseSet
-    @ObservedObject var workout: Workout
-    private var isNew: Bool
     
-    init(workout: Workout, eSet: ExerciseSet?) {
-        self.workout = workout
-        if (eSet == nil) {
-            self.eSet = ExerciseSet(saveOnCreate: false)
-            self.isNew = true
-        } else {
-            self.eSet = eSet!
-            self.isNew = false
-        }
-        exerciseList = getExercises()
+    var selectedExercise: Binding<Exercise?>
+    
+    init(selectedExercise: Binding<Exercise?>) {
+        self.selectedExercise = selectedExercise
+        self.exerciseList = getExercises()
     }
     
     var body: some View {
@@ -34,16 +26,7 @@ struct SelectNewWorkoutView: View {
         List(Array(exerciseList.enumerated()), id: \.element.id) { index, exercise in
             exerciseDisplay(exercise: exercise)
                 .onTapGesture {
-                    eSet.exerciseInfo = exercise
-                    //eSet.save()
-                    if (isNew) {
-                        workout.addExercise(newExercise: eSet)
-                    }
-                    /*
-                    if let i = workout.exercises.firstIndex(where: { $0.id == eSet.id }) {
-                        workout.exercises[i] = eSet
-                    }*/
-                    routineList.refreshAndSave()
+                    selectedExercise.wrappedValue = exercise
                     presentationMode.wrappedValue.dismiss()
                     
                 }
@@ -65,6 +48,10 @@ struct exerciseDisplay: View {
     }
 }
 
-#Preview {
-    SelectNewWorkoutView(workout: Workout(), eSet: nil)
+struct SelectNewWorkoutPreview: PreviewProvider {
+    static var previews: some View {
+        let temp: Exercise? = nil
+        return SelectNewWorkoutView(selectedExercise: .constant(temp))
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    }
 }

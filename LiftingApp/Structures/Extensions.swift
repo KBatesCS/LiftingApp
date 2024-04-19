@@ -8,6 +8,30 @@
 import Foundation
 import SwiftUI
 
+extension Binding where Value == String {
+    func max(_ limit: Int) -> Self {
+        if self.wrappedValue.count > limit {
+            DispatchQueue.main.async {
+                self.wrappedValue = String(self.wrappedValue.dropLast())
+            }
+        }
+        return self
+    }
+}
+
+/*
+extension Binding where Value == Float {
+    func max(_ limit: Float) -> Self {
+        if self.wrappedValue > limit {
+            DispatchQueue.main.async {
+                self.wrappedValue = self.wrappedValue.truncatingRemainder(dividingBy: 1000)
+            }
+        }
+        return self
+    }
+}
+*/
+
 extension Bundle {
     func decode(_ file: String) -> [Exercise] {
         guard let url = self.url(forResource: file, withExtension: nil) else {

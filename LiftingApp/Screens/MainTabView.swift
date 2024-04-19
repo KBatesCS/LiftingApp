@@ -9,23 +9,10 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var selectedTab = 3
-    @StateObject private var routineList: RoutineList
-    @StateObject private var recordList: RecordList
+
     @StateObject private var activeWorkoutInfo: ActiveWorkoutViewData
-    //@State public var routineList: [Routine] = []
     
     init() {
-        if let loadedRL: RoutineList = load(key: "ExampleUser") {
-            _routineList = StateObject(wrappedValue: loadedRL)
-        } else {
-            _routineList = StateObject(wrappedValue: RoutineList(user: "ExampleUser"))
-        }
-        
-        if let loadedRecL: RecordList = load(key: "ExampleUser/RecordList") {
-            _recordList = StateObject(wrappedValue: loadedRecL)
-        } else {
-            _recordList = StateObject(wrappedValue: RecordList(userID: "ExampleUgfjjser"))
-        }
         _activeWorkoutInfo = StateObject(wrappedValue: ActiveWorkoutViewData())
     }
     
@@ -71,11 +58,12 @@ struct MainTabView: View {
             let appearance = UITabBarAppearance()
             let itemAppearance = UITabBarItemAppearance()
             // edit tab appearances here
+        } 
+        .onChange(of: selectedTab) { _ in
+            PersistenceController.shared.save()
         }
-        .environmentObject(routineList)
-        .environmentObject(recordList)
         .environmentObject(activeWorkoutInfo)
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        //.environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
 

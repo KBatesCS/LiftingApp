@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-/*
+
 extension CDWorkoutRecord {
     var uuid: UUID {
         #if DEBUG
@@ -18,9 +18,9 @@ extension CDWorkoutRecord {
         #endif
     }
     
-    var exercises: Set<CDExerciseRecord> {
-        get {( exercises_ as? Set<CDExerciseRecord> ) ?? []}
-        set { exercises_ = newValue as NSSet}
+    var exercises: [CDExerciseRecord] {
+        get {( exercises_ as? Set<CDExerciseRecord> )?.sorted{$0.orderLoc < $1.orderLoc} ?? []}
+        set { exercises_ = NSSet(array: newValue)}
     }
     
     var notes: String {
@@ -64,7 +64,7 @@ extension CDWorkoutRecord {
     static func fetch(_ predicate: NSPredicate = .all) -> NSFetchRequest<CDWorkoutRecord> {
         let request = CDWorkoutRecord.fetchRequest()
         
-        //request.sortDescriptors = [NSSortDescriptor(keyPath: \CDWorkoutRecord.date., ascending: true)]
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \CDWorkoutRecord.date_, ascending: true)]
         request.predicate = predicate
         
         return request
@@ -88,15 +88,16 @@ extension CDExerciseRecord {
         set { exercise_ = (newValue as Exercise).id }
     }
     
-    var sets: Set<CDSetRecord> {
-        get {( sets_ as? Set<CDSetRecord> ) ?? []}
-        set { sets_ = newValue as NSSet}
+    var sets: [CDSetRecord] {
+        get {( sets_ as? Set<CDSetRecord> )?.sorted{$0.orderLoc < $1.orderLoc} ?? []}
+        set { sets_ = NSSet(array: newValue)}
     }
     
-    convenience init(inLBs: Bool = true, exercise: Exercise, context: NSManagedObjectContext) {
+    convenience init(inLBs: Bool = true, exercise: Exercise, orderLoc: Int32, context: NSManagedObjectContext) {
         self.init(context: context)
         self.inLbs = inLBs
         self.exercise = exercise
+        self.orderLoc = orderLoc
     }
     
     public override func awakeFromInsert() {
@@ -111,13 +112,13 @@ extension CDExerciseRecord {
     static func fetch(_ predicate: NSPredicate = .all) -> NSFetchRequest<CDExerciseRecord> {
         let request = CDExerciseRecord.fetchRequest()
         
-        //request.sortDescriptors = [NSSortDescriptor(keyPath: \CDSetRecord., ascending: <#T##Bool#>)]
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \CDExerciseRecord.orderLoc, ascending: true)]
         request.predicate = predicate
         
         return request
     }
 }
- */
+ 
 
 extension CDSetRecord {
     var uuid: UUID {
@@ -128,11 +129,12 @@ extension CDSetRecord {
         #endif
     }
     
-    convenience init(reps: Int32, weight: Double, completed: Bool, context: NSManagedObjectContext) {
+    convenience init(reps: Int32, weight: Double, completed: Bool, orderLoc: Int32, context: NSManagedObjectContext) {
         self.init(context: context)
         self.reps = reps
         self.weight = weight
         self.completed = completed
+        self.orderLoc = orderLoc
     }
     
     public override func awakeFromInsert() {
@@ -147,10 +149,22 @@ extension CDSetRecord {
     static func fetch(_ predicate: NSPredicate = .all) -> NSFetchRequest<CDSetRecord> {
         let request = CDSetRecord.fetchRequest()
         
-        //request.sortDescriptors = [NSSortDescriptor(keyPath: \CDSetRecord., ascending: <#T##Bool#>)]
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \CDSetRecord.orderLoc, ascending: true)]
         request.predicate = predicate
         
         return request
+    }
+    
+    static var example: CDSetRecord {
+        let context = PersistenceController.preview.container.viewContext
+        let set = CDSetRecord(reps: 10, weight: 320, completed: true, orderLoc: 1, context: context)
+        return set
+    }
+}
+
+extension CDSetRecord: Comparable {
+    public static func < (lhs: CDSetRecord, rhs: CDSetRecord) -> Bool {
+        lhs.uuid.uuidString < rhs.uuid.uuidString
     }
 }
 

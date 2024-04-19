@@ -15,7 +15,7 @@ struct RoundedTextFieldStyle: TextFieldStyle {
                 .padding(.horizontal, 10)
                 .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
                 .overlay(RoundedRectangle(cornerSize: CGSize(width: 5, height: 5)).stroke(Color("Accent"), lineWidth: 2))
-                .foregroundStyle(.white)
+                .foregroundStyle(Color(.text))
     }
 }
 

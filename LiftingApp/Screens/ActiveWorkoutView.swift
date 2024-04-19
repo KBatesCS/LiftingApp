@@ -9,8 +9,14 @@ import SwiftUI
 import Combine
 
 struct ActiveWorkoutView: View {
-    @EnvironmentObject var routineList: RoutineList
-    @EnvironmentObject var recordList: RecordList
+    //@FetchRequest(fetchRequest: CDWorkoutRecord.fetch())
+    //var workoutRecords: FetchedResults<CDWorkoutRecord>
+    
+    //@ObservedObject var workout: CDWorkout
+    
+    @Environment(\.managedObjectContext) var context
+    
+    //@EnvironmentObject var routineList: RoutineList
     @EnvironmentObject var activeWorkoutInfo: ActiveWorkoutViewData
     
     @Environment(\.dismiss) private var dismissAction: DismissAction
@@ -37,16 +43,16 @@ struct ActiveWorkoutView: View {
     
     @FocusState var numPadFocus: Bool
     
-    init(workout: Workout) {
+    init(workout: CDWorkout) {
         self.workoutName = workout.name
-        self.workoutDisplay = ActiveWorkoutDisplay(workoutID: workout.id)
+        self.workoutDisplay = ActiveWorkoutDisplay(workoutID: workout.uuid)
         self.startTime = Date()
-        self.workoutID = workout.id
+        self.workoutID = workout.uuid
         
         for eSet in workout.exercises {
-            let newESD = ActiveExerciseSetDisplay(exercise: eSet.exerciseInfo, intensityForm: eSet.intensityForm, inLBs: true)
+            let newESD = ActiveExerciseSetDisplay(exercise: eSet.exercise, intensityForm: eSet.intensityType, inLBs: true)
             for set in eSet.sets {
-                newESD.sets.append(ActiveSetDisplay(targetReps: set.reps, intensity: set.intensity))
+                newESD.sets.append(ActiveSetDisplay(targetReps: set.targetReps, intensity: set.intensity))
             }
             self.workoutDisplay.exercises.append(newESD)
         }
@@ -314,20 +320,20 @@ struct ActiveWorkoutView: View {
         return out
     }
     
-    func getDisplaySet(eset: ExerciseSet) -> [ActiveSetDisplay]{
+    func getDisplaySet(eset: CDExerciseSet) -> [ActiveSetDisplay]{
         var out: [ActiveSetDisplay] = []
         
         for set in eset.sets {
-            out.append(ActiveSetDisplay(targetReps: set.reps, intensity: set.intensity))
+            out.append(ActiveSetDisplay(targetReps: set.targetReps, intensity: set.intensity))
         }
         
         return out
     }
     
-    func getActiveWorkoutDisplay(workout: Workout) -> ActiveWorkoutDisplay {
-        let out = ActiveWorkoutDisplay(workoutID: workout.id)
+    func getActiveWorkoutDisplay(workout: CDWorkout) -> ActiveWorkoutDisplay {
+        let out = ActiveWorkoutDisplay(workoutID: workout.uuid)
         for eSet in workout.exercises {
-            let newESD = ActiveExerciseSetDisplay(exercise: eSet.exerciseInfo, intensityForm: eSet.intensityForm, inLBs: true)
+            let newESD = ActiveExerciseSetDisplay(exercise: eSet.exercise, intensityForm: eSet.intensityType, inLBs: true)
             newESD.sets = getDisplaySet(eset: eSet)
             out.exercises.append(newESD)
         }
@@ -335,20 +341,23 @@ struct ActiveWorkoutView: View {
     }
     
     func saveToRecord(displayInfo: ActiveWorkoutDisplay) {
-        let workoutRecord = WorkoutRecord(workoutID: workoutID, notes: displayInfo.notes)
-        for esetDisplay in workoutDisplay.exercises {
-            let esetRecord: ExerciseRecord = ExerciseRecord(exercise: esetDisplay.exercise)
-            esetRecord.inLBs = esetDisplay.inLBs
-            for set in esetDisplay.sets {
-                let achievedReps: Int = Int((set.achievedReps != nil) ? set.achievedReps! : 0)
-                let weight: Double = (set.weight != nil) ? set.weight! : 0.0
-                let setRecord: SetRecord = SetRecord(reps: achievedReps, weight: weight, completed: set.completed)
+        
+        let workoutRecord = CDWorkoutRecord(notes: displayInfo.notes, usrStr: "ExampleUser", workoutUUID: workoutID, context: context)
+        
+        for exerciseIndex in workoutDisplay.exercises.indices {
+            let esetDisplay = workoutDisplay.exercises[exerciseIndex]
+            let esetRecord: CDExerciseRecord = CDExerciseRecord(inLBs: esetDisplay.inLBs, exercise: esetDisplay.exercise, orderLoc: Int32(exerciseIndex), context: context)
+            for setIndex in esetDisplay.sets.indices {
+                let setDisplay = esetDisplay.sets[setIndex]
+                let achievedReps: Int = Int((setDisplay.achievedReps != nil) ? setDisplay.achievedReps! : 0)
+                let weight: Double = (setDisplay.weight != nil) ? setDisplay.weight! : 0.0
+                let setRecord: CDSetRecord = CDSetRecord(reps: Int32(achievedReps), weight: weight, completed: setDisplay.completed, orderLoc: Int32(setIndex), context: context)
                 esetRecord.sets.append(setRecord)
             }
             workoutRecord.exercises.append(esetRecord)
         }
-        recordList.workoutRecords.append(workoutRecord)
-        recordList.save()
+        
+        
     }
     
     func allExercisesComplete(displayInfo: ActiveWorkoutDisplay) -> Bool {
@@ -390,14 +399,14 @@ class ActiveExerciseSetDisplay: Identifiable, ObservableObject {
 
 class ActiveSetDisplay: Identifiable, ObservableObject {
     let id = UUID()
-    @Published var targetReps: Int
-    @Published var intensity: Int
+    @Published var targetReps: String
+    @Published var intensity: Float
     @Published var achievedReps: Double?
     @Published var weight: Double?
     @Published var completed: Bool = false
     
     
-    init(targetReps: Int, intensity: Int, achievedReps: Double? = nil, weight: Double? = nil) {
+    init(targetReps: String, intensity: Float, achievedReps: Double? = nil, weight: Double? = nil) {
         self.targetReps = targetReps
         self.intensity = intensity
         self.achievedReps = achievedReps
@@ -405,8 +414,31 @@ class ActiveSetDisplay: Identifiable, ObservableObject {
     }
 }
 
-/*
- #Preview {
- ActiveWorkoutView()
- }
- */
+struct awPreviewView: View {
+    @FetchRequest(fetchRequest: CDWorkout.fetch())
+    var workouts: FetchedResults<CDWorkout>
+    
+    @State var workout: CDWorkout?
+    
+    init() {
+        let request = CDWorkout.fetch()
+        _workouts = FetchRequest(fetchRequest: request)
+    }
+    var body: some View {
+        VStack {
+            if workout != nil {
+                ActiveWorkoutView(workout: workout!)
+            }
+        } .onAppear {
+            workout = workouts[0]
+        }
+    }
+}
+
+struct ActiveWorkoutPreview: PreviewProvider {
+    static var previews: some View {
+        return awPreviewView()
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    }
+}
+

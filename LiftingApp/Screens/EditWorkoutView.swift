@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct EditWorkoutView: View {
-    //@Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var routineList: RoutineList
-    @ObservedObject var workout: Workout
+    @Environment(\.managedObjectContext) var context
+    @ObservedObject var workout: CDWorkout
+    @State var newExercise: Exercise? = nil
     
-    init (workout: Workout) {
+    init (workout: CDWorkout) {
         self.workout = workout
     }
     
@@ -23,130 +23,155 @@ struct EditWorkoutView: View {
                 .textFieldStyle(RoundedTextFieldStyle())
                 .frame(alignment: .topLeading)
                 .padding()
+                .foregroundStyle(Color(.text))
                 .onChange(of: workout.name) { _ in
-                    routineList.refreshAndSave()
+                    workout.routine?.objectWillChange.send()
                 }
+            
             Spacer()
             
-            /*
-            List(Array(workout.exercises.enumerated()), id: \.element.id) { index, eset in
-                if let data = UserDefaults.standard.data(forKey: workout.exercises[index].id.uuidString) {
-                    if let loadedESet = try? JSONDecoder().decode(ExerciseSet.self, from: data) {
-                        NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: loadedESet)) {
-                            ExerciseSetDisplay(eset: loadedESet)
-                        }
-                    }
-                }
-            }
-            */
-            
             List(workout.exercises, id: \.self) { exerciseSet in
-                ExerciseSetDisplay(workout: workout, eset: exerciseSet)
+                ExerciseSetDisplay(eset: exerciseSet)
             }
-            //.listRowSpacing(10)
+            .scrollContentBackground(.hidden)
              
             Spacer()
             
-            NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: nil)) {
+            
+            NavigationLink(destination: SelectNewWorkoutView(selectedExercise: $newExercise)) {
                 Text("+ exersize")
                     .font(.title2)
-                    .foregroundColor(Color("Background"))
+                    .foregroundStyle(Color(.text))
                     .bold()
+            }
+            .onChange(of: newExercise) { _ in
+                if newExercise != nil {
+                    let newESet = CDExerciseSet(exercise: newExercise!, orderLoc: workout.exercises.count + 1, context: context)
+                    let newSet1 = CDSet(targetReps: "12", intensity: 0, orderLoc: 1, context: context)
+                    let newSet2 = CDSet(targetReps: "12", intensity: 0, orderLoc: 2, context: context)
+                    let newSet3 = CDSet(targetReps: "12", intensity: 0, orderLoc: 3, context: context)
+                    newESet.sets.append(newSet1)
+                    newESet.sets.append(newSet2)
+                    newESet.sets.append(newSet3)
+                    workout.exercises.append(newESet)
+                    newExercise = nil
+                }
             }
             
             Spacer()
         }
-        /*
-        .onAppear {
-            if (self.isNew) {
-                self.routine.addWorkout(newWorkout: self.workout)
-            }
-            self.name = self.workout.name
-        }
-         */
     }
 }
 struct ExerciseSetDisplay: View {
-    @EnvironmentObject var routineList: RoutineList
-    @ObservedObject var workout: Workout
-    @ObservedObject var eset: ExerciseSet
+    @ObservedObject var eset: CDExerciseSet
+    @State var newExercise: Exercise? = nil
     
     var body: some View {
         Section {
-                let displayIntensity = eset.intensityForm != IntensityType.None
-                ForEach(eset.sets.indices, id: \.self) { index in
-                    let curSet = eset.sets[index]
-                    HStack {
-                        Text("Set \(index):")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        
-                        Spacer()
-                        
-                        if displayIntensity {
-                            TextField("0", value: $eset.sets[index].intensity, format: .number)
-                                .keyboardType(.numberPad)
-                                .onChange(of: eset.sets[index].intensity) { _ in
-                                    routineList.refreshAndSave()
-                                }
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            
-                        }
-                        Spacer()
-                        HStack {
-                            Button(action: {
-                                if curSet.reps >= 1 {
-                                    curSet.reps -= 1
-                                    routineList.refreshAndSave()
-                                }
-                            }) {
-                                Text("-")
-                            }
-                            .buttonStyle(BorderlessButtonStyle())
-                            
-                            Text("\(curSet.reps)")
-                            
-                            Button(action: {
-                                curSet.reps += 1
-                                routineList.refreshAndSave()
-                            }) {
-                                Text("+")
-                            }
-                            .buttonStyle(BorderlessButtonStyle())
-                        }
+            let displayIntensity = eset.intensityType != IntensityType.None
+            
+            HStack {
+                Text("Set #")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Spacer()
+                if eset.intensityType == IntensityType.RPE {
+                    Text("RPE")
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                    }
-                    //.padding(.horizontal) // Add horizontal padding for better spacing
+                    Spacer()
+                } else if eset.intensityType == IntensityType.PercentOfMax {
+                    Text("%RPM")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Spacer()
                 }
-                .foregroundColor(Color("Text"))
-                //.listRowBackground(Color("Accent"))
+                Text("Target Reps")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+           
+            ForEach(eset.sets, id: \.self) { set in
+                    SetEditRow(set: set, displayIntensity: displayIntensity)
+            }
             
         } header: {
             HStack {
-                NavigationLink(destination: SelectNewWorkoutView(workout: workout, eSet: eset)) {
-                    Text(eset.exerciseInfo.name)
+                
+                NavigationLink(destination: SelectNewWorkoutView(selectedExercise: $newExercise)) {
+                    Text(eset.exercise.name)
                         .foregroundStyle(Color("Text"))
                         .bold()
                         .fixedSize(horizontal: false, vertical: true)
                 }
+                .onChange(of: newExercise) { _ in
+                    if newExercise != nil {
+                        eset.exercise = newExercise!
+                    }
+                }
                 .frame(maxWidth: .infinity)
+                
                 Spacer()
-                Picker("", selection: $eset.intensityForm) {
+                Picker("", selection: $eset.intensityType) {
                     Text("RPE").tag(IntensityType.RPE)
                     Text("None").tag(IntensityType.None)
                     Text("%RPM").tag(IntensityType.PercentOfMax)
                 }
                 .pickerStyle(.segmented)
-                .onChange(of: eset.intensityForm) { _ in
-                    routineList.refreshAndSave()
-                }
             }
         }
     }
 }
-/*
- #Preview {
- EditWorkoutView(routine: Routine(), workout: Workout())
- }
- */
+
+struct SetEditRow: View {
+    @ObservedObject var set: CDSet
+    var displayIntensity: Bool
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Text("Set \(set.orderLoc):")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                Spacer()
+                
+                if displayIntensity {
+                    TextField("0", value: $set.intensity, format: .number)
+                        .keyboardType(.numberPad)
+                }
+                
+                Spacer()
+                
+                TextField("0", text: $set.targetReps.max(5))
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                
+            }
+        }
+    }
+}
+
+struct ewPreviewView: View {
+    @FetchRequest(fetchRequest: CDWorkout.fetch())
+    var workouts: FetchedResults<CDWorkout>
+    
+    @State var workout: CDWorkout?
+    
+    init() {
+        let request = CDWorkout.fetch()
+        _workouts = FetchRequest(fetchRequest: request)
+    }
+    var body: some View {
+        VStack {
+            if workout != nil {
+                EditWorkoutView(workout: workout!)
+            }
+        } .onAppear {
+            workout = workouts[0]
+        }
+    }
+}
+
+struct EditWorkoutPreview: PreviewProvider {
+    static var previews: some View {
+        return ewPreviewView()
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    }
+}
+
+ 

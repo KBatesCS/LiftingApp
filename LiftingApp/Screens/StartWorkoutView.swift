@@ -9,16 +9,24 @@ import SwiftUI
 
 struct StartWorkoutView: View {
     
-    @EnvironmentObject private var routineList: RoutineList
+    //@EnvironmentObject private var routineList: RoutineList
     @EnvironmentObject private var activeWorkoutInfo: ActiveWorkoutViewData
     
-    @State private var selectedRoutine: Routine = Routine(name: "Select A Routine", saveOnCreate: false)
+    @State private var selectedRoutine: CDWorkoutRoutine?
     
-    @State private var selectedWorkout: Workout = Workout(name: "no workout selected", saveOnCreate: false)
+    @State private var selectedWorkout: CDWorkout?
     
-    @State private var isShowingActiveWorkout = false
+    //@State private var isShowingActiveWorkout = false
 //    @State private var activeViewHolder: ActiveWorkoutViewHolder
-    @State var currActiveWorkoutView: ActiveWorkoutView? = nil
+    //@State var currActiveWorkoutView: ActiveWorkoutView? = nil
+    
+    @FetchRequest(fetchRequest: CDWorkoutRoutine.fetch())
+    var workoutRoutines: FetchedResults<CDWorkoutRoutine>
+    
+    init() {
+        let request = CDWorkoutRoutine.fetch()
+        self._workoutRoutines = FetchRequest(fetchRequest: request)
+    }
     
     var body: some View {
         ZStack {
@@ -30,14 +38,14 @@ struct StartWorkoutView: View {
                     Spacer()
                     Menu {
                         Picker("", selection: $selectedRoutine) {
-                            ForEach(routineList.routines) { routine in
+                            ForEach(workoutRoutines) { routine in
                                 Text(routine.name)
-                                    .tag(routine)
+                                    .tag(routine as CDWorkoutRoutine?)
                             }
                         }
                     } label: {
                         HStack {
-                            Text(selectedRoutine.name)
+                            Text(selectedRoutine?.name ?? "Select A routine")
                                 .bold()
                                 .frame(alignment: .top)
                             Image(systemName: "arrowtriangle.down.fill")
@@ -50,14 +58,14 @@ struct StartWorkoutView: View {
                         .padding(.top)
                     }
                     .onChange(of: selectedRoutine) { _ in
-                        save(key: "ExampleUser/SelectedRoutine", data: selectedRoutine)
+                        save(key: "ExampleUser/SelectedRoutine", data: selectedRoutine?.uuid)
                     }
                     .onAppear {
-                        if let SLRT: Routine = load(key: "ExampleUser/SelectedRoutine") {
-                            if let foundRT = routineList.routines.first(where: {$0.id == SLRT.id}) {
+                        if let SLRTUUID: UUID = load(key: "ExampleUser/SelectedRoutine") {
+                            if let foundRT = workoutRoutines.first(where: {$0.uuid == SLRTUUID}) {
                                 self.selectedRoutine = foundRT
-                                if let SLWO: Workout = load(key: "ExampleUser/SelectedWorkout") {
-                                    if let foundWO = selectedRoutine.workouts.first(where: {$0.id == SLWO.id}) {
+                                if let SLWOUUID: UUID = load(key: "ExampleUser/SelectedWorkout") {
+                                    if let foundWO = selectedRoutine?.workouts.first(where: {$0.uuid == SLWOUUID}) {
                                         self.selectedWorkout = foundWO
                                     }
                                 }
@@ -68,19 +76,21 @@ struct StartWorkoutView: View {
                     Spacer()
                     
                     List {
-                        ForEach(selectedRoutine.workouts) { workout in
-                            HStack {
-                                Text(workout.name)
-                                Spacer()
-                            }
-                            .contentShape(Rectangle())
-                            .foregroundColor(workout == selectedWorkout ? Color("Text") :
-                                                Color("Text"))
-                            .listRowBackground(workout == selectedWorkout ? .gray :
-                                                Color("Accent"))
-                            .onTapGesture {
-                                selectedWorkout = workout
-                                save(key: "ExampleUser/SelectedWorkout", data: selectedWorkout)
+                        if selectedRoutine != nil {
+                            ForEach(selectedRoutine!.workouts) { workout in
+                                HStack {
+                                    Text(workout.name)
+                                    Spacer()
+                                }
+                                .contentShape(Rectangle())
+                                .foregroundColor(workout == selectedWorkout ? Color("Text") :
+                                                    Color("Text"))
+                                .listRowBackground(workout == selectedWorkout ? .gray :
+                                                    Color("Accent"))
+                                .onTapGesture {
+                                    selectedWorkout = workout
+                                    save(key: "ExampleUser/SelectedWorkout", data: selectedWorkout?.uuid)
+                                }
                             }
                         }
                     }
@@ -92,15 +102,19 @@ struct StartWorkoutView: View {
                     Spacer()
                     
                     if activeWorkoutInfo.workoutName == nil || activeWorkoutInfo.startTime == nil || activeWorkoutInfo.displayInfo == nil || activeWorkoutInfo.workoutID == nil {
-                        NavigationLink(destination: ActiveWorkoutView(workout: selectedWorkout)) {
-                            Text("Begin")
-                                .font(.title2)
-                                .foregroundColor(Color("Text"))
-                                .bold()
-                                .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
-                                .background(Color("Accent"))
-                                .cornerRadius(21)
-                                .padding()
+                        
+                        if selectedWorkout != nil {
+                            
+                            NavigationLink(destination: ActiveWorkoutView(workout: selectedWorkout!)) {
+                                Text("Begin")
+                                    .font(.title2)
+                                    .foregroundColor(Color("Text"))
+                                    .bold()
+                                    .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
+                                    .background(Color("Accent"))
+                                    .cornerRadius(21)
+                                    .padding()
+                            }
                         }
                     } else {
                         NavigationLink(destination: ActiveWorkoutView(workoutDisplay: activeWorkoutInfo.displayInfo!, startTime: activeWorkoutInfo.startTime!, workoutName: activeWorkoutInfo.workoutName!, workoutID: activeWorkoutInfo.workoutID!)) {
@@ -113,6 +127,7 @@ struct StartWorkoutView: View {
                                 .cornerRadius(21)
                                 .padding()
                         }
+                             
                     }
                     /*
                     
@@ -177,8 +192,26 @@ class ActiveWorkoutViewData: ObservableObject {
     }
 }
 
-/*
-#Preview {
-    StartWorkoutView()
+
+struct stwPreviewView: View {
+    @StateObject private var activeWorkoutInfo: ActiveWorkoutViewData
+
+    init() {
+        _activeWorkoutInfo = StateObject(wrappedValue: ActiveWorkoutViewData())
+    }
+    
+    var body: some View {
+        VStack {
+            StartWorkoutView()
+        }
+            .environmentObject(activeWorkoutInfo)
+    }
 }
-*/
+
+struct StartWorkoutPreview: PreviewProvider {
+    static var previews: some View {
+        return stwPreviewView()
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    }
+}
+

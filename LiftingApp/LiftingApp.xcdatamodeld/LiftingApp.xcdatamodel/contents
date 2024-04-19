@@ -3,15 +3,42 @@
     <entity name="CDExerciseRecord" representedClassName="CDExerciseRecord" syncable="YES" codeGenerationType="class">
         <attribute name="exercise_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="inLbs" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <attribute name="orderLoc" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="uuid_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <relationship name="sets_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDSetRecord"/>
+        <relationship name="sets_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDSetRecord" inverseName="exerciseRecord" inverseEntity="CDSetRecord"/>
         <relationship name="workout" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDWorkoutRecord" inverseName="exercises_" inverseEntity="CDWorkoutRecord"/>
+    </entity>
+    <entity name="CDExerciseSet" representedClassName="CDExerciseSet" syncable="YES" codeGenerationType="class">
+        <attribute name="exercise_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="intensityType_" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="orderLoc_" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="restLength_" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="uuid_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="sets_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDSet" inverseName="exerciseSet" inverseEntity="CDSet"/>
+        <relationship name="workout" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDWorkout" inverseName="exercises_" inverseEntity="CDWorkout"/>
+    </entity>
+    <entity name="CDSet" representedClassName="CDSet" syncable="YES" codeGenerationType="class">
+        <attribute name="intensity_" optional="YES" attributeType="Float" maxValueString="999" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="orderLoc_" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="targetReps_" optional="YES" attributeType="String" maxValueString="5"/>
+        <attribute name="uuid_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="exerciseSet" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDExerciseSet" inverseName="sets_" inverseEntity="CDExerciseSet"/>
     </entity>
     <entity name="CDSetRecord" representedClassName="CDSetRecord" syncable="YES" codeGenerationType="class">
         <attribute name="completed" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="orderLoc" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="reps" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="uuid_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="weight" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="exerciseRecord" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDExerciseRecord" inverseName="sets_" inverseEntity="CDExerciseRecord"/>
+    </entity>
+    <entity name="CDWorkout" representedClassName="CDWorkout" syncable="YES" codeGenerationType="class">
+        <attribute name="name_" optional="YES" attributeType="String"/>
+        <attribute name="notes_" optional="YES" attributeType="String"/>
+        <attribute name="orderLoc_" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="uuid_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="exercises_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDExerciseSet" inverseName="workout" inverseEntity="CDExerciseSet"/>
+        <relationship name="routine" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDWorkoutRoutine" inverseName="workouts_" inverseEntity="CDWorkoutRoutine"/>
     </entity>
     <entity name="CDWorkoutRecord" representedClassName="CDWorkoutRecord" syncable="YES" codeGenerationType="class">
         <attribute name="date_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -20,5 +47,12 @@
         <attribute name="uuid_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="workoutUUID_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <relationship name="exercises_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDExerciseRecord" inverseName="workout" inverseEntity="CDExerciseRecord"/>
+    </entity>
+    <entity name="CDWorkoutRoutine" representedClassName="CDWorkoutRoutine" syncable="YES" codeGenerationType="class">
+        <attribute name="name_" optional="YES" attributeType="String"/>
+        <attribute name="orderLoc_" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="userStr_" optional="YES" attributeType="String"/>
+        <attribute name="uuid_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="workouts_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDWorkout" inverseName="routine" inverseEntity="CDWorkout"/>
     </entity>
 </model>

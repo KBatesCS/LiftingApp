@@ -10,10 +10,15 @@ import CoreData
 
 struct SwiftUIView: View {
     
-    @FetchRequest(fetchRequest: CDSetRecord.fetch()) var workoutRecords: FetchedResults<CDSetRecord>
+    @FetchRequest(fetchRequest: CDWorkoutRecord.fetch(), animation: .bouncy)
+    var workoutRecords: FetchedResults<CDWorkoutRecord>
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            ForEach(workoutRecords) { record in
+                Text("\(record.date)")
+            }
+        }
     }
 }
 

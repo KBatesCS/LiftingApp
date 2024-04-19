@@ -368,7 +368,7 @@ class WOSet: Codable {
     }
 }
 
-struct Exercise: Identifiable, Codable {
+struct Exercise: Identifiable, Codable, Equatable {
     var id: UUID
     
     let name: String
@@ -406,6 +406,8 @@ struct Exercise: Identifiable, Codable {
     }
 }
 
+
+/*
 class RecordList: ObservableObject, Codable, Identifiable {
     @Published var id: UUID
     @Published var userID: String
@@ -493,6 +495,7 @@ class WorkoutRecord: ObservableObject, Codable, Identifiable {
     }
 }
 
+
 class ExerciseRecord: Identifiable, Codable {
     @Published var id: UUID
     @Published var inLBs: Bool
@@ -568,6 +571,7 @@ class SetRecord: Identifiable, Codable {
         try container.encode(completed, forKey: .completed)
     }
 }
+ */
 
 enum Muscles: Codable {
     case quad
@@ -595,6 +599,8 @@ enum Muscles: Codable {
 
 
 
-enum IntensityType: Codable {
-    case RPE, PercentOfMax, None
+enum IntensityType: Int16, Codable {
+    case RPE = 1
+    case PercentOfMax = 2
+    case None = 3
 }

@@ -84,14 +84,16 @@ struct VideoResultsView: View {
             if analyzingState == AnalyzingState.COMPLETED {
                 
                 VideoPlayer(player: AVPlayer(url: outputURL))
-                .scaledToFit()
-                .frame(width: 300, height: 300)
+                    .scaledToFit()
+                
                 /*
-                ScrollView {
-                    ForEach(imageBuffer, id: \.self) { frame in
-                        Image(uiImage: frame)
-                    }
-                }*/
+                 ScrollView {
+                 ForEach(imageBuffer, id: \.self) { frame in
+                 Image(uiImage: frame)
+                 .resizable()
+                 .aspectRatio(contentMode: .fit)
+                 }
+                 }*/
                 //                    Image(uiImage: image)
                 //                                       .resizable()
                 //                                        .aspectRatio(contentMode: .fit)
@@ -110,10 +112,20 @@ struct VideoResultsView: View {
         }
         .onAppear {
             if imageBuffer.count == 0 {
-                extractFrames { completed in
+                /*
+                 extractFrames { completed in
+                 if completed {
+                 loadingState = LoadingState.FINISHED
+                 
+                 } else {
+                 loadingState = LoadingState.ERROR
+                 }
+                 }
+                 */
+                
+                extractFrames(url: url) { completed in
                     if completed {
                         loadingState = LoadingState.FINISHED
-                        
                     } else {
                         loadingState = LoadingState.ERROR
                     }
@@ -121,11 +133,14 @@ struct VideoResultsView: View {
             }
         }
         .onChange(of: loadingState) { _ in
-            if loadingState == LoadingState.FINISHED {
+            if loadingState == LoadingState.FINISHED && imageBuffer.count > 10 {
                 analyzingState = AnalyzingState.ANALYZING
                 VideoCreator().createVideo(from: imageBuffer, outputURL: outputURL) { success in
                     if success {
                         analyzingState = AnalyzingState.COMPLETED
+                    }
+                    else {
+                        loadingState = LoadingState.ERROR
                     }
                 }
             }
@@ -141,6 +156,71 @@ struct VideoResultsView: View {
         case NOT_ANALYZING, ANALYZING, COMPLETED
     }
     
+    func extractFrames(url: URL, completion: @escaping (Bool) -> Void) {
+        let asset = AVURLAsset(url: url)
+        
+        do {
+            let reader = try AVAssetReader(asset: asset)
+            let videoTrack = asset.tracks(withMediaType: AVMediaType.video)[0]
+            
+            // Define output settings to get raw frames
+            let outputSettings: [String: Any] = [
+                kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
+            ]
+            
+            let readerOutput = AVAssetReaderTrackOutput(track: videoTrack, outputSettings: outputSettings)
+            readerOutput.alwaysCopiesSampleData = false
+            reader.add(readerOutput)
+            reader.startReading()
+            
+//            var frames: [UIImage] = []
+            
+            while let sampleBuffer = readerOutput.copyNextSampleBuffer() {
+                if let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
+                    // Create a CIImage from the image buffer
+                    let ciImage = CIImage(cvImageBuffer: imageBuffer)
+                    
+                    // Convert CIImage to UIImage
+                    let context = CIContext()
+                    if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
+                        let uiImage = UIImage(cgImage: cgImage)
+                        let grayScaledImage = OpenCVWrapper.grayscaleImg(uiImage)
+                        self.imageBuffer.append(grayScaledImage)
+                    }
+                }
+            }
+            
+            completion(true)
+        } catch {
+            print("Error: \(error)")
+            completion(false)
+        }
+    }
+    
+    
+    public func imageFromVideo(url: URL, at time: TimeInterval, completion: @escaping (UIImage?) -> Void) {
+        DispatchQueue.global(qos: .background).async {
+            let asset = AVURLAsset(url: url)
+            
+            let assetIG = AVAssetImageGenerator(asset: asset)
+            assetIG.appliesPreferredTrackTransform = true
+            assetIG.apertureMode = AVAssetImageGenerator.ApertureMode.encodedPixels
+            
+            let cmTime = CMTime(seconds: time, preferredTimescale: 60)
+            let thumbnailImageRef: CGImage
+            do {
+                thumbnailImageRef = try assetIG.copyCGImage(at: cmTime, actualTime: nil)
+            } catch let error {
+                print("Error: \(error)")
+                return completion(nil)
+            }
+            
+            DispatchQueue.main.async {
+                completion(UIImage(cgImage: thumbnailImageRef))
+            }
+        }
+    }
+    
     func extractFrames(completion: @escaping (Bool) -> Void) {
         let asset = AVURLAsset(url: url)
         let generator = AVAssetImageGenerator(asset: asset)
@@ -149,25 +229,31 @@ struct VideoResultsView: View {
         // Get the duration of the video
         let durationSeconds = CMTimeGetSeconds(asset.duration)
         
+        
         // Get the number of frames
         let totalFrames = Int(asset.tracks(withMediaType: .video)
             .map { Float64($0.nominalFrameRate) * durationSeconds }
             .reduce(0, +))
         
-        let frameRate = Int(Float64(totalFrames) / durationSeconds)
+        let frameRate: Int32 = Int32(Double(totalFrames) / durationSeconds)
+        
+        print("Framerate: \(frameRate)")
+        //        let frameRate = 24
         
         var times: [NSValue] = []
         var processedFrames = 0
         
         // Prepare array of times for each frame
-        let frameDuration = CMTime(value: 1, timescale: Int32(frameRate))
+        let frameDuration = CMTime(value: 1, timescale: frameRate)
         for i in 0..<totalFrames {
             let time = CMTimeMultiply(frameDuration, multiplier: Int32(i))
             times.append(NSValue(time: time))
         }
         
-        generator.generateCGImagesAsynchronously(forTimes: times) { _, image, _, _, _ in
+        
+        generator.generateCGImagesAsynchronously(forTimes: times) { requestedTime, image, actualTime, result, error in
             if let image = image {
+                print("Requested: \(requestedTime.seconds), Received: \(actualTime.seconds), error \(error?.localizedDescription ?? "none")")
                 DispatchQueue.main.async {
                     let uiimage = UIImage(cgImage: image)
                     let convertedImage = OpenCVWrapper.grayscaleImg(uiimage)
@@ -184,7 +270,6 @@ struct VideoResultsView: View {
                 }
             }
         }
-        
     }
     
 }
@@ -193,6 +278,16 @@ class VideoCreator {
     
     func createVideo(from images: [UIImage], outputURL: URL, completion: @escaping (Bool) -> Void) {
         guard !images.isEmpty else {
+            completion(false)
+            return
+        }
+        
+        // Delete existing file if it exists
+        do {
+            if FileManager.default.fileExists(atPath: outputURL.path) {
+                try FileManager.default.removeItem(at: outputURL)
+            }
+        } catch {
             completion(false)
             return
         }
@@ -207,6 +302,7 @@ class VideoCreator {
             ]
             
             let videoWriterInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
+            
             let sourcePixelBufferAttributes: [String: Any] = [
                 kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32ARGB,
                 kCVPixelBufferWidthKey as String: images[0].size.width,
@@ -226,19 +322,24 @@ class VideoCreator {
             videoWriter.startSession(atSourceTime: .zero)
             
             let mediaQueue = DispatchQueue(label: "mediaInputQueue")
-            let frameDuration = CMTimeMake(value: 1, timescale: 24) // Assuming 30 frames per second
+            let frameDuration = CMTimeMake(value: 1, timescale: 30) // Assuming 30 frames per second
+            var presentationTime = CMTime.zero
             
             videoWriterInput.requestMediaDataWhenReady(on: mediaQueue) {
                 var frameCount = 0
                 
-                while videoWriterInput.isReadyForMoreMediaData && frameCount < images.count {
-                    let presentationTime = CMTimeMultiply(frameDuration, multiplier: Int32(frameCount))
-                    
-                    if let buffer = self.pixelBufferFromImage(images[frameCount]) {
-                        pixelBufferAdaptor.append(buffer, withPresentationTime: presentationTime)
+                while frameCount < images.count {
+                    if videoWriterInput.isReadyForMoreMediaData {
+                        if let buffer = self.pixelBufferFromImage(images[frameCount]) {
+                            if !self.appendPixelBuffer(buffer, withPresentationTime: presentationTime, to: pixelBufferAdaptor) {
+                                completion(false)
+                                return
+                            }
+                            
+                            presentationTime = CMTimeAdd(presentationTime, frameDuration)
+                            frameCount += 1
+                        }
                     }
-                    
-                    frameCount += 1
                 }
                 
                 videoWriterInput.markAsFinished()
@@ -255,7 +356,7 @@ class VideoCreator {
     private func pixelBufferFromImage(_ image: UIImage) -> CVPixelBuffer? {
         let size = image.size
         let attrs = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue,
-                     kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue] as CFDictionary
+             kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue] as CFDictionary
         var pixelBuffer: CVPixelBuffer?
         let status = CVPixelBufferCreate(kCFAllocatorDefault,
                                          Int(size.width),
@@ -278,7 +379,7 @@ class VideoCreator {
                                       bytesPerRow: CVPixelBufferGetBytesPerRow(buffer),
                                       space: rgbColorSpace,
                                       bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue) else {
-                                        return nil
+            return nil
         }
         
         context.translateBy(x: 0, y: size.height)
@@ -291,6 +392,14 @@ class VideoCreator {
         CVPixelBufferUnlockBaseAddress(buffer, [])
         
         return buffer
+    }
+    
+    private func appendPixelBuffer(_ pixelBuffer: CVPixelBuffer, withPresentationTime presentationTime: CMTime, to pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor) -> Bool {
+        while !pixelBufferAdaptor.assetWriterInput.isReadyForMoreMediaData {
+            usleep(10)
+        }
+        
+        return pixelBufferAdaptor.append(pixelBuffer, withPresentationTime: presentationTime)
     }
 }
 

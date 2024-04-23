@@ -85,21 +85,6 @@ struct EditRoutineView: View {
         
 }
 
-
-struct WorkoutMetaDislay: View {
-    
-    let workout: Workout
-    
-    var body: some View {
-        VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
-            Text(workout.name)
-        }
-        .padding()
-    }
-    
-    
-}
-
 struct erPreviewView: View {
     @FetchRequest(fetchRequest: CDWorkoutRoutine.fetch())
     var workouts: FetchedResults<CDWorkoutRoutine>

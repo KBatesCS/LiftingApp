@@ -8,7 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		31D1B17D2BA6907D0002D615 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D1B17C2BA6907D0002D615 /* SettingsView.swift */; };
-		C7497919EC49BF9495216855 /* Pods_LiftingApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C72E220A79BBF9067BF1A9D2 /* Pods_LiftingApp.framework */; };
+		BE3FCB1137A82738110216F7 /* libPods-LiftingApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC868353408A417A3E3F49D /* libPods-LiftingApp.a */; };
+		D62BB9E42BD3392400ABBAA6 /* OpenCVWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = D62BB9E32BD3392400ABBAA6 /* OpenCVWrapper.mm */; };
+		D62BB9E62BD33D4500ABBAA6 /* OpenCVFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62BB9E52BD33D4500ABBAA6 /* OpenCVFunctions.swift */; };
+		D62BB9EF2BD34B6700ABBAA6 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D62BB9EE2BD34B6700ABBAA6 /* AssetsLibrary.framework */; };
+		D62BB9F12BD34B7500ABBAA6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D62BB9F02BD34B7500ABBAA6 /* CoreGraphics.framework */; };
+		D62BB9F32BD34B8200ABBAA6 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D62BB9F22BD34B8200ABBAA6 /* CoreMedia.framework */; };
+		D62BB9F52BD34B8F00ABBAA6 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D62BB9F42BD34B8F00ABBAA6 /* CoreFoundation.framework */; };
+		D62BB9F72BD34B9400ABBAA6 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D62BB9F62BD34B9400ABBAA6 /* Accelerate.framework */; };
 		D63DF7AF2BAC7BA90036C9D0 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63DF7AE2BAC7BA90036C9D0 /* AnalyticsView.swift */; };
 		D63DF7B12BAC8CD50036C9D0 /* VideoAnalysisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63DF7B02BAC8CD50036C9D0 /* VideoAnalysisView.swift */; };
 		D63DF7B42BAC9A230036C9D0 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63DF7B32BAC9A230036C9D0 /* Extensions.swift */; };
@@ -37,11 +44,34 @@
 		D6F255CA2BA513F4006D7AC2 /* WorkoutStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F255C62BA513F3006D7AC2 /* WorkoutStructs.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		D62BB9EB2BD3463800ABBAA6 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		121C65806067097B55E0FE6A /* Pods-LiftingApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LiftingApp.debug.xcconfig"; path = "Target Support Files/Pods-LiftingApp/Pods-LiftingApp.debug.xcconfig"; sourceTree = "<group>"; };
+		1AC868353408A417A3E3F49D /* libPods-LiftingApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LiftingApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		31D1B17C2BA6907D0002D615 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3A5C07DB321520577D3D6B9F /* Pods-LiftingApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LiftingApp.release.xcconfig"; path = "Target Support Files/Pods-LiftingApp/Pods-LiftingApp.release.xcconfig"; sourceTree = "<group>"; };
-		C72E220A79BBF9067BF1A9D2 /* Pods_LiftingApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LiftingApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D62BB9DE2BD3305700ABBAA6 /* LiftingApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LiftingApp-Bridging-Header.h"; sourceTree = "<group>"; };
+		D62BB9DF2BD3305800ABBAA6 /* OpenCVWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenCVWrapper.h; sourceTree = "<group>"; };
+		D62BB9E22BD3339300ABBAA6 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		D62BB9E32BD3392400ABBAA6 /* OpenCVWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenCVWrapper.mm; sourceTree = "<group>"; };
+		D62BB9E52BD33D4500ABBAA6 /* OpenCVFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenCVFunctions.swift; sourceTree = "<group>"; };
+		D62BB9EE2BD34B6700ABBAA6 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.4.sdk/System/Library/Frameworks/AssetsLibrary.framework; sourceTree = DEVELOPER_DIR; };
+		D62BB9F02BD34B7500ABBAA6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.4.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
+		D62BB9F22BD34B8200ABBAA6 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.4.sdk/System/Library/Frameworks/CoreMedia.framework; sourceTree = DEVELOPER_DIR; };
+		D62BB9F42BD34B8F00ABBAA6 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.4.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		D62BB9F62BD34B9400ABBAA6 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.4.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
 		D63DF7AE2BAC7BA90036C9D0 /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
 		D63DF7B02BAC8CD50036C9D0 /* VideoAnalysisView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoAnalysisView.swift; sourceTree = "<group>"; };
 		D63DF7B32BAC9A230036C9D0 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -78,7 +108,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C7497919EC49BF9495216855 /* Pods_LiftingApp.framework in Frameworks */,
+				D62BB9F12BD34B7500ABBAA6 /* CoreGraphics.framework in Frameworks */,
+				D62BB9F72BD34B9400ABBAA6 /* Accelerate.framework in Frameworks */,
+				D62BB9EF2BD34B6700ABBAA6 /* AssetsLibrary.framework in Frameworks */,
+				D62BB9F52BD34B8F00ABBAA6 /* CoreFoundation.framework in Frameworks */,
+				BE3FCB1137A82738110216F7 /* libPods-LiftingApp.a in Frameworks */,
+				D62BB9F32BD34B8200ABBAA6 /* CoreMedia.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,9 +140,26 @@
 		507FD6F97DE2B9F416BB6A9C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C72E220A79BBF9067BF1A9D2 /* Pods_LiftingApp.framework */,
+				D62BB9F62BD34B9400ABBAA6 /* Accelerate.framework */,
+				D62BB9F42BD34B8F00ABBAA6 /* CoreFoundation.framework */,
+				D62BB9F22BD34B8200ABBAA6 /* CoreMedia.framework */,
+				D62BB9F02BD34B7500ABBAA6 /* CoreGraphics.framework */,
+				D62BB9EE2BD34B6700ABBAA6 /* AssetsLibrary.framework */,
+				1AC868353408A417A3E3F49D /* libPods-LiftingApp.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D62BB9DD2BD32ECE00ABBAA6 /* OpenCV */ = {
+			isa = PBXGroup;
+			children = (
+				D62BB9DF2BD3305800ABBAA6 /* OpenCVWrapper.h */,
+				D62BB9E32BD3392400ABBAA6 /* OpenCVWrapper.mm */,
+				D62BB9DE2BD3305700ABBAA6 /* LiftingApp-Bridging-Header.h */,
+				D62BB9E22BD3339300ABBAA6 /* PrefixHeader.pch */,
+				D62BB9E52BD33D4500ABBAA6 /* OpenCVFunctions.swift */,
+			);
+			path = OpenCV;
 			sourceTree = "<group>";
 		};
 		D653A4AF2BCF09360056C7B9 /* Core Data */ = {
@@ -184,9 +236,10 @@
 				D67369432B8BD5F600187549 /* LoadableData */,
 				D67369402B8BD53C00187549 /* Scripts */,
 				D697690D2B8536DE00458370 /* Screens */,
+				D62BB9DD2BD32ECE00ABBAA6 /* OpenCV */,
 				D653A4AF2BCF09360056C7B9 /* Core Data */,
-				D6D56FCF2B4C82F40040D4C4 /* Assets.xcassets */,
 				D653A4AC2BCEF3060056C7B9 /* LiftingApp.xcdatamodeld */,
+				D6D56FCF2B4C82F40040D4C4 /* Assets.xcassets */,
 				D6D56FD12B4C82F40040D4C4 /* LiftingApp.entitlements */,
 				D6D56FD22B4C82F40040D4C4 /* Preview Content */,
 			);
@@ -223,7 +276,8 @@
 				D6D56FC42B4C82F20040D4C4 /* Sources */,
 				D6D56FC52B4C82F20040D4C4 /* Frameworks */,
 				D6D56FC62B4C82F20040D4C4 /* Resources */,
-				1A5213C3961835C202128296 /* [CP] Embed Pods Frameworks */,
+				66BB9E52444F39914838A67B /* [CP] Copy Pods Resources */,
+				D62BB9EB2BD3463800ABBAA6 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -246,6 +300,7 @@
 				TargetAttributes = {
 					D6D56FC72B4C82F20040D4C4 = {
 						CreatedOnToolsVersion = 14.3.1;
+						LastSwiftMigration = 1530;
 					};
 				};
 			};
@@ -281,21 +336,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1A5213C3961835C202128296 /* [CP] Embed Pods Frameworks */ = {
+		66BB9E52444F39914838A67B /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-LiftingApp/Pods-LiftingApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-LiftingApp/Pods-LiftingApp-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-LiftingApp/Pods-LiftingApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-LiftingApp/Pods-LiftingApp-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LiftingApp/Pods-LiftingApp-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LiftingApp/Pods-LiftingApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		EAEA50B9A663557FC553A3E9 /* [CP] Check Pods Manifest.lock */ = {
@@ -342,12 +397,14 @@
 				D6D56FCE2B4C82F20040D4C4 /* LoginView.swift in Sources */,
 				D665A1392B965EF500FB2043 /* SelectNewWorkoutView.swift in Sources */,
 				D6F255C82BA513F4006D7AC2 /* CustomFunctions.swift in Sources */,
+				D62BB9E42BD3392400ABBAA6 /* OpenCVWrapper.mm in Sources */,
 				D665A1372B8FB08B00FB2043 /* RegisterAccountView.swift in Sources */,
 				D6D56FCC2B4C82F20040D4C4 /* LiftingAppApp.swift in Sources */,
 				D679F47E2BD068C100377A12 /* PersistenceController.swift in Sources */,
 				D6D56FDB2B4CABF00040D4C4 /* SplashScreenView.swift in Sources */,
 				D6A7CE032B62C8F7005ED2BA /* MainTabView.swift in Sources */,
 				D679F4842BD1B91300377A12 /* CD Routine + Helper.swift in Sources */,
+				D62BB9E62BD33D4500ABBAA6 /* OpenCVFunctions.swift in Sources */,
 				D69769112B8539A500458370 /* EditRoutineView.swift in Sources */,
 				31D1B17D2BA6907D0002D615 /* SettingsView.swift in Sources */,
 				D63DF7B12BAC8CD50036C9D0 /* VideoAnalysisView.swift in Sources */,
@@ -472,6 +529,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = LiftingApp/LiftingApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -479,6 +537,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"LiftingApp/Preview Content\"";
 				DEVELOPMENT_TEAM = AC6V234L6Y;
 				ENABLE_PREVIEWS = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/LiftingApp/OpenCV/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -491,7 +550,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "\"<Multiple values>\"";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
@@ -502,6 +561,8 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "LiftingApp/OpenCV/LiftingApp-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -513,6 +574,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = LiftingApp/LiftingApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -520,6 +582,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"LiftingApp/Preview Content\"";
 				DEVELOPMENT_TEAM = AC6V234L6Y;
 				ENABLE_PREVIEWS = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/LiftingApp/OpenCV/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -532,7 +595,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "\"<Multiple values>\"";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
@@ -543,6 +606,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "LiftingApp/OpenCV/LiftingApp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

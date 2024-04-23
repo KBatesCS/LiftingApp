@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+/*
 class RoutineList: Identifiable, Codable, ObservableObject {
     @Published var id: UUID
     @Published var routines: [Routine] = []
@@ -367,6 +367,7 @@ class WOSet: Codable {
         self.restLength = restLength
     }
 }
+*/
 
 struct Exercise: Identifiable, Codable, Equatable {
     var id: UUID

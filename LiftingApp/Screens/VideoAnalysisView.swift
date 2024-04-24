@@ -41,6 +41,7 @@ struct VideoAnalysisView: View {
                 ProgressView()
             case .loaded(let movie):
                 VideoResultsView(url: movie.url)
+                    
                 //VideoPlayer(player: AVPlayer(url: movie.url))
                 //   .scaledToFit()
                 //  .frame(width: 300, height: 300)
@@ -73,6 +74,7 @@ struct VideoResultsView: View {
     @State private var analyzingState: AnalyzingState = AnalyzingState.NOT_ANALYZING
     @State private var imageBuffer: [UIImage] = []
     let outputURL = URL(fileURLWithPath: NSTemporaryDirectory() + "output.mp4")
+    @State var loadVideo: Bool = true
     
     init(url: URL) {
         self.url = url
@@ -82,22 +84,9 @@ struct VideoResultsView: View {
         VStack {
             Text("results")
             if analyzingState == AnalyzingState.COMPLETED {
-                
                 VideoPlayer(player: AVPlayer(url: outputURL))
                     .scaledToFit()
-                
-                /*
-                 ScrollView {
-                 ForEach(imageBuffer, id: \.self) { frame in
-                 Image(uiImage: frame)
-                 .resizable()
-                 .aspectRatio(contentMode: .fit)
-                 }
-                 }*/
-                //                    Image(uiImage: image)
-                //                                       .resizable()
-                //                                        .aspectRatio(contentMode: .fit)
-                //                                        .frame(width: 300, height: 200)
+                    .frame(width: 300, height: 300)
             } else if loadingState == LoadingState.LOADING {
                 Text("Loading Video...")
             } else if loadingState == LoadingState.ERROR {
@@ -111,20 +100,11 @@ struct VideoResultsView: View {
             
         }
         .onAppear {
-            if imageBuffer.count == 0 {
-                /*
-                 extractFrames { completed in
-                 if completed {
-                 loadingState = LoadingState.FINISHED
-                 
-                 } else {
-                 loadingState = LoadingState.ERROR
-                 }
-                 }
-                 */
-                
+            if loadVideo {
+                loadVideo = false
                 extractFrames(url: url) { completed in
                     if completed {
+                        analyzingState = AnalyzingState.COMPLETED
                         loadingState = LoadingState.FINISHED
                     } else {
                         loadingState = LoadingState.ERROR
@@ -132,6 +112,7 @@ struct VideoResultsView: View {
                 }
             }
         }
+        /*
         .onChange(of: loadingState) { _ in
             if loadingState == LoadingState.FINISHED && imageBuffer.count > 10 {
                 analyzingState = AnalyzingState.ANALYZING
@@ -145,6 +126,7 @@ struct VideoResultsView: View {
                 }
             }
         }
+         */
         
     }
     
@@ -160,6 +142,7 @@ struct VideoResultsView: View {
         let asset = AVURLAsset(url: url)
         
         do {
+            let writer = VideoCreator(url: outputURL)
             let reader = try AVAssetReader(asset: asset)
             let videoTrack = asset.tracks(withMediaType: AVMediaType.video)[0]
             
@@ -173,236 +156,199 @@ struct VideoResultsView: View {
             reader.add(readerOutput)
             reader.startReading()
             
-//            var frames: [UIImage] = []
+            var frameCount = 0
+            
+            let context = CIContext() // Create CIContext outside the loop
             
             while let sampleBuffer = readerOutput.copyNextSampleBuffer() {
-                if let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
-                    // Create a CIImage from the image buffer
-                    let ciImage = CIImage(cvImageBuffer: imageBuffer)
-                    
-                    // Convert CIImage to UIImage
-                    let context = CIContext()
-                    if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
-                        let uiImage = UIImage(cgImage: cgImage)
-                        let grayScaledImage = OpenCVWrapper.grayscaleImg(uiImage)
-                        self.imageBuffer.append(grayScaledImage)
+                autoreleasepool { // Use autoreleasepool for efficient memory management
+                    if let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
+                        // Create a CIImage from the image buffer
+                        let ciImage = CIImage(cvImageBuffer: imageBuffer)
+                        
+                        // Convert CIImage to UIImage
+                        if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
+                            let uiImage = UIImage(cgImage: cgImage)
+                            let grayScaledImage = OpenCVWrapper.grayscaleImg(uiImage)
+                            
+                            // Write frame to video
+                            writer.write(image: grayScaledImage) { success in
+                                if !success {
+                                    completion(false)
+                                    writer.close()
+                                    return
+                                }
+                            }
+                                
+                            print("reading frame \(frameCount)")
+                            frameCount += 1
+                            
+                            // You can limit the number of frames processed here
+                            // For example, if you only want the first 5 frames:
+                        }
                     }
+                    CMSampleBufferInvalidate(sampleBuffer) // Release the sample buffer
                 }
             }
             
+            // Close writer after processing all frames
+            writer.close()
             completion(true)
         } catch {
             print("Error: \(error)")
             completion(false)
         }
-    }
-    
-    
-    public func imageFromVideo(url: URL, at time: TimeInterval, completion: @escaping (UIImage?) -> Void) {
-        DispatchQueue.global(qos: .background).async {
-            let asset = AVURLAsset(url: url)
-            
-            let assetIG = AVAssetImageGenerator(asset: asset)
-            assetIG.appliesPreferredTrackTransform = true
-            assetIG.apertureMode = AVAssetImageGenerator.ApertureMode.encodedPixels
-            
-            let cmTime = CMTime(seconds: time, preferredTimescale: 60)
-            let thumbnailImageRef: CGImage
-            do {
-                thumbnailImageRef = try assetIG.copyCGImage(at: cmTime, actualTime: nil)
-            } catch let error {
-                print("Error: \(error)")
-                return completion(nil)
-            }
-            
-            DispatchQueue.main.async {
-                completion(UIImage(cgImage: thumbnailImageRef))
-            }
-        }
-    }
-    
-    func extractFrames(completion: @escaping (Bool) -> Void) {
-        let asset = AVURLAsset(url: url)
-        let generator = AVAssetImageGenerator(asset: asset)
-        generator.appliesPreferredTrackTransform = true
-        
-        // Get the duration of the video
-        let durationSeconds = CMTimeGetSeconds(asset.duration)
-        
-        
-        // Get the number of frames
-        let totalFrames = Int(asset.tracks(withMediaType: .video)
-            .map { Float64($0.nominalFrameRate) * durationSeconds }
-            .reduce(0, +))
-        
-        let frameRate: Int32 = Int32(Double(totalFrames) / durationSeconds)
-        
-        print("Framerate: \(frameRate)")
-        //        let frameRate = 24
-        
-        var times: [NSValue] = []
-        var processedFrames = 0
-        
-        // Prepare array of times for each frame
-        let frameDuration = CMTime(value: 1, timescale: frameRate)
-        for i in 0..<totalFrames {
-            let time = CMTimeMultiply(frameDuration, multiplier: Int32(i))
-            times.append(NSValue(time: time))
-        }
-        
-        
-        generator.generateCGImagesAsynchronously(forTimes: times) { requestedTime, image, actualTime, result, error in
-            if let image = image {
-                print("Requested: \(requestedTime.seconds), Received: \(actualTime.seconds), error \(error?.localizedDescription ?? "none")")
-                DispatchQueue.main.async {
-                    let uiimage = UIImage(cgImage: image)
-                    let convertedImage = OpenCVWrapper.grayscaleImg(uiimage)
-                    self.imageBuffer.append(convertedImage)
-                    self.image = convertedImage
-                    processedFrames += 1
-                    if processedFrames == totalFrames {
-                        completion(true)
-                    }
-                }
-            } else {
-                DispatchQueue.main.async {
-                    completion(false)
-                }
-            }
-        }
+
     }
     
 }
 
+import AVFoundation
+import UIKit
+
 class VideoCreator {
     
-    func createVideo(from images: [UIImage], outputURL: URL, completion: @escaping (Bool) -> Void) {
-        guard !images.isEmpty else {
-            completion(false)
-            return
-        }
-        
-        // Delete existing file if it exists
+    let outputURL: URL
+    var initialized: Bool = false
+    var videoWriter: AVAssetWriter? = nil
+    var videoWriterInput: AVAssetWriterInput? = nil
+    var mediaQueue: DispatchQueue? = nil
+    var totalFrames: Int = 0
+    var presentationTime = CMTime.zero
+    let frameDuration = CMTimeMake(value: 1, timescale: 30)
+    var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor? = nil
+    
+    init(url: URL) {
+        outputURL = url
         do {
             if FileManager.default.fileExists(atPath: outputURL.path) {
                 try FileManager.default.removeItem(at: outputURL)
             }
         } catch {
-            completion(false)
-            return
+            print("Error removing file: \(error)")
         }
-        
+    }
+    
+    func initializeVideoWriter(height: CGFloat, width: CGFloat) -> Bool {
         do {
-            let videoWriter = try AVAssetWriter(outputURL: outputURL, fileType: .mp4)
+            videoWriter = try AVAssetWriter(outputURL: outputURL, fileType: .mp4)
             
             let videoSettings: [String: Any] = [
                 AVVideoCodecKey: AVVideoCodecType.h264,
-                AVVideoWidthKey: images[0].size.width,
-                AVVideoHeightKey: images[0].size.height
+                AVVideoWidthKey: width,
+                AVVideoHeightKey: height
             ]
             
-            let videoWriterInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
+            videoWriterInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
             
             let sourcePixelBufferAttributes: [String: Any] = [
                 kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32ARGB,
-                kCVPixelBufferWidthKey as String: images[0].size.width,
-                kCVPixelBufferHeightKey as String: images[0].size.height
+                kCVPixelBufferWidthKey as String: width,
+                kCVPixelBufferHeightKey as String: height
             ]
             
-            let pixelBufferAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: videoWriterInput, sourcePixelBufferAttributes: sourcePixelBufferAttributes)
+            pixelBufferAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: videoWriterInput!, sourcePixelBufferAttributes: sourcePixelBufferAttributes)
             
-            if videoWriter.canAdd(videoWriterInput) {
-                videoWriter.add(videoWriterInput)
+            if videoWriter!.canAdd(videoWriterInput!) {
+                videoWriter!.add(videoWriterInput!)
             } else {
-                completion(false)
-                return
+                return false
             }
             
-            videoWriter.startWriting()
-            videoWriter.startSession(atSourceTime: .zero)
+            videoWriter!.startWriting()
+            videoWriter!.startSession(atSourceTime: .zero)
             
-            let mediaQueue = DispatchQueue(label: "mediaInputQueue")
-            let frameDuration = CMTimeMake(value: 1, timescale: 30) // Assuming 30 frames per second
-            var presentationTime = CMTime.zero
-            
-            videoWriterInput.requestMediaDataWhenReady(on: mediaQueue) {
-                var frameCount = 0
-                
-                while frameCount < images.count {
-                    if videoWriterInput.isReadyForMoreMediaData {
-                        if let buffer = self.pixelBufferFromImage(images[frameCount]) {
-                            if !self.appendPixelBuffer(buffer, withPresentationTime: presentationTime, to: pixelBufferAdaptor) {
-                                completion(false)
-                                return
-                            }
-                            
-                            presentationTime = CMTimeAdd(presentationTime, frameDuration)
-                            frameCount += 1
+            mediaQueue = DispatchQueue(label: "mediaInputQueue")
+            presentationTime = CMTime.zero
+            initialized = true
+            return true
+        } catch {
+            print("Error initializing video writer: \(error)")
+            return false
+        }
+    }
+    
+    func write(image: UIImage, completed: @escaping (Bool) -> Void) {
+        if initialized || initializeVideoWriter(height: image.size.height, width: image.size.width) {
+            if let videoWriter = videoWriter, let videoWriterInput = videoWriterInput, let mediaQueue = mediaQueue, let pixelBufferAdaptor = pixelBufferAdaptor {
+                // Check if the input is ready for more media data
+                if videoWriterInput.isReadyForMoreMediaData {
+                    // Create pixel buffer from image
+                    if let buffer = self.pixelBufferFromImage(image) {
+                        // Append pixel buffer to video
+                        if !self.appendPixelBuffer(buffer, withPresentationTime: self.presentationTime, to: pixelBufferAdaptor) {
+                            completed(false)
+                            return
                         }
+                        
+                        // Update presentation time
+                        self.presentationTime = CMTimeAdd(self.presentationTime, self.frameDuration)
+                        self.totalFrames += 1
+                        completed(true)
                     }
                 }
-                
-                videoWriterInput.markAsFinished()
-                
-                videoWriter.finishWriting {
-                    completion(true)
-                }
             }
-        } catch {
-            completion(false)
+        }
+    }
+
+    
+    func close() {
+        if initialized, let videoWriter = videoWriter, let videoWriterInput = videoWriterInput, let mediaQueue = mediaQueue {
+            videoWriterInput.requestMediaDataWhenReady(on: mediaQueue) {
+                videoWriter.finishWriting {
+                    print("Video writing finished")
+                }
+                videoWriterInput.markAsFinished()
+            }
         }
     }
     
     private func pixelBufferFromImage(_ image: UIImage) -> CVPixelBuffer? {
-        let size = image.size
-        let attrs = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue,
-             kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue] as CFDictionary
-        var pixelBuffer: CVPixelBuffer?
+        guard let cgImage = image.cgImage else {
+            return nil
+        }
+        
+        let options: [String: Any] = [
+            kCVPixelBufferCGImageCompatibilityKey as String: true,
+            kCVPixelBufferCGBitmapContextCompatibilityKey as String: true
+        ]
+        
+        var pixelBuffer: CVPixelBuffer? = nil
         let status = CVPixelBufferCreate(kCFAllocatorDefault,
-                                         Int(size.width),
-                                         Int(size.height),
+                                         Int(image.size.width),
+                                         Int(image.size.height),
                                          kCVPixelFormatType_32ARGB,
-                                         attrs,
+                                         options as CFDictionary,
                                          &pixelBuffer)
-        
-        guard let buffer = pixelBuffer, status == kCVReturnSuccess else {
+        guard status == kCVReturnSuccess else {
             return nil
         }
         
-        CVPixelBufferLockBaseAddress(buffer, [])
-        let pixelData = CVPixelBufferGetBaseAddress(buffer)
-        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-        guard let context = CGContext(data: pixelData,
-                                      width: Int(size.width),
-                                      height: Int(size.height),
-                                      bitsPerComponent: 8,
-                                      bytesPerRow: CVPixelBufferGetBytesPerRow(buffer),
-                                      space: rgbColorSpace,
-                                      bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue) else {
+        CVPixelBufferLockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
+        let context = CGContext(data: CVPixelBufferGetBaseAddress(pixelBuffer!),
+                                width: Int(image.size.width),
+                                height: Int(image.size.height),
+                                bitsPerComponent: 8,
+                                bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer!),
+                                space: CGColorSpaceCreateDeviceRGB(),
+                                bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue)
+        
+        guard let ctx = context else {
             return nil
         }
         
-        context.translateBy(x: 0, y: size.height)
-        context.scaleBy(x: 1.0, y: -1.0)
+        ctx.draw(cgImage, in: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
+        CVPixelBufferUnlockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
         
-        UIGraphicsPushContext(context)
-        image.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
-        UIGraphicsPopContext()
-        
-        CVPixelBufferUnlockBaseAddress(buffer, [])
-        
-        return buffer
+        return pixelBuffer
     }
     
     private func appendPixelBuffer(_ pixelBuffer: CVPixelBuffer, withPresentationTime presentationTime: CMTime, to pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor) -> Bool {
-        while !pixelBufferAdaptor.assetWriterInput.isReadyForMoreMediaData {
-            usleep(10)
-        }
+        while !videoWriterInput!.isReadyForMoreMediaData {}
         
         return pixelBufferAdaptor.append(pixelBuffer, withPresentationTime: presentationTime)
     }
 }
-
 
 #Preview {
     VideoAnalysisView()

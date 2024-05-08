@@ -78,17 +78,6 @@
     
     cv::Mat resized;
     
-//    cv::INTER_NEAREST = 0,
-//    cv::INTER_LINEAR = 1,
-//    cv::INTER_CUBIC = 2,
-//    cv::INTER_AREA = 3,
-//    cv::INTER_LANCZOS4 = 4,
-//    cv::INTER_LINEAR_EXACT = 5,
-//    cv::INTER_NEAREST_EXACT = 6,
-//    cv::INTER_MAX = 7,
-//    cv::WARP_FILL_OUTLIERS = 8,
-//    cv::WARP_INVERSE_MAP = 16
-    
     cv::Size size = {width, height};
     
     cv::resize(mat, resized, size, 0, 0, interpolation);
@@ -99,6 +88,21 @@
     
     return resizedImg;
 
+}
+
++ (UIImage *)addDot:(UIImage *)image :(int)x :(int)y {
+    
+    cv::Mat dotted;
+    [image convertToMat : &dotted :false];
+    
+    // Draw a dot on the image
+    cv::Point center(x, y);
+    cv::circle(dotted, center, 10, cv::Scalar(255, 0, 0), -1); // Draw a green dot with radius 3
+    
+    // Convert the modified mat back to UIImage
+    UIImage *resultImage = MatToUIImage(dotted);
+    
+    return resultImage;
 }
 
 @end

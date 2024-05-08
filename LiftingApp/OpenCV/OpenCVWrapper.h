@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)getOpenCVVersion;
 + (UIImage *)grayscaleImg:(UIImage *)image;
 + (UIImage *)resizeImg:(UIImage *)image :(int)width :(int)height :(int)interpolation;
++ (UIImage *)addDot:(UIImage *)image :(int)width :(int) height;
 @end
 
 NS_ASSUME_NONNULL_END

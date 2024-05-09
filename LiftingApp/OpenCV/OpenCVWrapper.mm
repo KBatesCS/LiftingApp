@@ -12,33 +12,23 @@
 @implementation UIImage (OpenCVWrapper)
 
 - (void)convertToMat: (cv::Mat *)pMat: (bool)alphaExists {
+    
+    /*
     if (self.imageOrientation == UIImageOrientationRight) {
-        /*
-         * When taking picture in portrait orientation,
-         * convert UIImage to OpenCV Matrix in landscape right-side-up orientation,
-         * and then rotate OpenCV Matrix to portrait orientation
-         */
         UIImageToMat([UIImage imageWithCGImage:self.CGImage scale:1.0 orientation:UIImageOrientationUp], *pMat, alphaExists);
         cv::rotate(*pMat, *pMat, cv::ROTATE_90_CLOCKWISE);
     } else if (self.imageOrientation == UIImageOrientationLeft) {
-        /*
-         * When taking picture in portrait upside-down orientation,
-         * convert UIImage to OpenCV Matrix in landscape right-side-up orientation,
-         * and then rotate OpenCV Matrix to portrait upside-down orientation
-         */
         UIImageToMat([UIImage imageWithCGImage:self.CGImage scale:1.0 orientation:UIImageOrientationUp], *pMat, alphaExists);
         cv::rotate(*pMat, *pMat, cv::ROTATE_90_COUNTERCLOCKWISE);
     } else {
-        /*
-         * When taking picture in landscape orientation,
-         * convert UIImage to OpenCV Matrix directly,
-         * and then ONLY rotate OpenCV Matrix for landscape left-side-up orientation
-         */
         UIImageToMat(self, *pMat, alphaExists);
         if (self.imageOrientation == UIImageOrientationDown) {
             cv::rotate(*pMat, *pMat, cv::ROTATE_180);
         }
     }
+     */
+    
+    UIImageToMat(self, *pMat, alphaExists);
 }
 @end
 

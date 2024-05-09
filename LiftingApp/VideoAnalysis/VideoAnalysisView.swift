@@ -172,7 +172,7 @@ struct VideoResultsView: View {
                         if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
                             print("reading frame \(frameCount)")
                             if (frameCount < totalFrames) {
-                                analyzer.analyze(frame: cgImage, frameNum: frameCount) { completed in
+                                /*analyzer.analyze(frame: cgImage, frameNum: frameCount) { completed in
                                     
                                 } numWritten: { framesWritten in
                                     for _ in 1...framesWritten {
@@ -183,7 +183,7 @@ struct VideoResultsView: View {
                                             completion(true)
                                         }
                                     }
-                                }
+                                }*/
                             }
                             frameCount += 1
                             

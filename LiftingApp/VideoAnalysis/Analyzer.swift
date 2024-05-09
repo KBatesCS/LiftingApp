@@ -59,16 +59,8 @@ class VideoAnalyzer {
         }
     }
 
-    func analyze(frame: CGImage, frameNum: Int, completed: @escaping (Bool) -> Void, numWritten: @escaping (Int) -> Void) {
-        writer.write(image: UIImage(cgImage: frame), frameNum: frameNum) { success in
-            if !success {
-                print("ERRORRRR")
-            }
-            completed(true)
-        } numWritten: { total in
-            numWritten(total)
-        }
-        /*
+    func analyze(frame: CGImage, frameNum: Int) {
+        
         let requestHandler = VNImageRequestHandler(cgImage: frame)
         
         // Create a new request to recognize a human body pose.
@@ -82,7 +74,7 @@ class VideoAnalyzer {
         } catch {
             print("Unable to perform the request: \(error).")
         }
-         */
+         
     }
 
     func bodyPoseHandler(request: VNRequest, error: Error?, forFrame frame: CGImage, frameNum: Int) {
@@ -90,17 +82,7 @@ class VideoAnalyzer {
             print("error converting results to correct type")
             return
         }
-        
-        // Process each observation to find the recognized body pose points.
-        //if observations.isEmpty {
-            /*writer.write(image: UIImage(cgImage: frame), frameNum: frameNum) { success in
-                if !success {
-                    print("ERRORRRR")
-                }
-            }*/
-        /*} else {
-            observations.forEach { processObservation($0, forFrame: frame, frameNum: frameNum) }
-        }*/
+        observations.forEach { processObservation($0, forFrame: frame, frameNum: frameNum) }
     }
 
     func closeWriter() {

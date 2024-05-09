@@ -43,6 +43,7 @@
 		D6E166892BE98A7200CE53B1 /* VideoWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E166882BE98A7200CE53B1 /* VideoWriter.swift */; };
 		D6E1668B2BE9C55400CE53B1 /* VideoTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1668A2BE9C55400CE53B1 /* VideoTester.swift */; };
 		D6E1668D2BEAE2C500CE53B1 /* TestWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1668C2BEAE2C500CE53B1 /* TestWriter.swift */; };
+		D6E1668F2BEC2FFB00CE53B1 /* TestAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1668E2BEC2FFB00CE53B1 /* TestAnalyzer.swift */; };
 		D6F255C82BA513F4006D7AC2 /* CustomFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F255C42BA513F3006D7AC2 /* CustomFunctions.swift */; };
 		D6F255C92BA513F4006D7AC2 /* CustomViewObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F255C52BA513F3006D7AC2 /* CustomViewObjects.swift */; };
 		D6F255CA2BA513F4006D7AC2 /* WorkoutStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F255C62BA513F3006D7AC2 /* WorkoutStructs.swift */; };
@@ -106,6 +107,7 @@
 		D6E166882BE98A7200CE53B1 /* VideoWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoWriter.swift; sourceTree = "<group>"; };
 		D6E1668A2BE9C55400CE53B1 /* VideoTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTester.swift; sourceTree = "<group>"; };
 		D6E1668C2BEAE2C500CE53B1 /* TestWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWriter.swift; sourceTree = "<group>"; };
+		D6E1668E2BEC2FFB00CE53B1 /* TestAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAnalyzer.swift; sourceTree = "<group>"; };
 		D6F255C42BA513F3006D7AC2 /* CustomFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomFunctions.swift; sourceTree = "<group>"; };
 		D6F255C52BA513F3006D7AC2 /* CustomViewObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomViewObjects.swift; sourceTree = "<group>"; };
 		D6F255C62BA513F3006D7AC2 /* WorkoutStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkoutStructs.swift; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 				D6E166882BE98A7200CE53B1 /* VideoWriter.swift */,
 				D6E1668A2BE9C55400CE53B1 /* VideoTester.swift */,
 				D6E1668C2BEAE2C500CE53B1 /* TestWriter.swift */,
+				D6E1668E2BEC2FFB00CE53B1 /* TestAnalyzer.swift */,
 			);
 			path = VideoAnalysis;
 			sourceTree = "<group>";
@@ -423,6 +426,7 @@
 				D62BB9E42BD3392400ABBAA6 /* OpenCVWrapper.mm in Sources */,
 				D665A1372B8FB08B00FB2043 /* RegisterAccountView.swift in Sources */,
 				D6D56FCC2B4C82F20040D4C4 /* LiftingAppApp.swift in Sources */,
+				D6E1668F2BEC2FFB00CE53B1 /* TestAnalyzer.swift in Sources */,
 				D679F47E2BD068C100377A12 /* PersistenceController.swift in Sources */,
 				D6D56FDB2B4CABF00040D4C4 /* SplashScreenView.swift in Sources */,
 				D6E1668B2BE9C55400CE53B1 /* VideoTester.swift in Sources */,

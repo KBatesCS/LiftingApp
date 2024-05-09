@@ -20,18 +20,19 @@ extension Binding where Value == String {
 }
 
 extension UIImage {
-    func fixOrientation() -> UIImage {
-        if self.imageOrientation == UIImage.Orientation.up {
-            return self
-        }
-        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
-        self.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
-        if let normalizedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext() {
-            UIGraphicsEndImageContext()
-            return normalizedImage
-        } else {
-            return self
-        }
+    func drawDot(at point: CGPoint, color: UIColor, radius: CGFloat) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        
+        draw(in: CGRect(origin: .zero, size: size))
+        
+        context.setFillColor(color.cgColor)
+        context.addEllipse(in: CGRect(x: point.x - radius, y: point.y - radius, width: radius * 2, height: radius * 2))
+        context.fillPath()
+        
+        return UIGraphicsGetImageFromCurrentImageContext()
     }
 }
 

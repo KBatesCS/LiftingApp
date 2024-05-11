@@ -39,15 +39,15 @@ extension CDWorkoutRecord {
     }
     
     var workoutUUID: UUID {
-        get { workoutUUID_ ?? UUID() }
-        set { workoutUUID_ = newValue }
+        get { UUID(uuidString: workoutUUID_ ?? "") ?? UUID() }
+        set { workoutUUID_ = newValue.uuidString }
     }
     
     convenience init(date: Date = Date(), notes: String = "", usrStr: String, workoutUUID: UUID, context: NSManagedObjectContext) {
         self.init(context: context)
         self.notes = notes
         self.usrStr = usrStr
-        self.workoutUUID = uuid
+        self.workoutUUID = workoutUUID
         self.date = date
     }
     

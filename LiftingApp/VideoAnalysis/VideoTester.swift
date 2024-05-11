@@ -18,23 +18,25 @@ struct VideoProcessingView: View {
         self.outputURL = URL(fileURLWithPath: NSTemporaryDirectory() + "output.mp4")
         self.videoWriter = VideoWriter(outputURL: outputURL)
     }
-
+    
     var body: some View {
         if isVideoProcessed {
             VideoPlayer(player: AVPlayer(url: outputURL))
+                .scaledToFit()
         } else {
             ProgressView(value: progress) {
                 Text("Analyzing Video...")
             }
-                .onAppear {
-                    if !alreadyLoaded {
-                        alreadyLoaded = true
-                        Task {
-                            await extractFrames(url: videoURL)
-                            isVideoProcessed = true
-                        }
+            .padding(20)
+            .onAppear {
+                if !alreadyLoaded {
+                    alreadyLoaded = true
+                    Task {
+                        await extractFrames(url: videoURL)
+                        isVideoProcessed = true
                     }
                 }
+            }
         }
     }
     
@@ -45,7 +47,7 @@ struct VideoProcessingView: View {
         print("Orientation: \(getVideoOrientation(from: asset).rawValue)")
         do {
             guard let videoTrack = try await asset.loadTracks(withMediaType: .video).first else {
-                    throw VideoWriterError.noVideoTrack
+                throw VideoWriterError.noVideoTrack
             }
             
             
@@ -59,12 +61,12 @@ struct VideoProcessingView: View {
             
             if (getVideoOrientation(from: asset).rawValue % 2 == 0) {
                 try await videoWriter.setupWriter(width: Int(videoTrack.load(.naturalSize).width),
-                                                   height: Int(videoTrack.load(.naturalSize).height),
-                                                   frameRate: Int32(fps))
+                                                  height: Int(videoTrack.load(.naturalSize).height),
+                                                  frameRate: Int32(fps))
             } else {
                 try await videoWriter.setupWriter(width: Int(videoTrack.load(.naturalSize).height),
-                                                   height: Int(videoTrack.load(.naturalSize).width),
-                                                   frameRate: Int32(fps))
+                                                  height: Int(videoTrack.load(.naturalSize).width),
+                                                  frameRate: Int32(fps))
             }
             
             
@@ -97,19 +99,19 @@ struct VideoProcessingView: View {
                             
                             if let bodyPoints = TestAnalyzer().analyze(frame: image.cgImage!) {
                                 for frameBodyPoints in bodyPoints {
-//                                    print("Found \(frameBodyPoints.count) points on frame \(frameNum)")
+                                    //                                    print("Found \(frameBodyPoints.count) points on frame \(frameNum)")
                                     for (point, jointName) in frameBodyPoints {
                                         image = image.drawDot(at: CGPoint(x: point.x, y: image.size.height - point.y), color: .red, radius: 10) ?? image
                                     }
                                 }
                             }
-                             
+                            
                             
                             let success = videoWriter.write(image: image, frameNum: frameNum)
                             if !success {
                                 print("Failed to write frame \(frameNum)")
                             } else {
-//                                print("wrote frame \(frameNum)")
+                                //                                print("wrote frame \(frameNum)")
                                 frameNum += 1
                                 progress = Double(frameNum) / Double(totalFrames)
                                 if progress > 1.0 {
@@ -133,14 +135,14 @@ struct VideoProcessingView: View {
             await _ = videoWriter.finishWriting()
             print("Error: \(error)")
         }
-
+        
     }
     
     func getVideoOrientation(from asset: AVAsset) -> UIImage.Orientation {
         guard let videoTrack = asset.tracks(withMediaType: .video).first else {
             return .up
         }
-
+        
         let transform = videoTrack.preferredTransform
         
         if transform.a == 0 && transform.b == 1 && transform.c == -1 && transform.d == 0 {
@@ -155,7 +157,7 @@ struct VideoProcessingView: View {
             return .up // Default to up if orientation is unknown
         }
     }
-
+    
     
     
     enum VideoWriterError: Error {

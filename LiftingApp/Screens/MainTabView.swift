@@ -10,10 +10,10 @@ import SwiftUI
 struct MainTabView: View {
     @State private var selectedTab = 3
 
-    @StateObject private var activeWorkoutInfo: ActiveWorkoutViewData
+    @StateObject private var activeWorkoutInfo: ActiveWorkoutDisplayContainer
     
     init() {
-        _activeWorkoutInfo = StateObject(wrappedValue: ActiveWorkoutViewData())
+        _activeWorkoutInfo = StateObject(wrappedValue: ActiveWorkoutDisplayContainer())
     }
     
     var body: some View {

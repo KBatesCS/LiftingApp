@@ -7,47 +7,39 @@
 
 import SwiftUI
 import Combine
+import CoreData
 
 struct ActiveWorkoutView: View {
-    //@FetchRequest(fetchRequest: CDWorkoutRecord.fetch())
-    //var workoutRecords: FetchedResults<CDWorkoutRecord>
+    @FetchRequest(fetchRequest: CDWorkoutRecord.fetch())
+    var previousWorkoutRecordsList: FetchedResults<CDWorkoutRecord>
     
-    //@ObservedObject var workout: CDWorkout
+    @State var previousWorkoutRecord: CDWorkoutRecord? = nil
     
     @Environment(\.managedObjectContext) var context
     
-    //@EnvironmentObject var routineList: RoutineList
-    @EnvironmentObject var activeWorkoutInfo: ActiveWorkoutViewData
+    @EnvironmentObject var activeWorkoutInfo: ActiveWorkoutDisplayContainer
+    @ObservedObject private var workoutDisplay: ActiveWorkoutDisplay
     
     @Environment(\.dismiss) private var dismissAction: DismissAction
     
-    @ObservedObject private var workoutDisplay: ActiveWorkoutDisplay
-    @State private var timerString = "00:00:00"
-    private var workoutName: String
-    private var workoutID: UUID
-    
-    @State private var startTime: Date
     @State private var elapsedTime = TimeInterval(0)
     @State private var timer: Timer?
     
     @State private var isShowingFinishConf: Bool = false
     
     var elapsedTimeString: String {
-            let currentTimeInterval = elapsedTime
-            let hours = Int(currentTimeInterval / 3600)
-            let minutes = Int((currentTimeInterval.truncatingRemainder(dividingBy: 3600)) / 60)
-            let seconds = Int(currentTimeInterval.truncatingRemainder(dividingBy: 60))
-            
-            return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        let currentTimeInterval = elapsedTime
+        let hours = Int(currentTimeInterval / 3600)
+        let minutes = Int((currentTimeInterval.truncatingRemainder(dividingBy: 3600)) / 60)
+        let seconds = Int(currentTimeInterval.truncatingRemainder(dividingBy: 60))
+        
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
     
     @FocusState var numPadFocus: Bool
     
     init(workout: CDWorkout) {
-        self.workoutName = workout.name
-        self.workoutDisplay = ActiveWorkoutDisplay(workoutID: workout.uuid)
-        self.startTime = Date()
-        self.workoutID = workout.uuid
+        self.workoutDisplay = ActiveWorkoutDisplay(startTime: Date(), workoutName: workout.name, workoutID: workout.uuid)
         
         for eSet in workout.exercises {
             let newESD = ActiveExerciseSetDisplay(exercise: eSet.exercise, intensityForm: eSet.intensityType, inLBs: true)
@@ -58,18 +50,15 @@ struct ActiveWorkoutView: View {
         }
     }
     
-    init(workoutDisplay: ActiveWorkoutDisplay, startTime: Date, workoutName: String, workoutID: UUID) {
+    init(workoutDisplay: ActiveWorkoutDisplay) {
         self.workoutDisplay = workoutDisplay
-        self.startTime = startTime
-        self.workoutName = workoutName
-        self.workoutID = workoutID
     }
     
     
     var body: some View {
         HStack {
             Spacer()
-            Text(workoutName)
+            Text(workoutDisplay.workoutName)
                 .scaledToFill()
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
@@ -78,12 +67,23 @@ struct ActiveWorkoutView: View {
             Text("\(elapsedTimeString)")
             
             Spacer()
-             
+            
         }
         
         Spacer()
         
+        
+        
         List {
+            
+            if !workoutDisplay.previousNotes.isEmpty {
+                Section {
+                    Text(workoutDisplay.previousNotes)
+                } header: {
+                    Text("Previous Notes")
+                }
+            }
+            
             ForEach(workoutDisplay.exercises.indices, id: \.self) { woIndex in
                 let eSetDisplay = workoutDisplay.exercises[woIndex]
                 Section {
@@ -138,7 +138,9 @@ struct ActiveWorkoutView: View {
                                 .frame(width: 25, height: 25, alignment: .leading)
                                 .cornerRadius(5.0)
                                 .overlay {
-                                    Image(systemName: self.workoutDisplay.exercises[woIndex].sets[sindex].completed ? "checkmark" : "")
+                                    if self.workoutDisplay.exercises[woIndex].sets[sindex].completed {
+                                        Image(systemName: self.workoutDisplay.exercises[woIndex].sets[sindex].completed ? "checkmark" : "")
+                                    }
                                 }
                                 .onTapGesture {
                                     self.workoutDisplay.exercises[woIndex].sets[sindex].completed.toggle()
@@ -238,44 +240,47 @@ struct ActiveWorkoutView: View {
                     }
                 )
             }
-            //  }
-            
-            
-            // }
         }
         .onAppear {
-            if activeWorkoutInfo.startTime == nil {
-                startTime = Date()
+            if self.activeWorkoutInfo.display == nil {
+                if let oldRecord = getLatestRecord() {
+                    workoutDisplay.previousNotes = oldRecord.notes
+                }
+                workoutDisplay.startTime = Date()
+                self.activeWorkoutInfo.display = workoutDisplay
             }
-            activeWorkoutInfo.displayInfo = self.workoutDisplay
-            activeWorkoutInfo.startTime = self.startTime
-            activeWorkoutInfo.workoutName = self.workoutName
-            activeWorkoutInfo.workoutID = self.workoutID
+            
             self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-                self.elapsedTime = Date().timeIntervalSince(startTime)
+                self.elapsedTime = Date().timeIntervalSince(workoutDisplay.startTime)
                 if (self.elapsedTime >= 864999) { // should stop the timer right before 10 days hits.
                     self.timer?.invalidate()
                 }
             }
-            
         }
         .onDisappear {
-                    self.timer?.invalidate()
+            self.timer?.invalidate()
         }
     }
-    /*
-    func stopTimer() {
-        self.timer.upstream.connect().cancel()
-        self.isTimerRunning = false
-    }
     
-    func startTimer() {
-        self.timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-        self.isTimerRunning = true
-    }*/
-    
-    func fillDetails() {
-        
+    func getLatestRecord() -> CDWorkoutRecord? {
+        let request = CDWorkoutRecord.fetch()
+        request.predicate = NSPredicate(format: "workoutUUID_ == %@", workoutDisplay.workoutID.uuidString)
+        request.fetchLimit = 1
+        request.sortDescriptors = [NSSortDescriptor(key: "date_", ascending: false)]
+        do {
+            let oldRecords = try context.fetch(request)
+            if !oldRecords.isEmpty {
+                print(previousWorkoutRecord?.workoutUUID ?? "no workoutuuid on previous record????")
+                print(workoutDisplay.workoutID.uuidString)
+                previousWorkoutRecord = oldRecords[0]
+                return previousWorkoutRecord
+            }
+        } catch {
+            print(error)
+            return nil
+        }
+        print("no previous records found")
+        return nil
     }
     
     func everyExerciseComplete() -> Bool {
@@ -290,10 +295,7 @@ struct ActiveWorkoutView: View {
     }
     
     func closeActiveWorkoutInfo() {
-        self.activeWorkoutInfo.displayInfo = nil
-        self.activeWorkoutInfo.startTime = nil
-        self.activeWorkoutInfo.workoutName = nil
-        self.activeWorkoutInfo.workoutID = nil
+        self.activeWorkoutInfo.display = nil
     }
     
     func allSameIntensity(exerciseSet: ActiveExerciseSetDisplay) -> Bool{
@@ -320,7 +322,7 @@ struct ActiveWorkoutView: View {
         return out
     }
     
-    func getDisplaySet(eset: CDExerciseSet) -> [ActiveSetDisplay]{
+    func getDisplaySet(eset: CDExerciseSet) -> [ActiveSetDisplay] {
         var out: [ActiveSetDisplay] = []
         
         for set in eset.sets {
@@ -330,19 +332,9 @@ struct ActiveWorkoutView: View {
         return out
     }
     
-    func getActiveWorkoutDisplay(workout: CDWorkout) -> ActiveWorkoutDisplay {
-        let out = ActiveWorkoutDisplay(workoutID: workout.uuid)
-        for eSet in workout.exercises {
-            let newESD = ActiveExerciseSetDisplay(exercise: eSet.exercise, intensityForm: eSet.intensityType, inLBs: true)
-            newESD.sets = getDisplaySet(eset: eSet)
-            out.exercises.append(newESD)
-        }
-        return out
-    }
-    
     func saveToRecord(displayInfo: ActiveWorkoutDisplay) {
         
-        let workoutRecord = CDWorkoutRecord(notes: displayInfo.notes, usrStr: "ExampleUser", workoutUUID: workoutID, context: context)
+        let workoutRecord = CDWorkoutRecord(notes: displayInfo.notes, usrStr: "ExampleUser", workoutUUID: workoutDisplay.workoutID, context: context)
         
         for exerciseIndex in workoutDisplay.exercises.indices {
             let esetDisplay = workoutDisplay.exercises[exerciseIndex]
@@ -370,49 +362,11 @@ struct ActiveWorkoutView: View {
         }
         return true
     }
+    
+    
 }
 
-class ActiveWorkoutDisplay: Identifiable, ObservableObject {
-    let id = UUID()
-    @Published var workoutID: UUID?
-    @Published var exercises: [ActiveExerciseSetDisplay] = []
-    @Published var notes: String = ""
-    
-    init (workoutID: UUID?) {
-        self.workoutID = workoutID
-    }
-}
 
-class ActiveExerciseSetDisplay: Identifiable, ObservableObject {
-    let id = UUID()
-    @Published var exercise: Exercise
-    @Published var intensityForm: IntensityType
-    @Published var sets: [ActiveSetDisplay] = []
-    @Published var inLBs: Bool
-    
-    init(exercise: Exercise, intensityForm: IntensityType, inLBs: Bool) {
-        self.exercise = exercise
-        self.intensityForm = intensityForm
-        self.inLBs = inLBs
-    }
-}
-
-class ActiveSetDisplay: Identifiable, ObservableObject {
-    let id = UUID()
-    @Published var targetReps: String
-    @Published var intensity: Float
-    @Published var achievedReps: Double?
-    @Published var weight: Double?
-    @Published var completed: Bool = false
-    
-    
-    init(targetReps: String, intensity: Float, achievedReps: Double? = nil, weight: Double? = nil) {
-        self.targetReps = targetReps
-        self.intensity = intensity
-        self.achievedReps = achievedReps
-        self.weight = weight
-    }
-}
 
 struct awPreviewView: View {
     @FetchRequest(fetchRequest: CDWorkout.fetch())

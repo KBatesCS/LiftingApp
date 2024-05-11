@@ -8,24 +8,17 @@
 import SwiftUI
 
 struct StartWorkoutView: View {
-    
-    //@EnvironmentObject private var routineList: RoutineList
-    @EnvironmentObject private var activeWorkoutInfo: ActiveWorkoutViewData
+    @EnvironmentObject private var activeWorkoutInfo: ActiveWorkoutDisplayContainer
     
     @State private var selectedRoutine: CDWorkoutRoutine?
-    
     @State private var selectedWorkout: CDWorkout?
-    
-    //@State private var isShowingActiveWorkout = false
-//    @State private var activeViewHolder: ActiveWorkoutViewHolder
-    //@State var currActiveWorkoutView: ActiveWorkoutView? = nil
     
     @FetchRequest(fetchRequest: CDWorkoutRoutine.fetch())
     var workoutRoutines: FetchedResults<CDWorkoutRoutine>
     
     init() {
-        let request = CDWorkoutRoutine.fetch()
-        self._workoutRoutines = FetchRequest(fetchRequest: request)
+//        let request = CDWorkoutRoutine.fetch()
+//        self._workoutRoutines = FetchRequest(fetchRequest: request)
     }
     
     var body: some View {
@@ -101,8 +94,18 @@ struct StartWorkoutView: View {
                     
                     Spacer()
                     
-                    if activeWorkoutInfo.workoutName == nil || activeWorkoutInfo.startTime == nil || activeWorkoutInfo.displayInfo == nil || activeWorkoutInfo.workoutID == nil {
-                        
+                    if let foundDisplay = activeWorkoutInfo.display {
+                        NavigationLink(destination: ActiveWorkoutView(workoutDisplay: foundDisplay)) {
+                            Text("Continue")
+                                .font(.title2)
+                                .foregroundColor(Color("Text"))
+                                .bold()
+                                .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
+                                .background(Color("Accent"))
+                                .cornerRadius(21)
+                                .padding()
+                        }
+                    } else {
                         if selectedWorkout != nil {
                             
                             NavigationLink(destination: ActiveWorkoutView(workout: selectedWorkout!)) {
@@ -116,88 +119,21 @@ struct StartWorkoutView: View {
                                     .padding()
                             }
                         }
-                    } else {
-                        NavigationLink(destination: ActiveWorkoutView(workoutDisplay: activeWorkoutInfo.displayInfo!, startTime: activeWorkoutInfo.startTime!, workoutName: activeWorkoutInfo.workoutName!, workoutID: activeWorkoutInfo.workoutID!)) {
-                            Text("Continue")
-                                .font(.title2)
-                                .foregroundColor(Color("Text"))
-                                .bold()
-                                .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
-                                .background(Color("Accent"))
-                                .cornerRadius(21)
-                                .padding()
-                        }
-                             
                     }
-                    /*
-                    
-                    if activeWorkoutInfo.workoutName == nil {
-                        Button(action: {
-                            if currActiveWorkoutView == nil {
-                                currActiveWorkoutView = ActiveWorkoutView(workout: selectedWorkout)
-                            }
-                            isShowingActiveWorkout = true
-                        }) {
-                            Text("Begin")
-                                .font(.title2)
-                                .foregroundColor(Color("Text"))
-                                .bold()
-                                .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
-                                .background(Color("Accent"))
-                                .cornerRadius(21)
-                                .padding()
-                        }
-                    }
-                     */
-                    
-                    /*
-                    Button(action: {
-                        if activeViewHolder.currActiveWorkoutView == nil {
-                            currentActiveWorkoutView = ActiveWorkoutView(workout: selectedWorkout, activeViewHolder: activeViewHolder)
-                        }
-                        isShowingActiveWorkout = true
-                    }) {
-                        Text("Begin")
-                            .font(.title2)
-                            .foregroundColor(Color("Text"))
-                            .bold()
-                            .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
-                            .background(Color("Accent"))
-                            .cornerRadius(21)
-                            .padding()
-                    }
-                    .sheet(isPresented: $isShowingActiveWorkout, onDismiss: {
-                        // Perform actions upon dismissal of ActiveWorkoutView
-                    }) {
-                        ActiveWorkoutView(workout: selectedWorkout)
-                    }
-                     */
                 }
             }
         }
     }
 }
 
-class ActiveWorkoutViewData: ObservableObject {
-    @Published var displayInfo: ActiveWorkoutDisplay?
-    @Published var startTime: Date?
-    @Published var workoutName: String?
-    @Published var workoutID: UUID?
-    
-    init(displayInfo: ActiveWorkoutDisplay? = nil, startTime: Date? = nil, workoutName: String? = nil, workoutID: UUID? = nil) {
-        self.displayInfo = displayInfo
-        self.startTime = startTime
-        self.workoutName = workoutName
-        self.workoutID = workoutID
-    }
-}
+
 
 
 struct stwPreviewView: View {
-    @StateObject private var activeWorkoutInfo: ActiveWorkoutViewData
+    @StateObject private var activeWorkoutInfo: ActiveWorkoutDisplayContainer
 
     init() {
-        _activeWorkoutInfo = StateObject(wrappedValue: ActiveWorkoutViewData())
+        _activeWorkoutInfo = StateObject(wrappedValue: ActiveWorkoutDisplayContainer())
     }
     
     var body: some View {

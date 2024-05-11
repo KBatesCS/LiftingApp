@@ -45,7 +45,7 @@
         <attribute name="notes_" optional="YES" attributeType="String"/>
         <attribute name="userStr_" optional="YES" attributeType="String"/>
         <attribute name="uuid_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="workoutUUID_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="workoutUUID_" optional="YES" attributeType="String"/>
         <relationship name="exercises_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDExerciseRecord" inverseName="workout" inverseEntity="CDExerciseRecord"/>
     </entity>
     <entity name="CDWorkoutRoutine" representedClassName="CDWorkoutRoutine" syncable="YES" codeGenerationType="class">

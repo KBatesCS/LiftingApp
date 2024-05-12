@@ -245,10 +245,12 @@ struct ActiveWorkoutView: View {
             if self.activeWorkoutInfo.display == nil {
                 if let oldRecord = getLatestRecord() {
                     workoutDisplay.previousNotes = oldRecord.notes
+                    loadPastRecord(pastRecord: oldRecord)
                 }
                 workoutDisplay.startTime = Date()
                 self.activeWorkoutInfo.display = workoutDisplay
             }
+            self.elapsedTime = Date().timeIntervalSince(workoutDisplay.startTime)
             
             self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 self.elapsedTime = Date().timeIntervalSince(workoutDisplay.startTime)
@@ -262,6 +264,50 @@ struct ActiveWorkoutView: View {
         }
     }
     
+    func loadPastRecord(pastRecord: CDWorkoutRecord) {
+        var pastMap = [UUID: [CDExerciseRecord]]()
+        for exercise in pastRecord.exercises {
+            let id = exercise.exercise.id
+            if pastMap[id] == nil {
+                pastMap[id] = [exercise]
+            } else {
+                pastMap[id]?.append(exercise)
+            }
+        }
+        
+        var counterMap = [UUID: [ActiveExerciseSetDisplay]]()
+        for exercise in workoutDisplay.exercises {
+            let count: Int
+            let id = exercise.exercise.id
+            if counterMap[id] == nil {
+                count = 0
+                counterMap[id] = [exercise]
+            } else {
+                count = counterMap[id]?.count ?? 0
+                counterMap[id]?.append(exercise)
+            }
+            
+            let records = pastMap[id]
+            let index = min((records?.count ?? 0) - 1, count)
+            //if there is a past record, get closest matching (I think)
+            if index >= 0 {
+                //fill sets
+                let record = pastMap[id]![index]
+                for (i, set) in exercise.sets.enumerated() {
+                    if i < record.sets.count {
+                        if record.sets[i].reps != 0 {
+                            set.achievedReps = Double(record.sets[i].reps)
+                        }
+                        if record.sets[i].weight != 0 {
+                            set.weight = record.sets[i].weight
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+    
     func getLatestRecord() -> CDWorkoutRecord? {
         let request = CDWorkoutRecord.fetch()
         request.predicate = NSPredicate(format: "workoutUUID_ == %@", workoutDisplay.workoutID.uuidString)
@@ -270,8 +316,6 @@ struct ActiveWorkoutView: View {
         do {
             let oldRecords = try context.fetch(request)
             if !oldRecords.isEmpty {
-                print(previousWorkoutRecord?.workoutUUID ?? "no workoutuuid on previous record????")
-                print(workoutDisplay.workoutID.uuidString)
                 previousWorkoutRecord = oldRecords[0]
                 return previousWorkoutRecord
             }

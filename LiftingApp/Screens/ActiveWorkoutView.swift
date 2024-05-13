@@ -205,42 +205,57 @@ struct ActiveWorkoutView: View {
             
         }
         .scrollDismissesKeyboard(.interactively)
+        
         .overlay {
-            Spacer()
-            Button (action: {
-                //stopTimer()
-                if !self.allExercisesComplete(displayInfo: workoutDisplay) {
-                    isShowingFinishConf = true
-                } else {
-                    self.closeActiveWorkoutInfo()
-                    self.saveToRecord(displayInfo: workoutDisplay)
-                    self.dismissAction.callAsFunction()
-                }
-            }, label: {
-                Text("Finish Workout")
+            HStack {
+                Spacer()
+                Text("\(elapsedTimeString)")
                     .frame(alignment: .bottom)
                     .font(.title2)
                     .foregroundColor(Color("Text"))
                     .bold()
-                    .frame(width: UIScreen.main.bounds.width/1.6, height: 42)
+                    .frame(width: UIScreen.main.bounds.width/3.4, height: 42)
                     .background(Color("Accent"))
-                    .cornerRadius(21)
+                    .cornerRadius(7)
                     .padding(.bottom, 6)
-            })
-            .frame(maxHeight: .infinity, alignment: .bottom)
-            .alert(isPresented: $isShowingFinishConf) {
-                Alert(
-                    title: Text("Finish Workout"),
-                    message: Text("Not all exercises were entered, finish anyways?"),
-                    primaryButton: .cancel(),
-                    secondaryButton: .destructive(Text("Finish")) {
+                
+                Button (action: {
+                    //stopTimer()
+                    if !self.allExercisesComplete(displayInfo: workoutDisplay) {
+                        isShowingFinishConf = true
+                    } else {
+                        self.closeActiveWorkoutInfo()
+                        self.saveToRecord(displayInfo: workoutDisplay)
+                        self.dismissAction.callAsFunction()
+                    }
+                }, label: {
+                    Text("End Workout")
+                        .frame(alignment: .bottom)
+                        .font(.title2)
+                        .foregroundColor(Color("Text"))
+                        .bold()
+                        .frame(width: UIScreen.main.bounds.width/1.8, height: 42)
+                        .background(Color("Accent"))
+                        .cornerRadius(7)
+                        .padding(.bottom, 6)
+                })
+                .alert("Finish Workout", isPresented: $isShowingFinishConf, actions: {
+                    Button("Finish Anyways", action: {
                         self.saveToRecord(displayInfo: workoutDisplay)
                         self.closeActiveWorkoutInfo()
                         self.dismissAction.callAsFunction()
-                    }
-                )
+                    })
+                    Button("End Without Saving", role: .destructive, action: {
+                        self.closeActiveWorkoutInfo()
+                        self.dismissAction.callAsFunction()
+                    })
+                    Button("Cancel", role: .cancel, action: {})
+                }, message: {Text("Not all exercises have been completed")})
+                Spacer()
             }
+            .frame(maxHeight: .infinity, alignment: .bottom)
         }
+        
         .onAppear {
             if self.activeWorkoutInfo.display == nil {
                 if let oldRecord = getLatestRecord() {

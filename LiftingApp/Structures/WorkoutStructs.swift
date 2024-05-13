@@ -38,11 +38,13 @@ class ActiveExerciseSetDisplay: Identifiable, ObservableObject {
     @Published var intensityForm: IntensityType
     @Published var sets: [ActiveSetDisplay] = []
     @Published var inLBs: Bool
+    @Published var restTimeSeconds: Int
     
-    init(exercise: Exercise, intensityForm: IntensityType, inLBs: Bool) {
+    init(exercise: Exercise, intensityForm: IntensityType, inLBs: Bool, restTimeSeconds: Int) {
         self.exercise = exercise
         self.intensityForm = intensityForm
         self.inLBs = inLBs
+        self.restTimeSeconds = restTimeSeconds
     }
 }
 

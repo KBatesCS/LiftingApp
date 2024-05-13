@@ -46,7 +46,7 @@ struct PersistenceController {
         
         //example of stuff in memory for preview
         
-        let workoutRecord = CDWorkoutRecord(notes: "lift lighter next time", usrStr: "ExampleUser", workoutUUID: UUID(), context: context)
+        let workoutRecord = CDWorkoutRecord(notes: "lift lighter next time", usrStr: "ExampleUser", workoutUUID: UUID(), context: context, totalTime: 90)
         
         
         let exercise1 = CDExerciseRecord(inLBs: true, exercise: loadExercise(uuid: UUID(uuidString: "2ABFB8CA-E493-4EC8-B04A-45FDDF7D92A4")), orderLoc: 1, context: context)
@@ -85,12 +85,12 @@ struct PersistenceController {
         
         workoutRecord.exercises.append(exercise3)
         
-        let workoutRecord2 = CDWorkoutRecord(date: Date.now.startOfMonth, usrStr: "ExampleUser", workoutUUID: UUID(), context: context)
+        let workoutRecord2 = CDWorkoutRecord(date: Date.now.startOfMonth, usrStr: "ExampleUser", workoutUUID: UUID(), context: context, totalTime: 90)
         
         
-        let workoutRecord3 = CDWorkoutRecord(date: Date.now, usrStr: "ExampleUser", workoutUUID: UUID(), context: context)
+        let workoutRecord3 = CDWorkoutRecord(date: Date.now, usrStr: "ExampleUser", workoutUUID: UUID(), context: context, totalTime: 90)
         
-        let workoutRecord4 = CDWorkoutRecord(date: Date.now.firstWeekDayBeforeStart, notes: "lift lighter next time", usrStr: "ExampleUser", workoutUUID: UUID(), context: context)
+        let workoutRecord4 = CDWorkoutRecord(date: Date.now.firstWeekDayBeforeStart, notes: "lift lighter next time", usrStr: "ExampleUser", workoutUUID: UUID(), context: context, totalTime: 120)
         
         
         // ---------------------------------------

@@ -53,7 +53,7 @@ struct ActiveWorkoutView: View {
         self.workoutDisplay = ActiveWorkoutDisplay(startTime: Date(), workoutName: workout.name, workoutID: workout.uuid)
         
         for eSet in workout.exercises {
-            let newESD = ActiveExerciseSetDisplay(exercise: eSet.exercise, intensityForm: eSet.intensityType, inLBs: true)
+            let newESD = ActiveExerciseSetDisplay(exercise: eSet.exercise, intensityForm: eSet.intensityType, inLBs: true, restTimeSeconds: eSet.restLength)
             for set in eSet.sets {
                 newESD.sets.append(ActiveSetDisplay(targetReps: set.targetReps, intensity: set.intensity))
             }
@@ -138,8 +138,8 @@ struct ActiveWorkoutView: View {
                                 .onTapGesture {
                                     self.workoutDisplay.exercises[woIndex].sets[sindex].completed.toggle()
                                     self.workoutDisplay.objectWillChange.send()
-                                    self.endRestTime = Calendar.current.date(byAdding: .second, value: 90, to: Date())!
-                                    self.remainingRestTime = 90
+                                    self.endRestTime = Calendar.current.date(byAdding: .second, value: eSetDisplay.restTimeSeconds, to: Date())!
+                                    self.remainingRestTime = TimeInterval(eSetDisplay.restTimeSeconds)
                                 }
                             
                         }
@@ -459,7 +459,7 @@ struct ActiveWorkoutView: View {
     
     func saveToRecord(displayInfo: ActiveWorkoutDisplay) {
         
-        let workoutRecord = CDWorkoutRecord(notes: displayInfo.notes, usrStr: "ExampleUser", workoutUUID: workoutDisplay.workoutID, context: context)
+        let workoutRecord = CDWorkoutRecord(notes: displayInfo.notes, usrStr: "ExampleUser", workoutUUID: workoutDisplay.workoutID, context: context, totalTime: Int(elapsedTime))
         
         for exerciseIndex in workoutDisplay.exercises.indices {
             let esetDisplay = workoutDisplay.exercises[exerciseIndex]

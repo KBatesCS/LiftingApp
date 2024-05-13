@@ -18,6 +18,11 @@ extension CDWorkoutRecord {
         #endif
     }
     
+    var totalTime: Int {
+        get { Int(totalTime_) }
+        set { totalTime_ = Int32(newValue) }
+    }
+    
     var exercises: [CDExerciseRecord] {
         get {( exercises_ as? Set<CDExerciseRecord> )?.sorted{$0.orderLoc < $1.orderLoc} ?? []}
         set { exercises_ = NSSet(array: newValue)}
@@ -43,12 +48,13 @@ extension CDWorkoutRecord {
         set { workoutUUID_ = newValue.uuidString }
     }
     
-    convenience init(date: Date = Date(), notes: String = "", usrStr: String, workoutUUID: UUID, context: NSManagedObjectContext) {
+    convenience init(date: Date = Date(), notes: String = "", usrStr: String, workoutUUID: UUID, context: NSManagedObjectContext, totalTime: Int) {
         self.init(context: context)
         self.notes = notes
         self.usrStr = usrStr
         self.workoutUUID = workoutUUID
         self.date = date
+        self.totalTime = totalTime
     }
     
     public override func awakeFromInsert() {

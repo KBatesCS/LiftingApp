@@ -43,6 +43,7 @@
     <entity name="CDWorkoutRecord" representedClassName="CDWorkoutRecord" syncable="YES" codeGenerationType="class">
         <attribute name="date_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="notes_" optional="YES" attributeType="String"/>
+        <attribute name="totalTime_" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="userStr_" optional="YES" attributeType="String"/>
         <attribute name="uuid_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="workoutUUID_" optional="YES" attributeType="String"/>

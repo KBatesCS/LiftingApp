@@ -101,7 +101,7 @@ struct ActiveWorkoutView: View {
                         RoundedRectangle(cornerRadius: 5.0)
                             .stroke(Color.clear, lineWidth: 2)
                             .frame(width: 25, height: 25, alignment: .leading)
-                    }
+                    }.deleteDisabled(true)
                     
                     ForEach(eSetDisplay.sets.indices, id: \.self) { sindex in
                         let set = workoutDisplay.exercises[woIndex].sets[sindex]
@@ -112,7 +112,8 @@ struct ActiveWorkoutView: View {
                                 .bold()
                             Spacer()
                             if displayIntensity {
-                                Text("\(set.intensity)")
+                                let displayPercent = eSetDisplay.intensityForm == IntensityType.PercentOfMax
+                                Text(displayPercent ? String(format: "%.1f%%", set.intensity) : String(format: "%.1f", set.intensity))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .bold()
                                 Spacer()
@@ -145,9 +146,32 @@ struct ActiveWorkoutView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .ignoresSafeArea(.all)
+                        
                     }
-                    .frame(maxWidth: .infinity)
-                    .ignoresSafeArea(.all)
+                    .onDelete(perform: { indexSet in
+                        workoutDisplay.exercises[woIndex].sets.remove(atOffsets: indexSet)
+                        
+                    })
+                    HStack {
+                        Button(action: {
+                            let previousSet = workoutDisplay.exercises[woIndex].sets.last
+                            var target: String = ""
+                            var intensity: Float = 0
+                            if let previousSet = previousSet {
+                                target = previousSet.targetReps
+                                intensity = previousSet.intensity
+                            } else {
+                                workoutDisplay.exercises[woIndex].intensityForm = IntensityType.None
+                            }
+                            workoutDisplay.exercises[woIndex].sets.append(ActiveSetDisplay(targetReps: target, intensity: intensity))
+                            workoutDisplay.objectWillChange.send()
+                        }, label: {
+                            Text("+ Set")
+                                .foregroundStyle(Color(.text))
+                                .bold()
+                        })
+                        .frame(maxWidth: .infinity)
+                    }
                 } header: {
                     HStack {
                         Text(eSetDisplay.exercise.name)

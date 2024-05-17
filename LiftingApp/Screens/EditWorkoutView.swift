@@ -22,7 +22,6 @@ struct EditWorkoutView: View {
             TextField("name", text: $workout.name)
                 .textFieldStyle(RoundedTextFieldStyle())
                 .frame(alignment: .topLeading)
-                .padding()
                 .foregroundStyle(Color(.text))
                 .onChange(of: workout.name) { _ in
                     workout.routine?.objectWillChange.send()
@@ -64,6 +63,7 @@ struct EditWorkoutView: View {
 }
 struct ExerciseSetDisplay: View {
     @ObservedObject var eset: CDExerciseSet
+    @Environment(\.managedObjectContext) var context
     @State var newExercise: Exercise? = nil
     
     var body: some View {
@@ -89,7 +89,45 @@ struct ExerciseSetDisplay: View {
            
             ForEach(eset.sets, id: \.self) { set in
                     SetEditRow(set: set, displayIntensity: displayIntensity)
+                    
             }
+            .onDelete(perform: { indexSet in
+                eset.sets.remove(atOffsets: indexSet)
+                for (index, element) in eset.sets.enumerated() {
+                    element.orderLoc = index + 1
+                }
+            })
+            HStack {
+                Button(action: {
+                    let targetReps = eset.sets.last?.targetReps ?? "12"
+                    let intensity = eset.sets.last?.intensity ?? 0.0
+                    eset.sets.append(CDSet(targetReps: targetReps, intensity: intensity, orderLoc: eset.sets.count + 1, context: context))
+                }, label: {
+                    Text("+ set")
+                        .foregroundStyle(Color(.text))
+                        .bold()
+                        
+                })
+                .frame(maxWidth: .infinity, maxHeight: 25)
+                .background(Color(.gray))
+                .cornerRadius(6)
+
+                Divider().frame(width: 3, height: 30) // Vertical line
+                
+                Text("rest: ")
+                
+                TextField("0", value: $eset.restLength, format: .number)
+                    .frame(width: 40) // Adjust width as needed
+                    .keyboardType(.numberPad)
+                    .multilineTextAlignment(.trailing)
+                
+                Text("seconds")
+            }
+
+
+
+
+
             
         } header: {
             HStack {
@@ -116,6 +154,7 @@ struct ExerciseSetDisplay: View {
                 .pickerStyle(.segmented)
             }
         }
+        
     }
 }
 
@@ -140,7 +179,7 @@ struct SetEditRow: View {
                 
                 TextField("0", text: $set.targetReps.max(5))
                     .frame(maxWidth: .infinity, alignment: .topLeading)
-                
+                    .scrollDismissesKeyboard(.interactively)
             }
         }
     }

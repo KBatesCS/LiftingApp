@@ -10,25 +10,18 @@ import CoreData
 
 struct AnalyticsView: View {
     
-    
     @FetchRequest(fetchRequest: CDWorkoutRecord.fetch())
     var workoutRecords: FetchedResults<CDWorkoutRecord>
-    //@EnvironmentObject private var recordList: RecordList
-    //@EnvironmentObject private var routineList: RoutineList
     
     @State private var selectedDate: Date = .now
-    
-    init() {
-        let request = CDWorkoutRecord.fetch()
-        
-        self._workoutRecords = FetchRequest(fetchRequest: request)
-    }
+    @State private var selectedMonth: Int = Date.now.monthInt
+    @State private var selectedYear: Int = Date.now.yearInt
     
     var body: some View {
         ScrollView {
             VStack {
                 Section {
-                    CalendarView(workoutRecords: workoutRecords)
+                    SwipeableCalendarView(workoutRecords: workoutRecords, selectedMonth: $selectedMonth, selectedYear: $selectedYear)
                 } header: {
                     Text("Workout History")
                         .font(.largeTitle)
@@ -40,28 +33,35 @@ struct AnalyticsView: View {
     }
 }
 
+
 struct DayWrapper: Identifiable {
     let id = UUID() // Unique identifier
     let date: Date
 }
 
-struct CalendarView: View {
-    //@EnvironmentObject var recordList: RecordList
-    var workoutRecords: FetchedResults<CDWorkoutRecord>
+struct SwipeableCalendarView: View {
+    private let months = Date.fullMonthNames
+    private let years: [Int]
+    private let maxYear: Int
     
-    @State var date: Date = Date.now
-    let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
-    let columns = Array(repeating: GridItem(.flexible()), count: 7)
+    @Binding var selectedMonth: Int
+    @Binding var selectedYear: Int
     
-    @State private var days: [Date] = []
-    @State private var counts = [Int : Int]()
-    @State private var selectedMonth = Date.now.monthInt
-    @State private var selectedYear = Date.now.yearInt
+    @State var selectedTab: Int = 2
     
-    let months = Date.fullMonthNames
-    let years = [2024]
+    @State var testTab: Int
     
-    @State private var selectedDay: DayWrapper?
+    @State private var workoutRecords: FetchedResults<CDWorkoutRecord>
+    
+    init(workoutRecords: FetchedResults<CDWorkoutRecord>, selectedMonth: Binding<Int>, selectedYear: Binding<Int>) {
+        self._workoutRecords = State(initialValue: workoutRecords)
+        self._selectedMonth = selectedMonth
+        self._selectedYear = selectedYear
+        self.testTab = ((selectedYear.wrappedValue - 2024) * 12) + selectedMonth.wrappedValue
+        self.maxYear = Date().yearInt + 1
+        self.years = Array(2024...maxYear)
+    }
+    
     var body: some View {
         VStack {
             HStack {
@@ -71,6 +71,9 @@ struct CalendarView: View {
                             .foregroundStyle(Color(.text))
                     }
                 }
+                .onChange(of: selectedYear) { _ in
+                    self.testTab = ((selectedYear - 2024) * 12) + selectedMonth
+                }
                 .foregroundStyle(Color(.text))
                 
                 Picker("", selection: $selectedMonth) {
@@ -79,14 +82,84 @@ struct CalendarView: View {
                             .foregroundStyle(Color(.text))
                     }
                 }
+                .onChange(of: selectedMonth) { _ in
+                    self.testTab = ((selectedYear - 2024) * 12) + selectedMonth
+                }
+            }
+            .onAppear {
+                
             }
             .buttonStyle(.bordered)
-            .onChange(of: selectedYear) { _ in
-                updateDate()
+            
+            TabView(selection: $testTab) {
+                ForEach((1)...(((maxYear - 2024) + 1) * 12), id: \.self) { i in
+                    let monthAndYear = getMonthYearSinceDec2023(monthsSince: i)
+                    let month = monthAndYear[0]
+                    let year = monthAndYear[1]
+                    CalendarView(workoutRecords: workoutRecords, selectedMonth: month, selectedYear: year)
+                }
             }
-            .onChange(of: selectedMonth) { _ in
-                updateDate()
+            .onChange(of: testTab) { _ in
+                let monthAndYear = getMonthYearSinceDec2023(monthsSince: testTab)
+                self.selectedMonth = monthAndYear[0]
+                self.selectedYear = monthAndYear[1]
             }
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            .frame(width: 400, height: 400)
+        }
+    }
+    
+    func getMonthYearSinceDec2023(monthsSince: Int) -> [Int]{
+        let year = Int((monthsSince - 1) / 12) + 2024
+        let month = (((monthsSince - 1)  % 12)) + 1
+        
+        return [month, year]
+    }
+    
+    func getPreviousMonthYear(year: Int, month: Int) ->[Int] {
+        var nextMonth = month - 1
+        var nextYear = year
+        if nextMonth <= 0 {
+            nextMonth = 1
+            nextYear -= 1
+        }
+        
+        return [nextYear, nextMonth]
+    }
+    
+    func getNextMonthYear(year: Int, month: Int) ->[Int] {
+        var nextMonth = month + 1
+        var nextYear = year
+        if nextMonth >= 13 {
+            nextMonth = 1
+            nextYear += 1
+        }
+        
+        return [nextYear, nextMonth]
+    }
+}
+
+
+
+struct CalendarView: View {
+    var workoutRecords: FetchedResults<CDWorkoutRecord>
+    let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
+    let columns = Array(repeating: GridItem(.flexible()), count: 7)
+    
+    @State private var days: [Date] = []
+    @State private var counts = [Int: Int]()
+    @State private var selectedDay: DayWrapper?
+    var selectedMonth: Int
+    var selectedYear: Int
+    
+    init(workoutRecords: FetchedResults<CDWorkoutRecord>, selectedMonth: Int, selectedYear: Int) {
+        self.workoutRecords = workoutRecords
+        self.selectedMonth = selectedMonth
+        self.selectedYear = selectedYear
+    }
+    
+    var body: some View {
+        VStack {
             HStack {
                 ForEach(daysOfWeek.indices, id: \.self) { index in
                     Text(daysOfWeek[index])
@@ -97,7 +170,7 @@ struct CalendarView: View {
             }
             LazyVGrid(columns: columns) {
                 ForEach(days, id: \.self) { day in
-                    if day.monthInt != date.monthInt {
+                    if day.monthInt != selectedMonth {
                         Text("")
                     } else {
                         Button(action: {
@@ -117,7 +190,6 @@ struct CalendarView: View {
                                         )
                                 )
                                 .overlay(alignment: .bottomTrailing) {
-                                    
                                     if let count = counts[day.dayInt] {
                                         if count > 1 {
                                             Image(systemName: count <= 50 ? "\(count).circle.fill" : "plus.circle.fill")
@@ -126,12 +198,10 @@ struct CalendarView: View {
                                                 .background(
                                                     Color(.text)
                                                         .clipShape(.circle)
-                                                    
                                                 )
                                                 .offset(x: 5, y: 5)
                                         }
                                     }
-                                    
                                 }
                         })
                     }
@@ -140,11 +210,15 @@ struct CalendarView: View {
         }
         .padding()
         .onAppear {
-            days = date.calendarDisplayDays
+            updateDate()
             setupCounts()
         }
-        .onChange(of: date) { _ in
-            days = date.calendarDisplayDays
+        .onChange(of: selectedYear) { _ in
+            updateDate()
+            setupCounts()
+        }
+        .onChange(of: selectedMonth) { _ in
+            updateDate()
             setupCounts()
         }
         .sheet(item: $selectedDay) { day in
@@ -152,17 +226,18 @@ struct CalendarView: View {
         }
     }
     
-    func updateDate() {
-        date = Calendar.current.date(from: DateComponents(year: selectedYear, month: selectedMonth, day: 1))!
+    private func updateDate() {
+        self.days = Calendar.current.date(from: DateComponents(year: selectedYear, month: selectedMonth, day: 1))!.calendarDisplayDays
     }
     
-    func setupCounts() {
+    private func setupCounts() {
         counts.removeAll()
-        let filteredRecords = workoutRecords.filter {$0.date.yearInt == date.yearInt && $0.date.monthInt == date.monthInt}
-        let mappedItems = filteredRecords.map{($0.date.dayInt, 1)}
+        let filteredRecords = workoutRecords.filter { $0.date.yearInt == self.selectedYear && $0.date.monthInt == self.selectedMonth }
+        let mappedItems = filteredRecords.map { ($0.date.dayInt, 1) }
         counts = Dictionary(mappedItems, uniquingKeysWith: +)
     }
 }
+
 
 struct DisplayDayRecords: View {
     //@EnvironmentObject private var recordList: RecordList
@@ -184,7 +259,7 @@ struct DisplayDayRecords: View {
 struct SingleDayRecordDisplay: View {
     //@EnvironmentObject private var routineList: RoutineList
     var record: CDWorkoutRecord
-
+    
     var totalWeight: Double {
         var weight = 0.0
         for exerciseRecord in record.exercises {
@@ -198,7 +273,7 @@ struct SingleDayRecordDisplay: View {
         }
         return weight
     }
-
+    
     var body: some View {
         VStack {
             Section {
@@ -232,11 +307,11 @@ struct SingleDayRecordDisplay: View {
             Spacer()
         }
     }
-     
+    
 }
 
 #Preview {
     AnalyticsView()
         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-
+    
 }

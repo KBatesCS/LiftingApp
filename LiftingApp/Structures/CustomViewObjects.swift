@@ -42,6 +42,33 @@ struct CheckboxToggleStyle: ToggleStyle {
     }
 }
 
+struct StatisticBox: View {
+    let title: String
+    let content: String
+
+    var body: some View {
+        VStack {
+            Text(title)
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding(.top, 5)
+            Text(content)
+                .font(.title)
+                .foregroundColor(.white)
+                .padding(.bottom, 5)
+
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(Color(.accent))
+        .cornerRadius(10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color(.accent).opacity(0.5), lineWidth: 5)
+                .blendMode(.multiply)
+        )
+    }
+}
 
 
 #Preview {

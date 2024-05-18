@@ -1,5 +1,77 @@
 import UIKit
+import Foundation
+
+public struct Exercise: Identifiable, Codable, Equatable {
+    public var id: UUID
     
+    let name: String
+    let primaryMusclesWorked: [Muscles]
+    let secondaryMusclesWorked: [Muscles]
+    
+    init(id: UUID = UUID(), name: String = "default", primaryMusclesWorked: [Muscles] = [], secondaryMusclesWorked: [Muscles] = []) {
+        self.id = id
+        self.name = name
+        self.primaryMusclesWorked = primaryMusclesWorked
+        self.secondaryMusclesWorked = secondaryMusclesWorked
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case primaryMusclesWorked
+        case secondaryMusclesWorked
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        primaryMusclesWorked = try container.decode([Muscles].self, forKey: .primaryMusclesWorked)
+        secondaryMusclesWorked = try container.decode([Muscles].self, forKey: .secondaryMusclesWorked)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(primaryMusclesWorked, forKey: .primaryMusclesWorked)
+        try container.encode(secondaryMusclesWorked, forKey: .secondaryMusclesWorked)
+    }
+}
+
+public enum Muscles: String, Codable {
+    case quad
+    case hamstring
+    case calf
+    case chest
+    case tricep
+    case shoulder
+    case back
+    case bicep
+    case frontdeltoid
+    case abdominal
+    case reardeltoid
+    case trapezius
+    case rotatorcuff
+    case forearmflexor
+    case lateraldeltoid
+    case lat
+    case glute
+    case lowback
+    case adductor
+    case forearmextensor
+    case oblique
+}
+
+
+
+public enum IntensityType: Int16, Codable {
+    case RPE = 1
+    case PercentOfMax = 2
+    case None = 3
+}
+
+
 let e1 = Exercise(name: "BenchPress", primaryMusclesWorked: [Muscles.chest], secondaryMusclesWorked: [Muscles.shoulder, Muscles.tricep])
 let e2 = Exercise(name: "Pullup", primaryMusclesWorked: [Muscles.back], secondaryMusclesWorked: [Muscles.bicep])
 let e3 = Exercise(name: "Chest Press", primaryMusclesWorked: [Muscles.chest], secondaryMusclesWorked: [Muscles.frontdeltoid, Muscles.tricep])

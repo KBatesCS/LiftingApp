@@ -66,7 +66,7 @@ class ActiveSetDisplay: Identifiable, ObservableObject {
 }
 
 struct Exercise: Identifiable, Codable, Equatable {
-    var id: UUID
+    public var id: UUID
     
     let name: String
     let primaryMusclesWorked: [Muscles]
@@ -86,7 +86,7 @@ struct Exercise: Identifiable, Codable, Equatable {
         case secondaryMusclesWorked
     }
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
@@ -94,7 +94,7 @@ struct Exercise: Identifiable, Codable, Equatable {
         secondaryMusclesWorked = try container.decode([Muscles].self, forKey: .secondaryMusclesWorked)
     }
     
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)

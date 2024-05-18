@@ -17,18 +17,135 @@ struct AnalyticsView: View {
     @State private var selectedMonth: Int = Date.now.monthInt
     @State private var selectedYear: Int = Date.now.yearInt
     
+    @State private var filteredRecords: [CDWorkoutRecord] = []
+    
+    @State private var totalWorkouts: Int = 0
+    @State private var totalWeightLifted: Double = 0
+    @State private var totalTimeWorkedOut: Int = 0
+    @State private var averageDuration: Int = 0
+    @State private var mostUsedMuscle: String = ""
+    @State private var leastUsedMuscle: String = ""
+    
+    let columns = Array(repeating: GridItem(.flexible()), count: 2)
+    
     var body: some View {
         ScrollView {
             VStack {
                 Section {
-                    SwipeableCalendarView(workoutRecords: workoutRecords, selectedMonth: $selectedMonth, selectedYear: $selectedYear)
+                    SwipeableCalendarView(selectedMonth: $selectedMonth, selectedYear: $selectedYear)
                 } header: {
                     Text("Workout History")
                         .font(.largeTitle)
                         .frame(alignment: .topLeading)
                 }
                 Spacer()
+                
+                
+                
+                VStack(spacing: 16) {
+                    HStack {
+                        Spacer()
+                        StatisticBox(title: "Completed Workouts", content: "\(totalWorkouts)")
+                        Spacer()
+                        StatisticBox(title: "Weight Lifted (lbs)", content: String(format: "%.1f", totalWeightLifted))
+                        Spacer()
+                    }
+
+                    HStack {
+                        Spacer()
+                        let hours = totalTimeWorkedOut / 3600
+                        let minutes = (totalTimeWorkedOut % 3600) / 60
+                        let remainingSeconds = totalTimeWorkedOut % 60
+                        StatisticBox(title: "Time Spent in Gym", content: "\(hours)h \(minutes)m \(remainingSeconds)s")
+                        Spacer()
+
+                        let avgHours = averageDuration / 3600
+                        let avgMinutes = (averageDuration % 3600) / 60
+                        let avgSeconds = averageDuration % 60
+                        StatisticBox(title: "Average Duration", content: "\(avgHours)h \(avgMinutes)m \(avgSeconds)s")
+                        Spacer()
+                    }
+
+                    HStack {
+                        Spacer()
+                        StatisticBox(title: "Most Used Muscle", content: mostUsedMuscle)
+                        Spacer()
+
+                        StatisticBox(title: "Least Used Muscle", content: leastUsedMuscle)
+                        Spacer()
+                    }
+                }
+                .padding()
             }
+        }
+        .onAppear {
+            self.filteredRecords = workoutRecords.filter { $0.date.yearInt == self.selectedYear && $0.date.monthInt == self.selectedMonth }
+        }
+        .onChange(of: selectedYear) { _ in
+            self.filteredRecords = workoutRecords.filter { $0.date.yearInt == self.selectedYear && $0.date.monthInt == self.selectedMonth }
+        }
+        .onChange(of: selectedMonth) { _ in
+            self.filteredRecords = workoutRecords.filter { $0.date.yearInt == self.selectedYear && $0.date.monthInt == self.selectedMonth }
+        }
+        .onChange(of: self.filteredRecords) { _ in
+            self.setupAnalytics()
+        }
+    }
+    
+    func setupAnalytics() {
+        totalWorkouts = filteredRecords.count
+        totalWeightLifted = 0
+        totalTimeWorkedOut = 0
+        
+        var muscleGroupCount: [Muscles: Double] = [:]
+        
+        muscleGroupCount[Muscles.back] = 0
+        muscleGroupCount[Muscles.chest] = 0
+        muscleGroupCount[Muscles.shoulder] = 0
+        muscleGroupCount[Muscles.bicep] = 0
+        muscleGroupCount[Muscles.tricep] = 0
+        muscleGroupCount[Muscles.quad] = 0
+        muscleGroupCount[Muscles.hamstring] = 0
+        muscleGroupCount[Muscles.calf] = 0
+        muscleGroupCount[Muscles.glute] = 0
+        
+        for (_, workout) in filteredRecords.enumerated() {
+            totalTimeWorkedOut += workout.totalTime
+            for (_, eset) in workout.exercises.enumerated() {
+                for (_, set) in eset.sets.enumerated() {
+                    if set.completed {
+                        totalWeightLifted += set.weight * Double(set.reps)
+                        for primaryMuscle in eset.exercise.primaryMusclesWorked {
+                            if muscleGroupCount[primaryMuscle] != nil {
+                                muscleGroupCount[primaryMuscle]! += 1
+                            }
+                        }
+                        for secondaryMuscle in eset.exercise.secondaryMusclesWorked {
+                            if muscleGroupCount[secondaryMuscle] != nil {
+                                muscleGroupCount[secondaryMuscle]! += 0.5
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        let sortedMuscleGroupCount = muscleGroupCount.sorted { $0.value < $1.value }
+        
+        if let mostUsed = sortedMuscleGroupCount.last {
+            self.mostUsedMuscle = "\(mostUsed.key)"
+        }
+        if let leastUsed = sortedMuscleGroupCount.first {
+            self.leastUsedMuscle = "\(leastUsed.key)"
+        }
+        
+        for value in sortedMuscleGroupCount {
+            print("\(value.key) : \(value.value)")
+        }
+        if totalWorkouts == 0 {
+            averageDuration = 0
+        } else {
+            averageDuration = totalTimeWorkedOut / totalWorkouts
         }
     }
 }
@@ -44,6 +161,7 @@ struct SwipeableCalendarView: View {
     private let years: [Int]
     private let maxYear: Int
     
+    
     @Binding var selectedMonth: Int
     @Binding var selectedYear: Int
     
@@ -51,20 +169,22 @@ struct SwipeableCalendarView: View {
     
     @State var testTab: Int
     
-    @State private var workoutRecords: FetchedResults<CDWorkoutRecord>
+    @FetchRequest(fetchRequest: CDWorkoutRecord.fetch())
+    var workoutRecords: FetchedResults<CDWorkoutRecord>
     
-    init(workoutRecords: FetchedResults<CDWorkoutRecord>, selectedMonth: Binding<Int>, selectedYear: Binding<Int>) {
-        self._workoutRecords = State(initialValue: workoutRecords)
+    init(selectedMonth: Binding<Int>, selectedYear: Binding<Int>) {
         self._selectedMonth = selectedMonth
         self._selectedYear = selectedYear
         self.testTab = ((selectedYear.wrappedValue - 2024) * 12) + selectedMonth.wrappedValue
-        self.maxYear = Date().yearInt + 1
+        self.maxYear = Int(Date().yearInt) + 1
         self.years = Array(2024...maxYear)
     }
     
     var body: some View {
         VStack {
             HStack {
+                Spacer()
+                
                 Picker("", selection: $selectedYear) {
                     ForEach(years, id: \.self) { year in
                         Text(String(year)).tag(year)
@@ -85,6 +205,7 @@ struct SwipeableCalendarView: View {
                 .onChange(of: selectedMonth) { _ in
                     self.testTab = ((selectedYear - 2024) * 12) + selectedMonth
                 }
+                Spacer()
             }
             .onAppear {
                 
@@ -96,7 +217,7 @@ struct SwipeableCalendarView: View {
                     let monthAndYear = getMonthYearSinceDec2023(monthsSince: i)
                     let month = monthAndYear[0]
                     let year = monthAndYear[1]
-                    CalendarView(workoutRecords: workoutRecords, selectedMonth: month, selectedYear: year)
+                    CalendarView(selectedMonth: month, selectedYear: year)
                 }
             }
             .onChange(of: testTab) { _ in
@@ -115,34 +236,14 @@ struct SwipeableCalendarView: View {
         
         return [month, year]
     }
-    
-    func getPreviousMonthYear(year: Int, month: Int) ->[Int] {
-        var nextMonth = month - 1
-        var nextYear = year
-        if nextMonth <= 0 {
-            nextMonth = 1
-            nextYear -= 1
-        }
-        
-        return [nextYear, nextMonth]
-    }
-    
-    func getNextMonthYear(year: Int, month: Int) ->[Int] {
-        var nextMonth = month + 1
-        var nextYear = year
-        if nextMonth >= 13 {
-            nextMonth = 1
-            nextYear += 1
-        }
-        
-        return [nextYear, nextMonth]
-    }
 }
 
 
 
 struct CalendarView: View {
+    @FetchRequest(fetchRequest: CDWorkoutRecord.fetch())
     var workoutRecords: FetchedResults<CDWorkoutRecord>
+    
     let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
     
@@ -152,8 +253,7 @@ struct CalendarView: View {
     var selectedMonth: Int
     var selectedYear: Int
     
-    init(workoutRecords: FetchedResults<CDWorkoutRecord>, selectedMonth: Int, selectedYear: Int) {
-        self.workoutRecords = workoutRecords
+    init(selectedMonth: Int, selectedYear: Int) {
         self.selectedMonth = selectedMonth
         self.selectedYear = selectedYear
     }
@@ -260,6 +360,10 @@ struct SingleDayRecordDisplay: View {
     //@EnvironmentObject private var routineList: RoutineList
     var record: CDWorkoutRecord
     
+    @State var title: String = ""
+    
+    @Environment(\.managedObjectContext) var context
+    
     var totalWeight: Double {
         var weight = 0.0
         for exerciseRecord in record.exercises {
@@ -268,6 +372,7 @@ struct SingleDayRecordDisplay: View {
                     // Calculate total weight based on reps and weight
                     weight += Double(set.reps) * set.weight
                     // TODO weight a pound conversions
+                    
                 }
             }
         }
@@ -296,16 +401,36 @@ struct SingleDayRecordDisplay: View {
             } header: {
                 HStack {
                     //Text("\(getWorkoutNameFromID(workoutID: record.workoutID, routineList: routineList))")
-                    Text("Temp Title")
+                    Text(self.title)
                         .font(.largeTitle)
-                        .frame(alignment: .leading) // Align text to leading
+                        .frame(alignment: .leading)
+                        .padding()// Align text to leading
                     Spacer()
                 }
             }
-            .navigationTitle("Test")
+            .onAppear {
+                self.title = getTitle()
+            }
             
             Spacer()
         }
+    }
+    
+    func getTitle() -> String {
+        let request = CDWorkout.fetch()
+        request.predicate = NSPredicate(format: "uuid_ == %@", record.workoutUUID.uuidString)
+        request.fetchLimit = 1
+        do {
+            let workout = try context.fetch(request)
+            if !workout.isEmpty {
+                return workout[0].name
+            }
+        } catch {
+            print(error)
+            return ""
+        }
+        print("no workout found")
+        return ""
     }
     
 }

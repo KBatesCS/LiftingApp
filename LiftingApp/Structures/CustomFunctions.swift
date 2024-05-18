@@ -40,6 +40,14 @@ func save<T: Codable>(key: String, data: T) {
     }
 }
 
+func secondsToTimeStr(seconds: Int) -> String {
+    let hours = seconds / 3600
+    let minutes = (seconds % 3600) / 60
+    let remainingSeconds = seconds % 60
+    
+    return String(format: "%02d:%02d:%02d", hours, minutes, remainingSeconds)
+}
+
 /*
  func getWorkoutNameFromID(workoutID: UUID, routineList: RoutineList) -> String {
  for routine in routineList.routines {

@@ -383,16 +383,24 @@ struct SingleDayRecordDisplay: View {
         VStack {
             Section {
                 List {
+                    
                     ForEach(record.exercises) { exerciseRecord in
-                        VStack {
-                            Text(exerciseRecord.exercise.name)
-                            ForEach(exerciseRecord.sets) { set in
-                                HStack {
-                                    Text(String(set.completed))
-                                    Spacer()
-                                    Text(String(set.weight))
+                        Section {
+                            VStack {
+                                ForEach(exerciseRecord.sets) { set in
+//                                    Divider()
+                                    HStack {
+                                        Text(String(set.completed))
+                                        Spacer()
+                                        Text(String(set.weight))
+                                    }
+                                    .background(Color(.accent))
+                                    .cornerRadius(5)
                                 }
                             }
+                            .listRowBackground(Color(.accent).opacity(0.80))
+                        } header: {
+                            Text(exerciseRecord.exercise.name)
                         }
                     }
                     
@@ -400,7 +408,6 @@ struct SingleDayRecordDisplay: View {
                 }
             } header: {
                 HStack {
-                    //Text("\(getWorkoutNameFromID(workoutID: record.workoutID, routineList: routineList))")
                     Text(self.title)
                         .font(.largeTitle)
                         .frame(alignment: .leading)
@@ -435,8 +442,34 @@ struct SingleDayRecordDisplay: View {
     
 }
 
-#Preview {
-    AnalyticsView()
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+struct SDPreviewView: View {
     
+    @FetchRequest(fetchRequest: CDWorkoutRecord.fetch())
+    var workouts: FetchedResults<CDWorkoutRecord>
+    @State var workoutRecord: CDWorkoutRecord? = nil
+    
+    init() {
+        let request = CDWorkoutRecord.fetch()
+        _workouts = FetchRequest(fetchRequest: request)
+    }
+    
+    var body: some View {
+        VStack {
+            if let record = workoutRecord {
+                SingleDayRecordDisplay(record: record)
+            } else {
+                Text("")
+            }
+        }
+        .onAppear {
+            workoutRecord = workouts[0]
+        }
+    }
+}
+
+struct SingleDayRecordPreview: PreviewProvider {
+    static var previews: some View {
+        return SDPreviewView()
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    }
 }

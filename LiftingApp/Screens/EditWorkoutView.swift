@@ -29,20 +29,33 @@ struct EditWorkoutView: View {
             
             Spacer()
             
-            List(workout.exercises, id: \.self) { exerciseSet in
-                ExerciseSetDisplay(eset: exerciseSet)
+            List {
+                ForEach(workout.exercises, id: \.self) { exerciseSet in
+                    ExerciseSetDisplay(eset: exerciseSet)
+                }
+                Text("")
+                    .listRowBackground(Color.clear)
             }
+            .scrollDismissesKeyboard(.interactively)
             .scrollContentBackground(.hidden)
-             
+            
+            
             Spacer()
-            
-            
+        }
+        .overlay {
             NavigationLink(destination: SelectNewWorkoutView(selectedExercise: $newExercise)) {
                 Text("+ exersize")
+                    
                     .font(.title2)
-                    .foregroundStyle(Color(.text))
+                    .foregroundColor(Color("Text"))
                     .bold()
+                    .frame(width: UIScreen.main.bounds.width/1.8, height: 42)
+                    .background(Color("Accent"))
+                    .brightness(-0.05)
+                    .cornerRadius(7)
             }
+            .frame(maxHeight: .infinity, alignment: .bottom)
+            .padding(.bottom, 15)
             .onChange(of: newExercise) { _ in
                 if newExercise != nil {
                     let newESet = CDExerciseSet(exercise: newExercise!, orderLoc: workout.exercises.count + 1, context: context)
@@ -56,8 +69,6 @@ struct EditWorkoutView: View {
                     newExercise = nil
                 }
             }
-            
-            Spacer()
         }
     }
 }
@@ -86,10 +97,10 @@ struct ExerciseSetDisplay: View {
                 Text("Target Reps")
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-           
+            
             ForEach(eset.sets, id: \.self) { set in
-                    SetEditRow(set: set, displayIntensity: displayIntensity)
-                    
+                SetEditRow(set: set, displayIntensity: displayIntensity)
+                
             }
             .onDelete(perform: { indexSet in
                 eset.sets.remove(atOffsets: indexSet)
@@ -98,20 +109,18 @@ struct ExerciseSetDisplay: View {
                 }
             })
             HStack {
-                Button(action: {
-                    let targetReps = eset.sets.last?.targetReps ?? "12"
-                    let intensity = eset.sets.last?.intensity ?? 0.0
-                    eset.sets.append(CDSet(targetReps: targetReps, intensity: intensity, orderLoc: eset.sets.count + 1, context: context))
-                }, label: {
-                    Text("+ set")
-                        .foregroundStyle(Color(.text))
-                        .bold()
-                        
-                })
-                .frame(maxWidth: .infinity, maxHeight: 25)
-                .background(Color(.gray))
-                .cornerRadius(6)
-
+                Text("+ set")
+                    .onTapGesture {
+                        let targetReps = eset.sets.last?.targetReps ?? "12"
+                        let intensity = eset.sets.last?.intensity ?? 0.0
+                        eset.sets.append(CDSet(targetReps: targetReps, intensity: intensity, orderLoc: eset.sets.count + 1, context: context))
+                    }
+                    .foregroundStyle(Color(.text))
+                    .bold()
+                    .frame(maxWidth: .infinity, maxHeight: 25)
+                    .background(Color(.gray))
+                    .cornerRadius(6)
+                
                 Divider().frame(width: 3, height: 30) // Vertical line
                 
                 Text("rest: ")
@@ -123,11 +132,11 @@ struct ExerciseSetDisplay: View {
                 
                 Text("seconds")
             }
-
-
-
-
-
+            
+            
+            
+            
+            
             
         } header: {
             HStack {
@@ -213,4 +222,4 @@ struct EditWorkoutPreview: PreviewProvider {
     }
 }
 
- 
+

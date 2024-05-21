@@ -50,7 +50,7 @@ struct AnalyticsView: View {
                         StatisticBox(title: "Weight Lifted (lbs)", content: String(format: "%.1f", totalWeightLifted))
                         Spacer()
                     }
-
+                    
                     HStack {
                         Spacer()
                         let hours = totalTimeWorkedOut / 3600
@@ -58,19 +58,19 @@ struct AnalyticsView: View {
                         let remainingSeconds = totalTimeWorkedOut % 60
                         StatisticBox(title: "Time Spent in Gym", content: "\(hours)h \(minutes)m \(remainingSeconds)s")
                         Spacer()
-
+                        
                         let avgHours = averageDuration / 3600
                         let avgMinutes = (averageDuration % 3600) / 60
                         let avgSeconds = averageDuration % 60
                         StatisticBox(title: "Average Duration", content: "\(avgHours)h \(avgMinutes)m \(avgSeconds)s")
                         Spacer()
                     }
-
+                    
                     HStack {
                         Spacer()
                         StatisticBox(title: "Most Used Muscle", content: mostUsedMuscle)
                         Spacer()
-
+                        
                         StatisticBox(title: "Least Used Muscle", content: leastUsedMuscle)
                         Spacer()
                     }
@@ -359,8 +359,22 @@ struct DisplayDayRecords: View {
 struct SingleDayRecordDisplay: View {
     //@EnvironmentObject private var routineList: RoutineList
     var record: CDWorkoutRecord
+    var columns: [GridItem] = [
+        GridItem(.flexible(minimum: 0, maximum: .infinity)),
+        GridItem(.flexible(minimum: 0, maximum: .infinity))
+    ]
+    
+    init(record: CDWorkoutRecord) {
+        self.record = record
+//        setVariables()
+    }
     
     @State var title: String = ""
+    @State var totalWeightLifted: Double = 0
+    @State var totalReps: Int = 0
+    @State var timeInGym: Int = 0
+    @State var timesCompleted: Int = 0
+    @State var improvement: Double = 0
     
     @Environment(\.managedObjectContext) var context
     
@@ -381,47 +395,95 @@ struct SingleDayRecordDisplay: View {
     
     var body: some View {
         VStack {
-            Section {
-                List {
-                    
-                    ForEach(record.exercises) { exerciseRecord in
-                        Section {
-                            VStack {
-                                ForEach(exerciseRecord.sets) { set in
-//                                    Divider()
-                                    HStack {
-                                        Text(String(set.completed))
-                                        Spacer()
-                                        Text(String(set.weight))
-                                    }
-                                    .background(Color(.accent))
-                                    .cornerRadius(5)
-                                }
-                            }
-                            .listRowBackground(Color(.accent).opacity(0.80))
-                        } header: {
-                            Text(exerciseRecord.exercise.name)
-                        }
+            Text(title)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.title)
+                .padding()
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                    ForEach(record.exercises) { eRecord in
+                        esetSection(record: eRecord)
                     }
+                }
+                .padding()
+                
+                Divider()
+                
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                    let hours = self.timeInGym / 3600
+                    let minutes = (timeInGym % 3600) / 60
+                    let remainingSeconds = timeInGym % 60
+                    StatisticBox(title: "Time In Gym", content: "\(hours)h \(minutes)m \(remainingSeconds)s")
                     
-                    Text("Total Weight: \(String(format: "%.0f", totalWeight)) LBS") //TODO choose default weight measurement
+                    StatisticBox(title: "Workout Completions", content: "\(timesCompleted + 1)")
+                    
+                    StatisticBox(title: "Total Reps", content: "\(self.totalReps)")
+                    
+                    StatisticBox(title: "Total Weight Lifted", content: "\(self.totalWeightLifted)")
+                    
+                    if improvement > 0 {
+                        StatisticBox(title: "Increase in Weight Lifted", content: "\(improvement)")
+                    }
                 }
-            } header: {
-                HStack {
-                    Text(self.title)
-                        .font(.largeTitle)
-                        .frame(alignment: .leading)
-                        .padding()// Align text to leading
-                    Spacer()
-                }
+                .padding()
             }
+            .padding(.top, 10)
             .onAppear {
                 self.title = getTitle()
+                setVariables()
             }
             
-            Spacer()
         }
     }
+    
+    func setVariables() {
+        totalWeightLifted = 0
+        totalReps = 0
+        timeInGym = 0
+        timesCompleted = 0
+        improvement = 0
+        
+        //sets total weightlifted and totalReps
+        for eSet in record.exercises {
+            for set in eSet.sets {
+                if set.completed {
+                    self.totalReps += Int(set.reps)
+                    self.totalWeightLifted += Double(set.reps) * set.weight
+                }
+            }
+        }
+        
+        //sets total time in gym
+        self.timeInGym = record.totalTime
+        
+        //sets timesCompleted and improvement
+        do {
+            let request = CDWorkoutRecord.fetch()
+            request.predicate = NSPredicate(format: "workoutUUID_ == %@ AND date_ < %@", record.workoutUUID.uuidString, record.date as CVarArg)
+            request.sortDescriptors = [NSSortDescriptor(key: "date_", ascending: false)]
+            let workout = try context.fetch(request)
+            self.timesCompleted = workout.count
+            if let mostRecent = workout.first {
+                self.improvement = self.totalWeight - getTotalWeight(workoutRecord: mostRecent)
+            }
+        } catch {
+            print(error)
+        }
+        
+    }
+    
+    func getTotalWeight(workoutRecord: CDWorkoutRecord) -> Double {
+        var out: Double = 0
+        for eSet in workoutRecord.exercises {
+            for set in eSet.sets {
+                if set.completed {
+                    out += set.weight * Double(set.reps)
+                }
+            }
+        }
+        return out
+    }
+
     
     func getTitle() -> String {
         let request = CDWorkout.fetch()
@@ -434,18 +496,79 @@ struct SingleDayRecordDisplay: View {
             }
         } catch {
             print(error)
-            return ""
+            return "Workout"
         }
         print("no workout found")
-        return ""
+        return "Workout"
     }
     
+}
+
+struct esetSection: View {
+    
+    @Environment(\.colorScheme) var colorScheme
+    
+    var record: CDExerciseRecord
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Text(record.exercise.name)
+                    .frame(alignment: .leading)
+                    .opacity(0.6)
+                    .padding(.leading, 4)
+                    .bold()
+                Spacer()
+            }
+            VStack {
+                HStack {
+                    Text("Reps")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    Spacer()
+                    
+                    Text("Weight")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.horizontal, 10)
+                ForEach(record.sets, id: \.self) { set in
+                    Divider()
+                    HStack {
+                        Text(String(set.reps))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Spacer()
+                        Text("\(String(format: "%.1f",set.weight)) \(record.inLbs ? "lbs" : "kgs")")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .overlay(
+                        set.completed == false ?
+                        Rectangle()
+                            .foregroundColor(Color(.text))
+                            .frame(height: 2)
+                            .offset(y: 0)
+                        : nil
+                    )
+                    .padding(.horizontal, 10)
+                }
+            }
+            .padding(.vertical, 5)
+            .frame(maxWidth: .infinity)
+            .background(colorScheme == .dark ?  Color(UIColor.secondarySystemGroupedBackground) : Color(UIColor.systemGroupedBackground))
+            .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color(.accent).opacity(0.5), lineWidth: 2)
+            )
+        }
+        .frame(maxWidth: .infinity)
+    }
 }
 
 struct SDPreviewView: View {
     
     @FetchRequest(fetchRequest: CDWorkoutRecord.fetch())
     var workouts: FetchedResults<CDWorkoutRecord>
+    
     @State var workoutRecord: CDWorkoutRecord? = nil
     
     init() {
@@ -455,17 +578,21 @@ struct SDPreviewView: View {
     
     var body: some View {
         VStack {
-            if let record = workoutRecord {
-                SingleDayRecordDisplay(record: record)
+            if let _ = workoutRecord {
+                //                SingleDayRecordDisplay(record: record)
             } else {
                 Text("")
             }
         }
         .onAppear {
-            workoutRecord = workouts[0]
+            workoutRecord = workouts[2]
+        }
+        .sheet(item: $workoutRecord) {_ in
+            SingleDayRecordDisplay(record: workoutRecord!)
         }
     }
 }
+
 
 struct SingleDayRecordPreview: PreviewProvider {
     static var previews: some View {

@@ -364,6 +364,9 @@ struct ActiveWorkoutView: View {
         }
         .onDisappear {
             self.timer?.cancel()
+            if let encoded = try? JSONEncoder().encode(activeWorkoutInfo) {
+                UserDefaults.standard.set(encoded, forKey: "ActiveWorkoutContainer")
+            }
         }
     }
     

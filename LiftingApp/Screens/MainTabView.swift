@@ -13,7 +13,13 @@ struct MainTabView: View {
     @StateObject private var activeWorkoutInfo: ActiveWorkoutDisplayContainer
     
     init() {
-        _activeWorkoutInfo = StateObject(wrappedValue: ActiveWorkoutDisplayContainer())
+        if let savedData = UserDefaults.standard.data(forKey: "ActiveWorkoutContainer"),
+           let decodedContainer = try? JSONDecoder().decode(ActiveWorkoutDisplayContainer.self, from: savedData) {
+            ActiveWorkoutDisplayContainer.shared.display = decodedContainer.display
+            _activeWorkoutInfo = StateObject(wrappedValue: decodedContainer)
+        } else {
+            _activeWorkoutInfo = StateObject(wrappedValue: ActiveWorkoutDisplayContainer())
+        }
     }
     
     var body: some View {

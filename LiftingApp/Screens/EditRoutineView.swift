@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct EditRoutineView: View {
-//    @EnvironmentObject var routineList: RoutineList
-//    @ObservedObject var routine: Routine
+    //    @EnvironmentObject var routineList: RoutineList
+    //    @ObservedObject var routine: Routine
     @State var refresh: Bool = true
     
     @State private var isShowingDeleteConfirmation = false
     @State private var deletionIndexSet: IndexSet?
-
+    
     @Environment(\.managedObjectContext) var context
     @ObservedObject var routine: CDWorkoutRoutine
     
@@ -26,26 +26,40 @@ struct EditRoutineView: View {
         NavigationStack {
             VStack {
                 TextField("RoutineName", text: $routine.name)
-                    .frame(alignment: .topLeading)
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(Color("Accent"))
+                //                        .frame(maxWidth: .infinity)
+                //                        .frame(alignment: .topLeading)
+                    .multilineTextAlignment(.leading)
+                
+                //                        .foregroundColor(Color("Accent"))
                     .textFieldStyle(RoundedTextFieldStyle())
                     .padding()
+                
+                    .overlay(Image(systemName: "square.and.pencil").frame(maxWidth: .infinity, alignment: .trailing).padding(.trailing, 22).foregroundStyle(Color(.text)))
+                Spacer()
                 
                 List {
                     ForEach(routine.workouts, id: \.self) { workout in
                         NavigationLink(destination: EditWorkoutView(workout: workout)) {
-                            Text(workout.name)
+                            VStack {
+                                Text(workout.name)                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                                    .font(.system(size: 23))
+                                
+                                Text("\(workout.exercises.count) exercises")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .foregroundStyle(Color(.text).opacity(0.8))
+                            }
                         }
                         .foregroundColor(Color("Text"))
                         //.listRowBackground(Color("Accent"))
-                         
+                        
                     }
                     .onDelete { indexSet in
                         deletionIndexSet = indexSet
                         isShowingDeleteConfirmation = true
                     }
+                    .listRowSeparatorTint(Color(.accent))
                 }
+                
                 .listStyle(.inset)
                 .alert(isPresented: $isShowingDeleteConfirmation) {
                     Alert(
@@ -71,7 +85,11 @@ struct EditRoutineView: View {
                         .font(.title2)
                         .foregroundColor(Color(.text))
                         .bold()
+                        .padding(.vertical, 15)
+                        .padding(.horizontal, 40)
                 })
+                .background(Color(.accent).opacity(0.2))
+                .overlay(RoundedRectangle(cornerRadius: 15).stroke(Color(.accent), lineWidth: 3))
                 .frame(alignment: .topLeading)
                 .padding()
                 
@@ -81,8 +99,8 @@ struct EditRoutineView: View {
             Spacer()
         }
     }
-        
-        
+    
+    
 }
 
 struct erPreviewView: View {

@@ -101,7 +101,7 @@ struct ActiveWorkoutView: View {
                         RoundedRectangle(cornerRadius: 5.0)
                             .stroke(Color.clear, lineWidth: 2)
                             .frame(width: 25, height: 25, alignment: .leading)
-                    }.deleteDisabled(true)
+                    }.deleteDisabled(true) //HStack: Header
                     
                     ForEach(eSetDisplay.sets.indices, id: \.self) { sindex in
                         let set = workoutDisplay.exercises[woIndex].sets[sindex]
@@ -143,11 +143,12 @@ struct ActiveWorkoutView: View {
                                     self.remainingRestTime = TimeInterval(eSetDisplay.restTimeSeconds)
                                 }
                             
-                        }
+                        } // HStack: Set info
                         .frame(maxWidth: .infinity)
                         .ignoresSafeArea(.all)
                         
-                    }
+                    } // Foreach: sets
+                    
                     .onDelete(perform: { indexSet in
                         workoutDisplay.exercises[woIndex].sets.remove(atOffsets: indexSet)
                         
@@ -171,7 +172,7 @@ struct ActiveWorkoutView: View {
                                 .bold()
                         })
                         .frame(maxWidth: .infinity)
-                    }
+                    } //: HStack addset
                 } header: {
                     HStack {
                         Text(eSetDisplay.exercise.name)
@@ -204,25 +205,29 @@ struct ActiveWorkoutView: View {
                         .pickerStyle(.segmented)
                         .frame(maxWidth: 100, alignment: .trailing)
                     }
-                }
-            }
+                    
+                } // section
+                
+            } //: ForEach exercises
+            
+            
             Section {
                 TextField("Notes for next time", text: $workoutDisplay.notes, axis: .vertical)
                     .frame(maxWidth: .infinity, minHeight: 70, alignment: .topLeading)
                     .lineLimit(nil)
-                
-                
             } header: {
                 Text("Notes")
                     .font(.system(size: 18))
                     .bold()
                     .frame(alignment: .leading)
             }
+            
             Color(.clear)
                 .frame(height: 1)
                 .listRowBackground(Color.clear)
             
         }
+        
         .scrollDismissesKeyboard(.interactively)
         
         .overlay {
@@ -361,14 +366,15 @@ struct ActiveWorkoutView: View {
                     }
                     
                 }
-        }
+        } //: onAppear
         .onDisappear {
             self.timer?.cancel()
             if let encoded = try? JSONEncoder().encode(activeWorkoutInfo) {
                 UserDefaults.standard.set(encoded, forKey: "ActiveWorkoutContainer")
             }
         }
-    }
+        
+    } //: body
     
     func loadPastRecord(pastRecord: CDWorkoutRecord) {
         var pastMap = [UUID: [CDExerciseRecord]]()
@@ -534,6 +540,7 @@ struct awPreviewView: View {
         VStack {
             if workout != nil {
                 ActiveWorkoutView(workout: workout!)
+                    .environmentObject(ActiveWorkoutDisplayContainer())
             }
         } .onAppear {
             workout = workouts[0]

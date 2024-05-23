@@ -36,7 +36,7 @@
 		D6D56FD02B4C82F40040D4C4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6D56FCF2B4C82F40040D4C4 /* Assets.xcassets */; };
 		D6D56FD42B4C82F40040D4C4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6D56FD32B4C82F40040D4C4 /* Preview Assets.xcassets */; };
 		D6D56FDB2B4CABF00040D4C4 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D56FDA2B4CABEF0040D4C4 /* SplashScreenView.swift */; };
-		D6D56FDD2B4CADA70040D4C4 /* MainTemp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D56FDC2B4CADA70040D4C4 /* MainTemp.swift */; };
+		D6D56FDD2B4CADA70040D4C4 /* SelectRoutineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D56FDC2B4CADA70040D4C4 /* SelectRoutineView.swift */; };
 		D6E1668B2BE9C55400CE53B1 /* VideoTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1668A2BE9C55400CE53B1 /* VideoTester.swift */; };
 		D6E1668D2BEAE2C500CE53B1 /* TestWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1668C2BEAE2C500CE53B1 /* TestWriter.swift */; };
 		D6E1668F2BEC2FFB00CE53B1 /* TestAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1668E2BEC2FFB00CE53B1 /* TestAnalyzer.swift */; };
@@ -93,7 +93,7 @@
 		D6D56FD12B4C82F40040D4C4 /* LiftingApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LiftingApp.entitlements; sourceTree = "<group>"; };
 		D6D56FD32B4C82F40040D4C4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D6D56FDA2B4CABEF0040D4C4 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
-		D6D56FDC2B4CADA70040D4C4 /* MainTemp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTemp.swift; sourceTree = "<group>"; };
+		D6D56FDC2B4CADA70040D4C4 /* SelectRoutineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectRoutineView.swift; sourceTree = "<group>"; };
 		D6E1668A2BE9C55400CE53B1 /* VideoTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTester.swift; sourceTree = "<group>"; };
 		D6E1668C2BEAE2C500CE53B1 /* TestWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWriter.swift; sourceTree = "<group>"; };
 		D6E1668E2BEC2FFB00CE53B1 /* TestAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAnalyzer.swift; sourceTree = "<group>"; };
@@ -194,7 +194,7 @@
 				D6D56FCD2B4C82F20040D4C4 /* LoginView.swift */,
 				D6D56FCB2B4C82F20040D4C4 /* LiftingAppApp.swift */,
 				D6A7CE022B62C8F7005ED2BA /* MainTabView.swift */,
-				D6D56FDC2B4CADA70040D4C4 /* MainTemp.swift */,
+				D6D56FDC2B4CADA70040D4C4 /* SelectRoutineView.swift */,
 				D65E4E972BA49BF000E41D38 /* ActiveWorkoutView.swift */,
 				D6D56FDA2B4CABEF0040D4C4 /* SplashScreenView.swift */,
 				D6A7CE042B62D5CB005ED2BA /* StartWorkoutView.swift */,
@@ -380,7 +380,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D653A4B12BCF09750056C7B9 /* CD Records + helper.swift in Sources */,
-				D6D56FDD2B4CADA70040D4C4 /* MainTemp.swift in Sources */,
+				D6D56FDD2B4CADA70040D4C4 /* SelectRoutineView.swift in Sources */,
 				D679F4802BD06C9400377A12 /* NSSPredicate + Helper.swift in Sources */,
 				D6E1668D2BEAE2C500CE53B1 /* TestWriter.swift in Sources */,
 				D6A7CE052B62D5CB005ED2BA /* StartWorkoutView.swift in Sources */,

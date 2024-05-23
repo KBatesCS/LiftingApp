@@ -25,7 +25,7 @@ struct MainTabView: View {
     var body: some View {
         TabView (selection: $selectedTab){
             // screen 1
-            MainTemp()
+            SelectRoutineView()
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                 }.tag(1)

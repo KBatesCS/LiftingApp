@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MainTemp: View {
+struct SelectRoutineView: View {
     //@EnvironmentObject private var routineList: RoutineList
     @Environment(\.managedObjectContext) var context
     @State private var isShowingDeleteConfirmation = false
@@ -15,11 +15,6 @@ struct MainTemp: View {
     
     @FetchRequest(fetchRequest: CDWorkoutRoutine.fetch())
     var workoutRoutines: FetchedResults<CDWorkoutRoutine>
-    
-    init() {
-        let request = CDWorkoutRoutine.fetch()
-        self._workoutRoutines = FetchRequest(fetchRequest: request)
-    }
     
     var body: some View {
         NavigationStack {
@@ -29,8 +24,14 @@ struct MainTemp: View {
                 List {
                     ForEach(workoutRoutines) { routine in
                         NavigationLink(destination: EditRoutineView(routine: routine)) {
-                            
-                            Text(routine.name)                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                            VStack {
+                                Text(routine.name)                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                                    .font(.system(size: 23))
+                                
+                                Text("\(routine.workouts.count) workouts")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .foregroundStyle(Color(.text).opacity(0.8))
+                            }
                         
                         }
                         //.foregroundColor(Color("Text"))
@@ -40,6 +41,8 @@ struct MainTemp: View {
                         deletionIndexSet = indexSet
                         isShowingDeleteConfirmation = true
                     }
+                    .listRowSeparatorTint(Color(.accent))
+                    
                     
                 }
                 .listStyle(.inset)
@@ -74,7 +77,11 @@ struct MainTemp: View {
                         .font(.title2)
                         .foregroundColor(Color(.text))
                         .bold()
+                        .padding(.vertical, 15)
+                        .padding(.horizontal, 40)
                 })
+                .background(Color(.accent).opacity(0.2))
+                .overlay(RoundedRectangle(cornerRadius: 15).stroke(Color(.accent), lineWidth: 3))
                 //.frame(alignment: .topLeading)
                 .padding()
                 Spacer()
@@ -92,7 +99,7 @@ struct MainTemp: View {
 
 struct MainTemp_Previews: PreviewProvider {
     static var previews: some View {
-        MainTemp()
+        SelectRoutineView()
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

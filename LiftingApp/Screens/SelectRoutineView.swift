@@ -19,6 +19,11 @@ struct SelectRoutineView: View {
     var body: some View {
         NavigationStack {
             VStack {
+                Text("Routines")
+                    .font(.system(size: 40))
+                    .bold()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
                 Spacer()
                 
                 List {
@@ -34,6 +39,7 @@ struct SelectRoutineView: View {
                             }
                         
                         }
+                        
                         //.foregroundColor(Color("Text"))
                         //.listRowBackground(Color("Accent"))
                     }
@@ -74,26 +80,19 @@ struct SelectRoutineView: View {
                     _ = CDWorkoutRoutine(name: "Routine \(num)", userStr: "ExampleUser", orderLoc: num, context: context)
                 }, label: {
                     Text("+ routine")
-                        .font(.title2)
-                        .foregroundColor(Color(.text))
-                        .bold()
-                        .padding(.vertical, 15)
-                        .padding(.horizontal, 40)
+                        .accentedButtonTextStyle()
                 })
-                .background(Color(.accent).opacity(0.2))
-                .overlay(RoundedRectangle(cornerRadius: 15).stroke(Color(.accent), lineWidth: 3))
-                //.frame(alignment: .topLeading)
-                .padding()
+                .accentedButtonStyle()
                 Spacer()
             }
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-            .navigationTitle("Routines")
               .bold()
         }
         .onAppear {
             //PersistenceController.shared.save()
         }
         .ignoresSafeArea(.all)
+        .navigationBarHidden(true)
     }
 }
 

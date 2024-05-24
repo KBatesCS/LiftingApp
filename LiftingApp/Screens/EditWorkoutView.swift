@@ -21,11 +21,13 @@ struct EditWorkoutView: View {
             
             TextField("name", text: $workout.name)
                 .textFieldStyle(RoundedTextFieldStyle())
-                .frame(alignment: .topLeading)
+//                .frame(alignment: .topLeading)
                 .foregroundStyle(Color(.text))
                 .onChange(of: workout.name) { _ in
                     workout.routine?.objectWillChange.send()
                 }
+                .padding()
+                .overlay(Image(systemName: "square.and.pencil").frame(maxWidth: .infinity, alignment: .trailing).padding(.trailing, 22).foregroundStyle(Color(.text)))
             
             Spacer()
             
@@ -45,15 +47,9 @@ struct EditWorkoutView: View {
         .overlay {
             NavigationLink(destination: SelectNewWorkoutView(selectedExercise: $newExercise)) {
                 Text("+ exersize")
-                    
-                    .font(.title2)
-                    .foregroundColor(Color("Text"))
-                    .bold()
-                    .frame(width: UIScreen.main.bounds.width/1.8, height: 42)
-                    .background(Color("Accent"))
-                    .brightness(-0.05)
-                    .cornerRadius(7)
+                    .accentedButtonTextStyle()
             }
+            .accentedButtonStyle()
             .frame(maxHeight: .infinity, alignment: .bottom)
             .padding(.bottom, 15)
             .onChange(of: newExercise) { _ in

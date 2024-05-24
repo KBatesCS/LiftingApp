@@ -82,22 +82,16 @@ struct EditRoutineView: View {
                     
                 }, label: {
                     Text("+ workout")
-                        .font(.title2)
-                        .foregroundColor(Color(.text))
-                        .bold()
-                        .padding(.vertical, 15)
-                        .padding(.horizontal, 40)
+                        .accentedButtonTextStyle()
                 })
-                .background(Color(.accent).opacity(0.2))
-                .overlay(RoundedRectangle(cornerRadius: 15).stroke(Color(.accent), lineWidth: 3))
-                .frame(alignment: .topLeading)
-                .padding()
+                .accentedButtonStyle()
                 
                 
             }
             
             Spacer()
         }
+        
     }
     
     

@@ -33,6 +33,21 @@ struct AccentedButtonStyle: ViewModifier {
     }
 }
 
+struct AccentedSectionBodyStyle: ViewModifier {
+    @Environment(\.colorScheme) var colorScheme
+    func body(content: Content) -> some View {
+        content
+            .padding(.vertical, 5)
+            .padding(.horizontal, 10)
+            .background(colorScheme == .dark ?  Color(UIColor.secondarySystemGroupedBackground) : Color(UIColor.systemGroupedBackground))
+            .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color(.accent).opacity(0.5), lineWidth: 2)
+            )
+    }
+}
+
 // Extension to make the usage of custom styles easier
 extension View {
     func accentedButtonTextStyle() -> some View {
@@ -41,6 +56,10 @@ extension View {
     
     func accentedButtonStyle() -> some View {
         self.modifier(AccentedButtonStyle())
+    }
+    
+    func accentedSectionBodyStyle() -> some View {
+        self.modifier(AccentedSectionBodyStyle())
     }
 }
 

@@ -45,7 +45,7 @@ struct EditWorkoutView: View {
             Spacer()
         }
         .overlay {
-            NavigationLink(destination: SelectNewWorkoutView(selectedExercise: $newExercise)) {
+            NavigationLink(destination: ChooseExerciseView(selectedExercise: $newExercise)) {
                 Text("+ exersize")
                     .accentedButtonTextStyle()
             }
@@ -137,7 +137,7 @@ struct ExerciseSetDisplay: View {
         } header: {
             HStack {
                 
-                NavigationLink(destination: SelectNewWorkoutView(selectedExercise: $newExercise)) {
+                NavigationLink(destination: ChooseExerciseView(selectedExercise: $newExercise)) {
                     Text(eset.exercise.name)
                         .foregroundStyle(Color("Text"))
                         .bold()

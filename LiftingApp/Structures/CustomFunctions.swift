@@ -31,6 +31,10 @@ func loadExercise(uuid: UUID?) -> Exercise {
     return Exercise()
 }
 
+func getExercises() -> [Exercise] {
+    return Bundle.main.decode("defaultData.json")
+}
+
 func save<T: Codable>(key: String, data: T) {
     do {
         let encoded = try JSONEncoder().encode(data)

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SelectNewWorkoutView: View {
+struct ChooseExerciseView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     //@EnvironmentObject var routineList: RoutineList
     
@@ -32,11 +32,6 @@ struct SelectNewWorkoutView: View {
                 }
         }
     }
-
-    
-    func getExercises() -> [Exercise] {
-        return Bundle.main.decode("defaultData.json")
-    }
 }
 
 struct exerciseDisplay: View {
@@ -51,7 +46,7 @@ struct exerciseDisplay: View {
 struct SelectNewWorkoutPreview: PreviewProvider {
     static var previews: some View {
         let temp: Exercise? = nil
-        return SelectNewWorkoutView(selectedExercise: .constant(temp))
+        return ChooseExerciseView(selectedExercise: .constant(temp))
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

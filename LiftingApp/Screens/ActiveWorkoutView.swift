@@ -49,6 +49,9 @@ struct ActiveWorkoutView: View {
     
     @FocusState var numPadFocus: Bool
     
+    @State private var displayInfoExerciseIndex: Int = -1
+    @State private var displaySheet: Bool = false
+    
     init(workout: CDWorkout) {
         self.workoutDisplay = ActiveWorkoutDisplay(startTime: Date(), workoutName: workout.name, workoutID: workout.uuid)
         
@@ -67,313 +70,332 @@ struct ActiveWorkoutView: View {
     
     
     var body: some View {
-        List {
-            
-            if !workoutDisplay.previousNotes.isEmpty {
-                Section {
-                    Text(workoutDisplay.previousNotes)
-                } header: {
-                    Text("Previous Notes")
+        VStack {
+            List {
+                
+                if !workoutDisplay.previousNotes.isEmpty {
+                    Section {
+                        Text(workoutDisplay.previousNotes)
+                    } header: {
+                        Text("Previous Notes")
+                    }
                 }
-            }
-            
-            ForEach(workoutDisplay.exercises.indices, id: \.self) { woIndex in
-                let eSetDisplay = workoutDisplay.exercises[woIndex]
-                Section {
-                    let displayIntensity = (eSetDisplay.intensityForm != IntensityType.None
-                                            && !allSameIntensity(exerciseSet: eSetDisplay))
-                    //Column headers
-                    HStack {
-                        Text("Target \nReps")
-                            .frame(maxWidth: .infinity, alignment: .topLeading)
-                        Spacer()
-                        if displayIntensity {
-                            Text(eSetDisplay.intensityForm == IntensityType.RPE ? "RPE" : "%1RPM")
+                
+                ForEach(workoutDisplay.exercises.indices, id: \.self) { woIndex in
+                    let eSetDisplay = workoutDisplay.exercises[woIndex]
+                    Section {
+                        let displayIntensity = (eSetDisplay.intensityForm != IntensityType.None
+                                                && !allSameIntensity(exerciseSet: eSetDisplay))
+                        //Column headers
+                        HStack {
+                            Text("Target \nReps")
                                 .frame(maxWidth: .infinity, alignment: .topLeading)
                             Spacer()
-                        }
-                        Text("Reps")
-                            .frame(maxWidth: .infinity, alignment: .topLeading)
-                        Spacer()
-                        Text("Weight")
-                            .frame(maxWidth: .infinity, alignment: .topLeading)
-                        Spacer()
-                        RoundedRectangle(cornerRadius: 5.0)
-                            .stroke(Color.clear, lineWidth: 2)
-                            .frame(width: 25, height: 25, alignment: .leading)
-                    }.deleteDisabled(true) //HStack: Header
-                    
-                    ForEach(eSetDisplay.sets.indices, id: \.self) { sindex in
-                        let set = workoutDisplay.exercises[woIndex].sets[sindex]
-                        //each row
-                        HStack {
-                            Text("\(set.targetReps)")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .bold()
-                            Spacer()
                             if displayIntensity {
-                                let displayPercent = eSetDisplay.intensityForm == IntensityType.PercentOfMax
-                                Text(displayPercent ? String(format: "%.1f%%", set.intensity) : String(format: "%.1f", set.intensity))
+                                Text(eSetDisplay.intensityForm == IntensityType.RPE ? "RPE" : "%1RPM")
+                                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                                Spacer()
+                            }
+                            Text("Reps")
+                                .frame(maxWidth: .infinity, alignment: .topLeading)
+                            Spacer()
+                            Text("Weight")
+                                .frame(maxWidth: .infinity, alignment: .topLeading)
+                            Spacer()
+                            RoundedRectangle(cornerRadius: 5.0)
+                                .stroke(Color.clear, lineWidth: 2)
+                                .frame(width: 25, height: 25, alignment: .leading)
+                        }.deleteDisabled(true) //HStack: Header
+                        
+                        ForEach(eSetDisplay.sets.indices, id: \.self) { sindex in
+                            let set = workoutDisplay.exercises[woIndex].sets[sindex]
+                            //each row
+                            HStack {
+                                Text("\(set.targetReps)")
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .bold()
                                 Spacer()
-                            }
-                            TextField("0", value: $workoutDisplay.exercises[woIndex].sets[sindex].achievedReps, format: .number)
-                                .keyboardType(.numberPad)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            Spacer()
-                            TextField("0", value: $workoutDisplay.exercises[woIndex].sets[sindex].weight, format: .number)
-                                .keyboardType(.numberPad)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            Spacer()
-                            
-                            RoundedRectangle(cornerRadius: 5.0)
-                                .stroke(lineWidth: 2)
-                                .frame(width: 25, height: 25, alignment: .leading)
-                                .cornerRadius(5.0)
-                                .overlay {
-                                    if self.workoutDisplay.exercises[woIndex].sets[sindex].completed {
-                                        Image(systemName: self.workoutDisplay.exercises[woIndex].sets[sindex].completed ? "checkmark" : "")
+                                if displayIntensity {
+                                    let displayPercent = eSetDisplay.intensityForm == IntensityType.PercentOfMax
+                                    Text(displayPercent ? String(format: "%.1f%%", set.intensity) : String(format: "%.1f", set.intensity))
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .bold()
+                                    Spacer()
+                                }
+                                TextField("0", value: $workoutDisplay.exercises[woIndex].sets[sindex].achievedReps, format: .number)
+                                    .keyboardType(.numberPad)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                Spacer()
+                                TextField("0", value: $workoutDisplay.exercises[woIndex].sets[sindex].weight, format: .number)
+                                    .keyboardType(.numberPad)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                Spacer()
+                                
+                                RoundedRectangle(cornerRadius: 5.0)
+                                    .stroke(lineWidth: 2)
+                                    .frame(width: 25, height: 25, alignment: .leading)
+                                    .cornerRadius(5.0)
+                                    .overlay {
+                                        if self.workoutDisplay.exercises[woIndex].sets[sindex].completed {
+                                            Image(systemName: self.workoutDisplay.exercises[woIndex].sets[sindex].completed ? "checkmark" : "")
+                                        }
                                     }
-                                }
-                                .onTapGesture {
-                                    self.workoutDisplay.exercises[woIndex].sets[sindex].completed.toggle()
-                                    self.workoutDisplay.objectWillChange.send()
-                                    self.endRestTime = Calendar.current.date(byAdding: .second, value: eSetDisplay.restTimeSeconds, to: Date())!
-                                    self.remainingRestTime = TimeInterval(eSetDisplay.restTimeSeconds)
-                                }
+                                    .onTapGesture {
+                                        self.workoutDisplay.exercises[woIndex].sets[sindex].completed.toggle()
+                                        self.workoutDisplay.objectWillChange.send()
+                                        self.endRestTime = Calendar.current.date(byAdding: .second, value: eSetDisplay.restTimeSeconds, to: Date())!
+                                        self.remainingRestTime = TimeInterval(eSetDisplay.restTimeSeconds)
+                                    }
+                                
+                            } // HStack: Set info
+                            .frame(maxWidth: .infinity)
+                            .ignoresSafeArea(.all)
                             
-                        } // HStack: Set info
-                        .frame(maxWidth: .infinity)
-                        .ignoresSafeArea(.all)
+                        } // Foreach: sets
                         
-                    } // Foreach: sets
-                    
-                    .onDelete(perform: { indexSet in
-                        workoutDisplay.exercises[woIndex].sets.remove(atOffsets: indexSet)
-                        
-                    })
-                    HStack {
-                        Button(action: {
-                            let previousSet = workoutDisplay.exercises[woIndex].sets.last
-                            var target: String = ""
-                            var intensity: Float = 0
-                            if let previousSet = previousSet {
-                                target = previousSet.targetReps
-                                intensity = previousSet.intensity
-                            } else {
-                                workoutDisplay.exercises[woIndex].intensityForm = IntensityType.None
-                            }
-                            workoutDisplay.exercises[woIndex].sets.append(ActiveSetDisplay(targetReps: target, intensity: intensity))
-                            workoutDisplay.objectWillChange.send()
-                        }, label: {
-                            Text("+ Set")
-                                .foregroundStyle(Color(.text))
-                                .bold()
+                        .onDelete(perform: { indexSet in
+                            workoutDisplay.exercises[woIndex].sets.remove(atOffsets: indexSet)
+                            
                         })
-                        .frame(maxWidth: .infinity)
-                    } //: HStack addset
-                } header: {
-                    HStack {
-                        Text(eSetDisplay.exercise.name)
-                            .font(.system(size: 18))
-                            .bold()
-                            .frame(alignment: .leading)
-                            .lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true)
-                        
-                        // IF ALL EXERCISES ARE SAME INTENSITY, NO NEED FOR A NEW COLUMN
-                        if (eSetDisplay.intensityForm != IntensityType.None
-                            && allSameIntensity(exerciseSet: eSetDisplay)) {
-                            if (eSetDisplay.intensityForm == IntensityType.RPE) {
-                                Text("@ RPE \(eSetDisplay.sets[0].intensity)")
-                                    .frame(alignment: .leading)
+                        HStack {
+                            Button(action: {
+                                let previousSet = workoutDisplay.exercises[woIndex].sets.last
+                                var target: String = ""
+                                var intensity: Float = 0
+                                if let previousSet = previousSet {
+                                    target = previousSet.targetReps
+                                    intensity = previousSet.intensity
+                                } else {
+                                    workoutDisplay.exercises[woIndex].intensityForm = IntensityType.None
+                                }
+                                workoutDisplay.exercises[woIndex].sets.append(ActiveSetDisplay(targetReps: target, intensity: intensity))
+                                workoutDisplay.objectWillChange.send()
+                            }, label: {
+                                Text("+ Set")
+                                    .foregroundStyle(Color(.text))
                                     .bold()
-                                    .font(.system(size: 15))
-                            } else {
-                                Text("@ \(eSetDisplay.sets[0].intensity)% 1RPM")
-                                    .frame(alignment: .leading)
+                            })
+                            .frame(maxWidth: .infinity)
+                        } //: HStack addset
+                    } header: {
+                        HStack {
+                            Button(action: {
+                                displayInfoExerciseIndex = woIndex
+                                displaySheet = true
+                            }, label: {
+                                Text(eSetDisplay.exercise.name)
+                                    .font(.system(size: 18))
                                     .bold()
-                                    .font(.system(size: 15))
+                                    .frame(alignment: .leading)
+                                    .lineLimit(nil)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            })
+                            
+                            
+                            // IF ALL EXERCISES ARE SAME INTENSITY, NO NEED FOR A NEW COLUMN
+                            if (eSetDisplay.intensityForm != IntensityType.None
+                                && allSameIntensity(exerciseSet: eSetDisplay)) {
+                                if (eSetDisplay.intensityForm == IntensityType.RPE) {
+                                    Text("@ RPE \(eSetDisplay.sets[0].intensity)")
+                                        .frame(alignment: .leading)
+                                        .bold()
+                                        .font(.system(size: 15))
+                                } else {
+                                    Text("@ \(eSetDisplay.sets[0].intensity)% 1RPM")
+                                        .frame(alignment: .leading)
+                                        .bold()
+                                        .font(.system(size: 15))
+                                }
                             }
+                            Spacer()
+                            Picker("", selection: $workoutDisplay.exercises[woIndex].inLBs) {
+                                Text("LBs").tag(true)
+                                Text("KGs").tag(false)
+                            }
+                            .pickerStyle(.segmented)
+                            .frame(maxWidth: 100, alignment: .trailing)
                         }
-                        Spacer()
-                        Picker("", selection: $workoutDisplay.exercises[woIndex].inLBs) {
-                            Text("LBs").tag(true)
-                            Text("KGs").tag(false)
-                        }
-                        .pickerStyle(.segmented)
-                        .frame(maxWidth: 100, alignment: .trailing)
-                    }
+                        
+                    } // section
                     
-                } // section
+                } //: ForEach exercises
                 
-            } //: ForEach exercises
-            
-            
-            Section {
-                TextField("Notes for next time", text: $workoutDisplay.notes, axis: .vertical)
-                    .frame(maxWidth: .infinity, minHeight: 70, alignment: .topLeading)
-                    .lineLimit(nil)
-            } header: {
-                Text("Notes")
-                    .font(.system(size: 18))
-                    .bold()
-                    .frame(alignment: .leading)
-            }
-            
-            Color(.clear)
-                .frame(height: 1)
-                .listRowBackground(Color.clear)
-            
-        }
-        
-        .scrollDismissesKeyboard(.interactively)
-        
-        .overlay {
-            VStack {
-                HStack {
-                    Spacer()
-                    Text("\(elapsedTimeString)")
-                        .frame(alignment: .bottom)
-                        .font(.title2)
-                        .foregroundColor(Color("Text"))
+                
+                Section {
+                    TextField("Notes for next time", text: $workoutDisplay.notes, axis: .vertical)
+                        .frame(maxWidth: .infinity, minHeight: 70, alignment: .topLeading)
+                        .lineLimit(nil)
+                } header: {
+                    Text("Notes")
+                        .font(.system(size: 18))
                         .bold()
-                        .frame(width: UIScreen.main.bounds.width/3.4, height: 42)
-                        .background(Color("Accent"))
-                        .cornerRadius(7)
-                        .padding(.bottom, 6)
-                    
-                    Button (action: {
-                        //stopTimer()
-                        if !self.allExercisesComplete(displayInfo: workoutDisplay) {
-                            isShowingFinishConf = true
-                        } else {
-                            self.closeActiveWorkoutInfo()
-                            self.saveToRecord(displayInfo: workoutDisplay)
-                            self.dismissAction.callAsFunction()
-                        }
-                    }, label: {
-                        Text("End Workout")
+                        .frame(alignment: .leading)
+                }
+                
+                Color(.clear)
+                    .frame(height: 1)
+                    .listRowBackground(Color.clear)
+                
+            }
+            .scrollDismissesKeyboard(.interactively)
+            
+            .overlay {
+                VStack {
+                    HStack {
+                        Spacer()
+                        Text("\(elapsedTimeString)")
                             .frame(alignment: .bottom)
                             .font(.title2)
                             .foregroundColor(Color("Text"))
                             .bold()
-                            .frame(width: UIScreen.main.bounds.width/1.8, height: 42)
+                            .frame(width: UIScreen.main.bounds.width/3.4, height: 42)
                             .background(Color("Accent"))
                             .cornerRadius(7)
                             .padding(.bottom, 6)
-                    })
-                    .alert("Finish Workout", isPresented: $isShowingFinishConf, actions: {
-                        Button("Finish Anyways", action: {
-                            self.saveToRecord(displayInfo: workoutDisplay)
-                            self.closeActiveWorkoutInfo()
-                            self.dismissAction.callAsFunction()
-                        })
-                        Button("End Without Saving", role: .destructive, action: {
-                            self.closeActiveWorkoutInfo()
-                            self.dismissAction.callAsFunction()
-                        })
-                        Button("Cancel", role: .cancel, action: {})
-                    }, message: {Text("Not all exercises have been completed")})
-                    Spacer()
-                }
-                
-                if let endRestTime = self.endRestTime {
-                    ZStack {
-                        Color(.accent)
-                            .frame(height: 50)
                         
-                        HStack {
-                            Button(action: {
-                                self.endRestTime = nil
-                            }, label: {
-                                Text("End")
-                                    .bold()
-                                    .font(.system(size: 25)) // Adjust size as needed
-                                    .padding(10) // Add padding around the button content
-                                    .foregroundColor(Color(.text))
-                            })
-                            
-                            Spacer()
-                            
-                            Text("\(self.remainingRestString)")
-                                .bold()
-                                .frame(maxWidth: .infinity)
-                                .font(.system(size: 25))
-                            Spacer()
-                            Button(action: {
-                                self.endRestTime =  endRestTime.addingTimeInterval(-10)
-                                self.remainingRestTime -= 10
-                            }) {
-                                Image(systemName: "minus.square.fill")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 25, height: 25) // Adjust size as needed
-                                    .padding(10) // Add padding around the button content
-                                    .foregroundColor(Color(.text))
+                        Button (action: {
+                            //stopTimer()
+                            if !self.allExercisesComplete(displayInfo: workoutDisplay) {
+                                isShowingFinishConf = true
+                            } else {
+                                self.closeActiveWorkoutInfo()
+                                self.saveToRecord(displayInfo: workoutDisplay)
+                                self.dismissAction.callAsFunction()
                             }
-                            Spacer()
-                            Button(action: {
-                                self.endRestTime = endRestTime.addingTimeInterval(10)
-                                self.remainingRestTime += 10
-                            }, label: {
-                                Image(systemName: "plus.app.fill")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 25, height: 25) // Adjust size as needed
-                                    .padding(5) // Add padding around the button content
-                                    .foregroundStyle(Color(.text))
+                        }, label: {
+                            Text("End Workout")
+                                .frame(alignment: .bottom)
+                                .font(.title2)
+                                .foregroundColor(Color("Text"))
+                                .bold()
+                                .frame(width: UIScreen.main.bounds.width/1.8, height: 42)
+                                .background(Color("Accent"))
+                                .cornerRadius(7)
+                                .padding(.bottom, 6)
+                        })
+                        .alert("Finish Workout", isPresented: $isShowingFinishConf, actions: {
+                            Button("Finish Anyways", action: {
+                                self.saveToRecord(displayInfo: workoutDisplay)
+                                self.closeActiveWorkoutInfo()
+                                self.dismissAction.callAsFunction()
                             })
-                            Spacer()
-                        }
+                            Button("End Without Saving", role: .destructive, action: {
+                                self.closeActiveWorkoutInfo()
+                                self.dismissAction.callAsFunction()
+                            })
+                            Button("Cancel", role: .cancel, action: {})
+                        }, message: {Text("Not all exercises have been completed")})
+                        Spacer()
                     }
-//                    .transition(.move(edge: .bottom))
-//                    .animation(.default)
+                    
+                    if let endRestTime = self.endRestTime {
+                        ZStack {
+                            Color(.accent)
+                                .frame(height: 50)
+                            
+                            HStack {
+                                Button(action: {
+                                    self.endRestTime = nil
+                                }, label: {
+                                    Text("End")
+                                        .bold()
+                                        .font(.system(size: 25)) // Adjust size as needed
+                                        .padding(10) // Add padding around the button content
+                                        .foregroundColor(Color(.text))
+                                })
+                                
+                                Spacer()
+                                
+                                Text("\(self.remainingRestString)")
+                                    .bold()
+                                    .frame(maxWidth: .infinity)
+                                    .font(.system(size: 25))
+                                Spacer()
+                                Button(action: {
+                                    self.endRestTime =  endRestTime.addingTimeInterval(-10)
+                                    self.remainingRestTime -= 10
+                                }) {
+                                    Image(systemName: "minus.square.fill")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 25, height: 25) // Adjust size as needed
+                                        .padding(10) // Add padding around the button content
+                                        .foregroundColor(Color(.text))
+                                }
+                                Spacer()
+                                Button(action: {
+                                    self.endRestTime = endRestTime.addingTimeInterval(10)
+                                    self.remainingRestTime += 10
+                                }, label: {
+                                    Image(systemName: "plus.app.fill")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 25, height: 25) // Adjust size as needed
+                                        .padding(5) // Add padding around the button content
+                                        .foregroundStyle(Color(.text))
+                                })
+                                Spacer()
+                            }
+                        }
+                        //                    .transition(.move(edge: .bottom))
+                        //                    .animation(.default)
+                    }
                 }
+                .frame(maxHeight: .infinity, alignment: .bottom)
             }
-            .frame(maxHeight: .infinity, alignment: .bottom)
-        }
-        .navigationTitle("\(workoutDisplay.workoutName)")
-        .onAppear {
-            if self.activeWorkoutInfo.display == nil {
-                if let oldRecord = getLatestRecord() {
-                    workoutDisplay.previousNotes = oldRecord.notes
-                    loadPastRecord(pastRecord: oldRecord)
-                }
-                workoutDisplay.startTime = Date()
-                self.activeWorkoutInfo.display = workoutDisplay
-            }
-            self.elapsedTime = Date().timeIntervalSince(workoutDisplay.startTime)
+            .navigationTitle("\(workoutDisplay.workoutName)")
             
-            self.timer = Timer.publish(every: 1, on: .main, in: .common)
-                .autoconnect()
-                .sink { _ in
-                    let elapsedTime = Date().timeIntervalSince(workoutDisplay.startTime)
-                    if elapsedTime >= 864999 {
-                        self.timer?.cancel()
-                    } else {
-                        self.elapsedTime = elapsedTime
+            .onAppear {
+                if self.activeWorkoutInfo.display == nil {
+                    if let oldRecord = getLatestRecord() {
+                        workoutDisplay.previousNotes = oldRecord.notes
+                        loadPastRecord(pastRecord: oldRecord)
                     }
-                    
-                    if let restEndTime = endRestTime {
-                        let remainingRestTime = restEndTime.timeIntervalSinceNow
-                        if remainingRestTime.isLess(than: 0) {
-                            self.endRestTime = nil
-                        } else {
-                            self.remainingRestTime = remainingRestTime
-                        }
-                    }
-                    
+                    workoutDisplay.startTime = Date()
+                    self.activeWorkoutInfo.display = workoutDisplay
                 }
-        } //: onAppear
-        .onDisappear {
-            self.timer?.cancel()
-            if let encoded = try? JSONEncoder().encode(activeWorkoutInfo) {
-                UserDefaults.standard.set(encoded, forKey: "ActiveWorkoutContainer")
+                self.elapsedTime = Date().timeIntervalSince(workoutDisplay.startTime)
+                
+                self.timer = Timer.publish(every: 1, on: .main, in: .common)
+                    .autoconnect()
+                    .sink { _ in
+                        let elapsedTime = Date().timeIntervalSince(workoutDisplay.startTime)
+                        if elapsedTime >= 864999 {
+                            self.timer?.cancel()
+                        } else {
+                            self.elapsedTime = elapsedTime
+                        }
+                        
+                        if let restEndTime = endRestTime {
+                            let remainingRestTime = restEndTime.timeIntervalSinceNow
+                            if remainingRestTime.isLess(than: 0) {
+                                self.endRestTime = nil
+                            } else {
+                                self.remainingRestTime = remainingRestTime
+                            }
+                        }
+                        
+                    }
+                
+                
+            } //: onAppear
+            .onDisappear {
+                self.timer?.cancel()
+                if let encoded = try? JSONEncoder().encode(activeWorkoutInfo) {
+                    UserDefaults.standard.set(encoded, forKey: "ActiveWorkoutContainer")
+                }
             }
+            
         }
-        
+        .sheet(isPresented: $displaySheet) {
+            if displayInfoExerciseIndex >= 0 && displayInfoExerciseIndex < workoutDisplay.exercises.count {
+                ExerciseInfoView(with: $workoutDisplay.exercises[displayInfoExerciseIndex].exercise)
+            }
+            
+        }
+//        .sheet(item: exerciseToChange) {
+//            ExerciseInfoView(with: exerciseToChange)
+//        }
     } //: body
     
     func loadPastRecord(pastRecord: CDWorkoutRecord) {

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		31D1B17D2BA6907D0002D615 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D1B17C2BA6907D0002D615 /* SettingsView.swift */; };
 		BE3FCB1137A82738110216F7 /* libPods-LiftingApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC868353408A417A3E3F49D /* libPods-LiftingApp.a */; };
+		D62B55E12C41D1DF001753C6 /* BackBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62B55E02C41D1DF001753C6 /* BackBodyView.swift */; };
 		D62BB9EF2BD34B6700ABBAA6 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D62BB9EE2BD34B6700ABBAA6 /* AssetsLibrary.framework */; };
 		D62BB9F12BD34B7500ABBAA6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D62BB9F02BD34B7500ABBAA6 /* CoreGraphics.framework */; };
 		D62BB9F32BD34B8200ABBAA6 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D62BB9F22BD34B8200ABBAA6 /* CoreMedia.framework */; };
@@ -42,7 +43,7 @@
 		D6E1668B2BE9C55400CE53B1 /* VideoTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1668A2BE9C55400CE53B1 /* VideoTester.swift */; };
 		D6E1668D2BEAE2C500CE53B1 /* TestWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1668C2BEAE2C500CE53B1 /* TestWriter.swift */; };
 		D6E1668F2BEC2FFB00CE53B1 /* TestAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1668E2BEC2FFB00CE53B1 /* TestAnalyzer.swift */; };
-		D6E87EF62C40876300D32177 /* BodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E87EF52C40876300D32177 /* BodyView.swift */; };
+		D6E87EF62C40876300D32177 /* FrontBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E87EF52C40876300D32177 /* FrontBodyView.swift */; };
 		D6F255C82BA513F4006D7AC2 /* CustomFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F255C42BA513F3006D7AC2 /* CustomFunctions.swift */; };
 		D6F255C92BA513F4006D7AC2 /* CustomViewObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F255C52BA513F3006D7AC2 /* CustomViewObjects.swift */; };
 		D6F255CA2BA513F4006D7AC2 /* WorkoutStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F255C62BA513F3006D7AC2 /* WorkoutStructs.swift */; };
@@ -66,6 +67,7 @@
 		1AC868353408A417A3E3F49D /* libPods-LiftingApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LiftingApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		31D1B17C2BA6907D0002D615 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3A5C07DB321520577D3D6B9F /* Pods-LiftingApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LiftingApp.release.xcconfig"; path = "Target Support Files/Pods-LiftingApp/Pods-LiftingApp.release.xcconfig"; sourceTree = "<group>"; };
+		D62B55E02C41D1DF001753C6 /* BackBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackBodyView.swift; sourceTree = "<group>"; };
 		D62BB9EE2BD34B6700ABBAA6 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.4.sdk/System/Library/Frameworks/AssetsLibrary.framework; sourceTree = DEVELOPER_DIR; };
 		D62BB9F02BD34B7500ABBAA6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.4.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		D62BB9F22BD34B8200ABBAA6 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.4.sdk/System/Library/Frameworks/CoreMedia.framework; sourceTree = DEVELOPER_DIR; };
@@ -102,7 +104,7 @@
 		D6E1668A2BE9C55400CE53B1 /* VideoTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTester.swift; sourceTree = "<group>"; };
 		D6E1668C2BEAE2C500CE53B1 /* TestWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWriter.swift; sourceTree = "<group>"; };
 		D6E1668E2BEC2FFB00CE53B1 /* TestAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAnalyzer.swift; sourceTree = "<group>"; };
-		D6E87EF52C40876300D32177 /* BodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyView.swift; sourceTree = "<group>"; };
+		D6E87EF52C40876300D32177 /* FrontBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontBodyView.swift; sourceTree = "<group>"; };
 		D6F255C42BA513F3006D7AC2 /* CustomFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomFunctions.swift; sourceTree = "<group>"; };
 		D6F255C52BA513F3006D7AC2 /* CustomViewObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomViewObjects.swift; sourceTree = "<group>"; };
 		D6F255C62BA513F3006D7AC2 /* WorkoutStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkoutStructs.swift; sourceTree = "<group>"; };
@@ -153,6 +155,15 @@
 				1AC868353408A417A3E3F49D /* libPods-LiftingApp.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D62B55DF2C41C111001753C6 /* Body Views */ = {
+			isa = PBXGroup;
+			children = (
+				D6E87EF52C40876300D32177 /* FrontBodyView.swift */,
+				D62B55E02C41D1DF001753C6 /* BackBodyView.swift */,
+			);
+			path = "Body Views";
 			sourceTree = "<group>";
 		};
 		D62BB9F82BD9DDAF00ABBAA6 /* VideoAnalysis */ = {
@@ -211,7 +222,6 @@
 				D63DF7AE2BAC7BA90036C9D0 /* AnalyticsView.swift */,
 				D6AF56382C013DB200BBCB0A /* ExerciseInfoView.swift */,
 				D68863C42C10FC01000848CA /* ReplaceExerciseView.swift */,
-				D6E87EF52C40876300D32177 /* BodyView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -237,6 +247,7 @@
 		D6D56FCA2B4C82F20040D4C4 /* LiftingApp */ = {
 			isa = PBXGroup;
 			children = (
+				D62B55DF2C41C111001753C6 /* Body Views */,
 				31D1B17B2BA690590002D615 /* Settings */,
 				D6F255C72BA513F3006D7AC2 /* Structures */,
 				D67369432B8BD5F600187549 /* LoadableData */,
@@ -390,7 +401,7 @@
 			files = (
 				D653A4B12BCF09750056C7B9 /* CD Records + helper.swift in Sources */,
 				D6D56FDD2B4CADA70040D4C4 /* SelectRoutineView.swift in Sources */,
-				D6E87EF62C40876300D32177 /* BodyView.swift in Sources */,
+				D6E87EF62C40876300D32177 /* FrontBodyView.swift in Sources */,
 				D68863C52C10FC01000848CA /* ReplaceExerciseView.swift in Sources */,
 				D679F4802BD06C9400377A12 /* NSSPredicate + Helper.swift in Sources */,
 				D6E1668D2BEAE2C500CE53B1 /* TestWriter.swift in Sources */,
@@ -418,6 +429,7 @@
 				D69769112B8539A500458370 /* EditRoutineView.swift in Sources */,
 				31D1B17D2BA6907D0002D615 /* SettingsView.swift in Sources */,
 				D63DF7B12BAC8CD50036C9D0 /* VideoAnalysisView.swift in Sources */,
+				D62B55E12C41D1DF001753C6 /* BackBodyView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

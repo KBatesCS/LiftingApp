@@ -20,68 +20,76 @@ struct ExerciseInfoView: View {
     }
     
     var body: some View {
+        
         NavigationStack {
+            ScrollView {
                 Text(selectedExercise.name)
                     .frame(alignment: .leading)
                     .padding(.top, 20)
                     .padding()
                     .font(.system(size: 25))
                     .bold()
-            
-            Text("How to perform")
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 10)
-                .opacity(0.8)
-                .bold()
-            
-            Text("Temporary description\nThis is a Temporary description of how to perform this exercise")
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .accentedSectionBodyStyle()
-                .padding(.horizontal, 10)
-            
-            HStack {
-                VStack {
-                    Text("Primary Muscles")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 10)
-                        .opacity(0.8)
-                        .bold()
-                    VStack {
-                        ForEach(selectedExercise.primaryMusclesWorked, id: \.self) { muscle in
-                            Text("- \(muscle)")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                    }
+                
+                Text("How to perform")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 10)
+                    .opacity(0.8)
+                    .bold()
+                
+                Text("Temporary description\nThis is a Temporary description of how to perform this exercise")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .accentedSectionBodyStyle()
                     .padding(.horizontal, 10)
+                HStack {
+                    FrontBodyView(exercise: selectedExerciseWrapped)
+                        .aspectRatio(contentMode: .fit)
+                    BackBodyView(exercise: selectedExerciseWrapped)
+                        .aspectRatio(contentMode: .fit)
                 }
-                VStack {
-                    Text("Secondary Muscles")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 10)
-                        .opacity(0.8)
-                        .bold()
+                .padding(.horizontal, 20)
+                HStack {
                     VStack {
-                        ForEach(selectedExercise.secondaryMusclesWorked, id: \.self) { muscle in
-                            Text("- \(muscle)")
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                        Text("Primary Muscles")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 10)
+                            .opacity(0.8)
+                            .bold()
+                        VStack {
+                            ForEach(selectedExercise.primaryMusclesWorked, id: \.self) { muscle in
+                                Text("- \(muscle)")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .accentedSectionBodyStyle()
+                        .padding(.horizontal, 10)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .accentedSectionBodyStyle()
-                    .padding(.horizontal, 10)
+                    VStack {
+                        Text("Secondary Muscles")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 10)
+                            .opacity(0.8)
+                            .bold()
+                        VStack {
+                            ForEach(selectedExercise.secondaryMusclesWorked, id: \.self) { muscle in
+                                Text("- \(muscle)")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .accentedSectionBodyStyle()
+                        .padding(.horizontal, 10)
+                    }
                 }
-            }
-            .padding(.vertical, 20)
-            
-            NavigationLink(destination: ReplaceExerciseView(with: selectedExerciseWrapped)) {
-                Text("Replace Exercise")
-                    .accentedButtonTextStyle()
-                    .accentedButtonStyle()
-            }
-            Spacer()
-        }
+                .padding(.vertical, 10)
+                
+                NavigationLink(destination: ReplaceExerciseView(with: selectedExerciseWrapped)) {
+                    Text("Replace Exercise")
+                        .accentedButtonTextStyle()
+                        .accentedButtonStyle()
+                }
+                Spacer()
+            }}
         
     }
 }

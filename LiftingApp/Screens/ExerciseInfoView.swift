@@ -36,10 +36,12 @@ struct ExerciseInfoView: View {
                     .opacity(0.8)
                     .bold()
                 
-                Text("Temporary description\nThis is a Temporary description of how to perform this exercise")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .accentedSectionBodyStyle()
-                    .padding(.horizontal, 10)
+                if selectedExercise.desc != "" {
+                    Text(selectedExercise.desc)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .accentedSectionBodyStyle()
+                        .padding(.horizontal, 10)
+                }
                 HStack {
                     FrontBodyView(exercise: selectedExerciseWrapped)
                         .aspectRatio(contentMode: .fit)
@@ -56,7 +58,7 @@ struct ExerciseInfoView: View {
                             .bold()
                         VStack {
                             ForEach(selectedExercise.primaryMusclesWorked, id: \.self) { muscle in
-                                Text("- \(muscle)")
+                                Text("- \(muscle.rawValue)")
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
@@ -72,7 +74,7 @@ struct ExerciseInfoView: View {
                             .bold()
                         VStack {
                             ForEach(selectedExercise.secondaryMusclesWorked, id: \.self) { muscle in
-                                Text("- \(muscle)")
+                                Text("- \(muscle.rawValue)")
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }

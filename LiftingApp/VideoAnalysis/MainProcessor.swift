@@ -96,6 +96,9 @@ struct VideoProcessingView: View {
                             
                             var image = UIImage(cgImage: cgImage)
                             
+                            // variables for counting reps
+                            var repCount = 0
+                            var lastHighest = image.size.height
                             
                             if let bodyPoints = TestAnalyzer().analyze(frame: image.cgImage!) {
                                 for frameBodyPoints in bodyPoints {
@@ -105,6 +108,7 @@ struct VideoProcessingView: View {
                                     }
                                 }
                             }
+                            
                             
                             
                             let success = videoWriter.write(image: image, frameNum: frameNum)

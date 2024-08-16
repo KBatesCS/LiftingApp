@@ -182,16 +182,18 @@ class ActiveSetDisplay: Identifiable, ObservableObject, Codable {
     }
 }
 
-struct Exercise: Identifiable, Codable, Equatable {
+public struct Exercise: Identifiable, Codable, Equatable {
     public var id: UUID
     
     let name: String
+    let desc: String
     let primaryMusclesWorked: [Muscles]
     let secondaryMusclesWorked: [Muscles]
     
-    init(id: UUID = UUID(), name: String = "default", primaryMusclesWorked: [Muscles] = [], secondaryMusclesWorked: [Muscles] = []) {
+    init(id: UUID = UUID(), name: String = "default", desc: String = "", primaryMusclesWorked: [Muscles] = [], secondaryMusclesWorked: [Muscles] = []) {
         self.id = id
         self.name = name
+        self.desc = desc
         self.primaryMusclesWorked = primaryMusclesWorked
         self.secondaryMusclesWorked = secondaryMusclesWorked
     }
@@ -199,6 +201,7 @@ struct Exercise: Identifiable, Codable, Equatable {
     enum CodingKeys: String, CodingKey {
         case id
         case name
+        case desc
         case primaryMusclesWorked
         case secondaryMusclesWorked
     }
@@ -207,6 +210,7 @@ struct Exercise: Identifiable, Codable, Equatable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
+        desc = try container.decode(String.self, forKey: .desc)
         primaryMusclesWorked = try container.decode([Muscles].self, forKey: .primaryMusclesWorked)
         secondaryMusclesWorked = try container.decode([Muscles].self, forKey: .secondaryMusclesWorked)
     }
@@ -215,33 +219,35 @@ struct Exercise: Identifiable, Codable, Equatable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
+        try container.encode(desc, forKey: .desc)
         try container.encode(primaryMusclesWorked, forKey: .primaryMusclesWorked)
         try container.encode(secondaryMusclesWorked, forKey: .secondaryMusclesWorked)
     }
 }
 
-enum Muscles: Codable {
-    case quad
-    case hamstring
-    case calf
-    case chest
-    case tricep
-    case shoulder
-    case back
-    case bicep
-    case frontdeltoid
-    case abdominal
-    case reardeltoid
-    case trapezius
-    case rotatorcuff
-    case forearmflexor
-    case lateraldeltoid
-    case lat
-    case glute
-    case lowback
-    case adductor
-    case forearmextensor
-    case oblique
+public enum Muscles: String, Codable {
+    case quad = "Quad"
+    case hamstring = "Hamstring"
+    case calf = "Calf"
+    case chest = "Chest"
+    case tricep = "Tricep"
+    case shoulder = "Shoulder"
+    case back = "Back"
+    case bicep = "Bicep"
+    case frontdeltoid = "Front Deltoid"
+    case abdominal = "Abdominal"
+    case reardeltoid = "Reat Deltoid"
+    case trapezius = "Trap"
+    case rotatorcuff = "Rotator Cuff"
+    case forearmflexor = "Forearm Flexor"
+    case lateraldeltoid = "Lateral Deltoid"
+    case lat = "Lat"
+    case glute = "Glute"
+    case lowback = "Lower Back"
+    case adductor = "Adductor"
+    case abductor = "Abductor"
+    case forearmextensor = "Forearm Extensor"
+    case oblique = "Oblique"
 }
 
 

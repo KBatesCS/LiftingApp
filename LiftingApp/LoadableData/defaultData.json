@@ -1,816 +1,406 @@
 [
   {
+    "name" : "Bench Press",
+    "id" : "24078134-D10B-4F0F-A706-E461A901FC7E",
+    "desc" : "-Lay on bench\n-Pull shoulder blades together and slightly arch back\n-Grip bar about 1-1.5x shoulder width\n-Breath air into the diaphragm and tighten abs\n-Lower bar to about the sternum, and touch the bar to your chest\n-Push bar back up\n-exhale, and repeat",
     "primaryMusclesWorked" : [
-      {
-        "chest" : {
-
-        }
-      }
+      "Chest",
+      "Front Deltoid"
     ],
-    "name" : "BenchPress",
-    "id" : "2ABFB8CA-E493-4EC8-B04A-45FDDF7D92A4",
     "secondaryMusclesWorked" : [
-      {
-        "shoulder" : {
-
-        }
-      },
-      {
-        "tricep" : {
-
-        }
-      }
+      "Tricep"
+    ]
+  },
+  {
+    "id" : "84075A39-11F1-4BDC-9264-C9797E72C507",
+    "desc" : "-Set bench to about 30-45 degrees\n-Bring dumbbells to chest\n-As you press the dumbbells up, exhale\n-Breath air in, and bring dumbbells back down to chest",
+    "name" : "Incline Dumbbell Press",
+    "primaryMusclesWorked" : [
+      "Chest",
+      "Front Deltoid"
+    ],
+    "secondaryMusclesWorked" : [
+      "Tricep"
+    ]
+  },
+  {
+    "name" : "Dips",
+    "primaryMusclesWorked" : [
+      "Chest",
+      "Front Deltoid"
+    ],
+    "desc" : "-Grip bars around shoulder width apart\n-Slightly lean forward\n-Slowly lower yourself until arm is about a 90 degree angle\n-Press back up and repeat",
+    "secondaryMusclesWorked" : [
+      "Tricep"
+    ],
+    "id" : "87C69CC1-516A-4D5A-BAE7-65BAF7B96F8F"
+  },
+  {
+    "name" : "Standing Cable Chest Fly",
+    "desc" : "-Grab handles on both sides\n-Slightly lean forward\n-Keep arms slightly bent and stiff\n-Push arms forward until they almost touch infront of you\n-Control handles back to starting position",
+    "secondaryMusclesWorked" : [
+      "Front Deltoid"
+    ],
+    "id" : "A46874D7-F601-4516-BF82-15EBE4DAADD0",
+    "primaryMusclesWorked" : [
+      "Chest"
+    ]
+  },
+  {
+    "id" : "835D046C-D7CF-404F-BA41-3B449DAFBCCD",
+    "desc" : "-On a rack, place the barbell a bit below shoulder height\n-Grip the bar just wider than shoulder width apart, and get your elbows underneath the bar\n-Unrack the bar and step back\n-Tighten glutes and brace core\n-Press the bar straight up, while getting under the bar\n-Bring the bar back down to touch the top of the chest",
+    "primaryMusclesWorked" : [
+      "Front Deltoid"
+    ],
+    "secondaryMusclesWorked" : [
+      "Lateral Deltoid",
+      "Tricep"
+    ],
+    "name" : "Overhead Press"
+  },
+  {
+    "desc" : "-Grab dumbbells and find a bench with back support\n-Bring dumbbells to shoulders, with forearms stacked under the weight\n-Brace and press the dumbbells up\n-Bring the weight back to the shoulder and repeat",
+    "name" : "Seated Dumbbell Shoulder Press",
+    "secondaryMusclesWorked" : [
+      "Tricep",
+      "Lateral Deltoid"
+    ],
+    "id" : "08AF4593-DEAF-43F6-AB1C-718DF1D384B1",
+    "primaryMusclesWorked" : [
+      "Front Deltoid"
+    ]
+  },
+  {
+    "name" : "Dumbbell Lateral Raise",
+    "desc" : "-Hold dumbbells by side with slightly bent and stiff arms\n-Raise dumbbells to the side until horizontal, almost as if pouring a watering can\n-Lower dumbbells back to side and repeat",
+    "id" : "CC59ECA4-5A50-46B4-ABF7-105FF76943A2",
+    "primaryMusclesWorked" : [
+      "Lateral Deltoid"
+    ],
+    "secondaryMusclesWorked" : [
+      "Front Deltoid"
+    ]
+  },
+  {
+    "name" : "Reverse Dumbbell Fly",
+    "id" : "12AC85C2-8E6E-4EC3-ACB4-9E0E2A6635E1",
+    "primaryMusclesWorked" : [
+      "Reat Deltoid",
+      "Rotator Cuff"
+    ],
+    "desc" : "-Keeping a neutral back, lean forward and let dumbbells hang\n-Raise dumbbells up to the sides, squeezing upper back together\n-With control, let the dumbbells decline back to hanging",
+    "secondaryMusclesWorked" : [
+      "Trap"
     ]
   },
   {
     "primaryMusclesWorked" : [
-      {
-        "back" : {
-
-        }
-      }
+      "Glute",
+      "Lower Back"
     ],
-    "secondaryMusclesWorked" : [
-      {
-        "bicep" : {
-
-        }
-      }
-    ],
-    "name" : "Pullup",
-    "id" : "D14A4EFA-C9B3-479A-ACAA-0668190CDB41"
-  },
-  {
-    "primaryMusclesWorked" : [
-      {
-        "chest" : {
-
-        }
-      }
-    ],
-    "id" : "14628BB1-1155-4EA4-A36B-2E97F8C3DBEC",
-    "name" : "Chest Press",
-    "secondaryMusclesWorked" : [
-      {
-        "frontdeltoid" : {
-
-        }
-      },
-      {
-        "tricep" : {
-
-        }
-      }
-    ]
-  },
-  {
-    "secondaryMusclesWorked" : [
-      {
-        "frontdeltoid" : {
-
-        }
-      }
-    ],
-    "name" : "Chest Fly",
-    "id" : "9EACD23A-F153-45BD-9382-02C58E1A7A89",
-    "primaryMusclesWorked" : [
-      {
-        "chest" : {
-
-        }
-      }
-    ]
-  },
-  {
-    "primaryMusclesWorked" : [
-      {
-        "chest" : {
-
-        }
-      },
-      {
-        "frontdeltoid" : {
-
-        }
-      }
-    ],
-    "secondaryMusclesWorked" : [
-      {
-        "tricep" : {
-
-        }
-      }
-    ],
-    "name" : "Dip",
-    "id" : "D51D5334-871D-482B-94C0-097F98E39E2C"
-  },
-  {
-    "secondaryMusclesWorked" : [
-      {
-        "tricep" : {
-
-        }
-      },
-      {
-        "abdominal" : {
-
-        }
-      }
-    ],
-    "id" : "5461CEE3-F61F-4738-B230-9AF06964EB9F",
-    "name" : "Pushup",
-    "primaryMusclesWorked" : [
-      {
-        "chest" : {
-
-        }
-      },
-      {
-        "frontdeltoid" : {
-
-        }
-      }
-    ]
-  },
-  {
-    "primaryMusclesWorked" : [
-      {
-        "reardeltoid" : {
-
-        }
-      },
-      {
-        "trapezius" : {
-
-        }
-      }
-    ],
-    "id" : "F04027B1-AB0D-4974-9495-4C436395D879",
-    "secondaryMusclesWorked" : [
-      {
-        "rotatorcuff" : {
-
-        }
-      },
-      {
-        "bicep" : {
-
-        }
-      },
-      {
-        "forearmflexor" : {
-
-        }
-      }
-    ],
-    "name" : "Rear Delt Row"
-  },
-  {
-    "id" : "B2CEE9DD-DE67-40C6-A41D-101C7AFEC1AF",
-    "primaryMusclesWorked" : [
-      {
-        "frontdeltoid" : {
-
-        }
-      }
-    ],
-    "name" : "Shoulder Press",
-    "secondaryMusclesWorked" : [
-      {
-        "tricep" : {
-
-        }
-      },
-      {
-        "lateraldeltoid" : {
-
-        }
-      }
-    ]
-  },
-  {
-    "id" : "6C05802B-BFC0-4210-BE3D-DF44A5A137D9",
-    "name" : "Overhead Press",
-    "primaryMusclesWorked" : [
-      {
-        "frontdeltoid" : {
-
-        }
-      }
-    ],
-    "secondaryMusclesWorked" : [
-      {
-        "tricep" : {
-
-        }
-      },
-      {
-        "lateraldeltoid" : {
-
-        }
-      }
-    ]
-  },
-  {
-    "name" : "Reverse Cable Fly",
-    "id" : "17B0F24B-760C-4CFA-A414-F519B20ACB29",
-    "primaryMusclesWorked" : [
-      {
-        "reardeltoid" : {
-
-        }
-      },
-      {
-        "rotatorcuff" : {
-
-        }
-      }
-    ],
-    "secondaryMusclesWorked" : [
-      {
-        "trapezius" : {
-
-        }
-      }
-    ]
-  },
-  {
-    "primaryMusclesWorked" : [
-      {
-        "frontdeltoid" : {
-
-        }
-      }
-    ],
-    "secondaryMusclesWorked" : [
-      {
-        "reardeltoid" : {
-
-        }
-      }
-    ],
-    "id" : "55FF16A1-0497-46FB-8CAE-60A2B5FA66CD",
-    "name" : "Dumbell front Raise"
-  },
-  {
-    "id" : "BD006A50-202A-42C3-B126-FE333A60EA7C",
-    "primaryMusclesWorked" : [
-      {
-        "lat" : {
-
-        }
-      },
-      {
-        "trapezius" : {
-
-        }
-      },
-      {
-        "reardeltoid" : {
-
-        }
-      }
-    ],
-    "name" : "Seated Row",
-    "secondaryMusclesWorked" : [
-      {
-        "bicep" : {
-
-        }
-      },
-      {
-        "forearmflexor" : {
-
-        }
-      },
-      {
-        "rotatorcuff" : {
-
-        }
-      }
-    ]
-  },
-  {
-    "primaryMusclesWorked" : [
-      {
-        "glute" : {
-
-        }
-      },
-      {
-        "lowback" : {
-
-        }
-      }
-    ],
-    "secondaryMusclesWorked" : [
-      {
-        "quad" : {
-
-        }
-      },
-      {
-        "hamstring" : {
-
-        }
-      },
-      {
-        "adductor" : {
-
-        }
-      },
-      {
-        "trapezius" : {
-
-        }
-      },
-      {
-        "forearmflexor" : {
-
-        }
-      }
-    ],
+    "id" : "8B33723B-9A72-4C96-8B6A-49582A827315",
+    "desc" : "-Stand in front of bar to where the bar is over the center of your foot when standing straight up\n-Breath air into diaphragm and brace\n-Lean forward and grip bar\n-Keeping a completely straight back, lift the bar up, imagining your legs pushing the floor down\n-Press glutes forward at the top and lockout the lift\n-Exhale, then breath air back in and brace\n-With control lower bar to the ground and repeat",
     "name" : "Deadlift",
-    "id" : "ADC8E4E5-CD19-480A-B20E-BAF48CE368DA"
-  },
-  {
     "secondaryMusclesWorked" : [
-      {
-        "reardeltoid" : {
-
-        }
-      },
-      {
-        "bicep" : {
-
-        }
-      },
-      {
-        "rotatorcuff" : {
-
-        }
-      }
-    ],
-    "primaryMusclesWorked" : [
-      {
-        "lat" : {
-
-        }
-      }
-    ],
-    "id" : "1728A2B4-2501-416F-AA63-D23269E232A8",
-    "name" : "Lat Pulldown"
-  },
-  {
-    "primaryMusclesWorked" : [
-      {
-        "lowback" : {
-
-        }
-      }
-    ],
-    "name" : "Jefferson Curl",
-    "id" : "FD12E018-D979-48FC-90C8-BFEFAE60693B",
-    "secondaryMusclesWorked" : [
-      {
-        "adductor" : {
-
-        }
-      },
-      {
-        "glute" : {
-
-        }
-      },
-      {
-        "hamstring" : {
-
-        }
-      }
+      "Quad",
+      "Hamstring",
+      "Adductor",
+      "Trap",
+      "Forearm Flexor"
     ]
   },
   {
-    "id" : "6415611F-D329-4AB3-8161-EB9C593722E9",
+    "name" : "Lat Pulldown",
     "primaryMusclesWorked" : [
-      {
-        "quad" : {
-
-        }
-      },
-      {
-        "glute" : {
-
-        }
-      }
+      "Lat"
     ],
+    "id" : "559AB3FB-9EA5-474E-A70F-4626DF0E61ED",
+    "desc" : "-Sit on the seat, with legs under the supports\n-Grip the bar with palms facing forward\n-Pull the bar to chest while squeezing shoulder blades together\n-Control the bar back up and repeat",
     "secondaryMusclesWorked" : [
-      {
-        "adductor" : {
-
-        }
-      }
-    ],
-    "name" : "Lunge"
+      "Reat Deltoid",
+      "Bicep"
+    ]
   },
   {
-    "id" : "A96D99F5-D5F9-4436-AE0D-84AA517D1334",
+    "primaryMusclesWorked" : [
+      "Lat"
+    ],
+    "desc" : "-Grip the pullup bar with palms facing forward and completely hanging\n-Without rocking, pull body up until your chin is over the bar\n-Control yourself back down until you reach a dead hang and repeat",
+    "id" : "E090DEF0-DADA-4808-908A-09C5A4E268D7",
+    "secondaryMusclesWorked" : [
+      "Reat Deltoid",
+      "Bicep"
+    ],
+    "name" : "Pullup"
+  },
+  {
+    "id" : "070183A4-D91C-4FDB-9BF5-01F8EEB966A8",
+    "desc" : "-Grip the bar with palm facing towards you\n-Bend over and brace, keeping a neutral back throughout the movement\n-Driving elbows back, pull the bar up towards your sternum, or whatever is comfortable\n-Lower the bar back down with control",
+    "name" : "Barbell Row",
+    "secondaryMusclesWorked" : [
+      "Bicep",
+      "Lower Back"
+    ],
+    "primaryMusclesWorked" : [
+      "Lat",
+      "Trap",
+      "Reat Deltoid"
+    ]
+  },
+  {
+    "id" : "BA0C4482-1E99-4FC6-8B69-A78C84182F44",
+    "desc" : "",
+    "primaryMusclesWorked" : [
+      "Lat",
+      "Trap",
+      "Reat Deltoid"
+    ],
+    "secondaryMusclesWorked" : [
+      "Bicep"
+    ],
+    "name" : "Dumbbell Row"
+  },
+  {
+    "secondaryMusclesWorked" : [
+
+    ],
+    "id" : "3ADDAF69-61E7-474C-9BA6-1449BE0078E0",
+    "desc" : "-Grip barbell with underhand grip\n-Keep elbows locked in place while bending them to lift the barbell up\n-Control the barbell back all the way down\n-Repeat process, avoiding unnecessary movement like swinging",
+    "name" : "Barbell Curl",
+    "primaryMusclesWorked" : [
+      "Bicep"
+    ]
+  },
+  {
+    "desc" : "-Grip Dumbbell with underhand grip\n-Keep elbows locked in place while bending them to lift the dumbbell up\n-Control the dumbbell back all the way down\n-Repeat process, avoiding unnecessary movement like swinging",
+    "name" : "Dumbbell Curl",
+    "secondaryMusclesWorked" : [
+
+    ],
+    "id" : "C5521ED3-27FA-4AB9-8AC9-84C8AED9F258",
+    "primaryMusclesWorked" : [
+      "Bicep"
+    ]
+  },
+  {
+    "secondaryMusclesWorked" : [
+      "Forearm Flexor"
+    ],
+    "primaryMusclesWorked" : [
+      "Bicep"
+    ],
+    "id" : "607263AE-18E7-482D-AD67-6E6FEB977358",
+    "desc" : "-Grip Dumbbell in a neutral grip, so the the dumbbells are parallel to eachother\n-Keep elbows locked in place while bending them to lift the dumbbell up\n-Control the dumbbell back all the way down\n-Repeat process, avoiding unnecessary movement like swinging",
+    "name" : "Hammer Curl"
+  },
+  {
+    "id" : "2A40345C-6A83-4369-BC8E-76F2F8055C08",
+    "desc" : "",
+    "name" : "Barbell Skull-Crusher",
+    "secondaryMusclesWorked" : [
+
+    ],
+    "primaryMusclesWorked" : [
+      "Tricep"
+    ]
+  },
+  {
+    "primaryMusclesWorked" : [
+      "Tricep"
+    ],
+    "desc" : "",
+    "name" : "Overhead Cable Tricep Extensions",
+    "secondaryMusclesWorked" : [
+
+    ],
+    "id" : "CE7B70EC-FAC9-4CC8-BC7A-E9204BF6B576"
+  },
+  {
+    "desc" : "",
+    "name" : "Tricep Pushdown",
+    "id" : "5FD3537C-F67A-4543-8AD8-33EE20ECCDF9",
+    "primaryMusclesWorked" : [
+      "Tricep"
+    ],
+    "secondaryMusclesWorked" : [
+
+    ]
+  },
+  {
+    "secondaryMusclesWorked" : [
+      "Front Deltoid",
+      "Chest"
+    ],
+    "id" : "5A412510-F911-4855-8B7C-C2DD4E553DCE",
+    "desc" : "",
+    "name" : "Close-Grip Bench Press",
+    "primaryMusclesWorked" : [
+      "Tricep"
+    ]
+  },
+  {
     "name" : "Squat",
     "primaryMusclesWorked" : [
-      {
-        "quad" : {
-
-        }
-      },
-      {
-        "adductor" : {
-
-        }
-      },
-      {
-        "glute" : {
-
-        }
-      },
-      {
-        "lowback" : {
-
-        }
-      }
+      "Quad",
+      "Glute",
+      "Lower Back",
+      "Hamstring"
     ],
     "secondaryMusclesWorked" : [
-      {
-        "calf" : {
-
-        }
-      }
-    ]
+      "Adductor",
+      "Lower Back",
+      "Calf"
+    ],
+    "id" : "E702CDA0-D31E-4B19-9A75-128DC0BECFF5",
+    "desc" : ""
   },
   {
+    "desc" : "",
+    "primaryMusclesWorked" : [
+      "Quad",
+      "Glute"
+    ],
+    "id" : "D321FEA1-686C-46B0-922A-D4E3380129A0",
+    "secondaryMusclesWorked" : [
+      "Adductor"
+    ],
+    "name" : "Hack Squat"
+  },
+  {
+    "primaryMusclesWorked" : [
+      "Quad"
+    ],
+    "desc" : "",
+    "id" : "84F0AEDD-9AA2-4DAC-8132-2773A34A43BA",
     "name" : "Leg Extension",
-    "id" : "9975BF7B-B30D-41AF-B767-EA37BDB86614",
-    "primaryMusclesWorked" : [
-      {
-        "quad" : {
-
-        }
-      }
-    ],
     "secondaryMusclesWorked" : [
 
     ]
   },
   {
     "primaryMusclesWorked" : [
-      {
-        "quad" : {
-
-        }
-      },
-      {
-        "glute" : {
-
-        }
-      },
-      {
-        "adductor" : {
-
-        }
-      }
+      "Quad",
+      "Glute"
     ],
     "secondaryMusclesWorked" : [
-      {
-        "hamstring" : {
-
-        }
-      }
+      "Adductor"
     ],
-    "id" : "38AB262B-F0B3-4778-A230-92179E3F91CE",
-    "name" : "Leg Press"
+    "id" : "374080F2-9C19-45DA-A8A2-C9AC966235DA",
+    "name" : "Bulgerian Split Squat",
+    "desc" : ""
   },
   {
+    "desc" : "",
+    "id" : "DE00286A-D7A7-45EA-99F0-E60E95836E8D",
+    "name" : "Seated Leg Curl",
     "primaryMusclesWorked" : [
-      {
-        "hamstring" : {
+      "Hamstring"
+    ],
+    "secondaryMusclesWorked" : [
 
-        }
-      }
+    ]
+  },
+  {
+    "name" : "Lying Leg Curl",
+    "id" : "197D56A6-9D8B-4BA8-8826-98A616E64D9B",
+    "primaryMusclesWorked" : [
+      "Hamstring"
     ],
     "secondaryMusclesWorked" : [
 
     ],
-    "name" : "Leg Curl",
-    "id" : "1F9A33EB-DDED-4D82-8D1B-3012792DD00A"
+    "desc" : ""
   },
   {
     "name" : "Romanian Deadlift",
     "secondaryMusclesWorked" : [
-      {
-        "adductor" : {
-
-        }
-      },
-      {
-        "trapezius" : {
-
-        }
-      }
+      "Adductor",
+      "Trap",
+      "Forearm Flexor"
     ],
+    "desc" : "",
+    "id" : "EDE4D211-9903-49AD-A07F-D3A1D7F8BB9C",
     "primaryMusclesWorked" : [
-      {
-        "glute" : {
-
-        }
-      },
-      {
-        "lowback" : {
-
-        }
-      },
-      {
-        "hamstring" : {
-
-        }
-      }
-    ],
-    "id" : "32BBAA15-57F2-4400-90F9-0958A518B0B3"
+      "Hamstring",
+      "Glute",
+      "Lower Back"
+    ]
   },
   {
-    "id" : "418BE043-F885-413D-B7B0-1F75784F89F8",
-    "name" : "Calf Raise",
-    "primaryMusclesWorked" : [
-      {
-        "calf" : {
-
-        }
-      }
+    "secondaryMusclesWorked" : [
+      "Adductor"
     ],
+    "id" : "47905B86-65B2-4433-8B22-9B0804C62371",
+    "desc" : "",
+    "name" : "Hip Thrust",
+    "primaryMusclesWorked" : [
+      "Glute"
+    ]
+  },
+  {
+    "name" : "Cable Crunch",
+    "primaryMusclesWorked" : [
+      "Abdominal"
+    ],
+    "desc" : "",
+    "id" : "1BCC0B4D-A9B9-44FB-951D-E2393FA954D8",
+    "secondaryMusclesWorked" : [
+      "Oblique"
+    ]
+  },
+  {
+    "desc" : "",
+    "primaryMusclesWorked" : [
+      "Abdominal"
+    ],
+    "name" : "Hanging Leg Raise",
+    "id" : "D14DB89C-FAD7-4095-B8DF-55C99099577D",
+    "secondaryMusclesWorked" : [
+      "Oblique"
+    ]
+  },
+  {
+    "name" : "High to Low Wood Chop",
+    "desc" : "",
+    "id" : "79000E64-9FC7-47A1-AA1A-613EE031675A",
+    "secondaryMusclesWorked" : [
+      "Abdominal"
+    ],
+    "primaryMusclesWorked" : [
+      "Oblique"
+    ]
+  },
+  {
+    "desc" : "",
+    "primaryMusclesWorked" : [
+      "Abdominal"
+    ],
+    "id" : "9EFFB89C-371F-4EC3-A7E2-B9A400DFD2C5",
+    "secondaryMusclesWorked" : [
+      "Oblique"
+    ],
+    "name" : "Crunch"
+  },
+  {
+    "desc" : "",
+    "name" : "Standing Calf Raise",
+    "primaryMusclesWorked" : [
+      "Calf"
+    ],
+    "id" : "655FB9C8-A97B-4967-A2E6-9D5BD063AD07",
     "secondaryMusclesWorked" : [
 
     ]
   },
   {
-    "id" : "77B5FEBB-8A04-4D6B-9AC1-54A67F6FFF2D",
-    "name" : "Heel Drop",
+    "id" : "CD8E1C8D-AB1A-4116-B4A3-C6245A8F538C",
+    "desc" : "",
     "primaryMusclesWorked" : [
-      {
-        "calf" : {
-
-        }
-      }
+      "Calf"
     ],
+    "name" : "Seated Calf Raise",
     "secondaryMusclesWorked" : [
 
     ]
-  },
-  {
-    "primaryMusclesWorked" : [
-      {
-        "calf" : {
-
-        }
-      }
-    ],
-    "name" : "Heel Raise",
-    "id" : "46A7EA8B-D590-4CB3-ABBE-2013E1D5C532",
-    "secondaryMusclesWorked" : [
-
-    ]
-  },
-  {
-    "id" : "43824977-A21E-4ADE-94F0-912576263FEC",
-    "primaryMusclesWorked" : [
-      {
-        "bicep" : {
-
-        }
-      }
-    ],
-    "name" : "Bicep Curl",
-    "secondaryMusclesWorked" : [
-      {
-        "forearmflexor" : {
-
-        }
-      }
-    ]
-  },
-  {
-    "id" : "0B91A042-38EC-43E6-B64E-5525A0AECF2F",
-    "name" : "Hammer Curl",
-    "secondaryMusclesWorked" : [
-
-    ],
-    "primaryMusclesWorked" : [
-      {
-        "bicep" : {
-
-        }
-      },
-      {
-        "forearmflexor" : {
-
-        }
-      }
-    ]
-  },
-  {
-    "primaryMusclesWorked" : [
-      {
-        "bicep" : {
-
-        }
-      }
-    ],
-    "name" : "Preacher Curl",
-    "id" : "110DBFD9-6D52-4059-B079-585449E1D9A7",
-    "secondaryMusclesWorked" : [
-      {
-        "forearmflexor" : {
-
-        }
-      }
-    ]
-  },
-  {
-    "secondaryMusclesWorked" : [
-      {
-        "chest" : {
-
-        }
-      }
-    ],
-    "primaryMusclesWorked" : [
-      {
-        "tricep" : {
-
-        }
-      }
-    ],
-    "id" : "948DCF99-F41A-4FDE-9CD8-F264B1A97431",
-    "name" : "Bench Dip"
-  },
-  {
-    "primaryMusclesWorked" : [
-      {
-        "tricep" : {
-
-        }
-      }
-    ],
-    "id" : "148727BB-FAA5-4EA8-96AE-0ACC094A92B9",
-    "secondaryMusclesWorked" : [
-
-    ],
-    "name" : "Tricep Pushdown"
-  },
-  {
-    "id" : "B00B1008-0B49-4E47-BCB3-564E0EF3FC27",
-    "secondaryMusclesWorked" : [
-      {
-        "forearmflexor" : {
-
-        }
-      }
-    ],
-    "primaryMusclesWorked" : [
-      {
-        "tricep" : {
-
-        }
-      }
-    ],
-    "name" : "Tricep Extension"
-  },
-  {
-    "id" : "BCAD6B51-76D2-46DC-9CFB-BE3AE3B25416",
-    "name" : "Plate Pinch",
-    "primaryMusclesWorked" : [
-      {
-        "forearmflexor" : {
-
-        }
-      }
-    ],
-    "secondaryMusclesWorked" : [
-
-    ]
-  },
-  {
-    "secondaryMusclesWorked" : [
-
-    ],
-    "name" : "Wrist Curl",
-    "id" : "C42BAE2B-D77C-4B7F-BE0B-3997B61D3128",
-    "primaryMusclesWorked" : [
-      {
-        "forearmflexor" : {
-
-        }
-      }
-    ]
-  },
-  {
-    "name" : "Wrist Extension",
-    "id" : "9939D7AE-C4A7-4048-9453-A25960F30BE5",
-    "primaryMusclesWorked" : [
-      {
-        "forearmextensor" : {
-
-        }
-      }
-    ],
-    "secondaryMusclesWorked" : [
-
-    ]
-  },
-  {
-    "name" : "Crunch",
-    "primaryMusclesWorked" : [
-      {
-        "abdominal" : {
-
-        }
-      }
-    ],
-    "secondaryMusclesWorked" : [
-      {
-        "oblique" : {
-
-        }
-      }
-    ],
-    "id" : "7F1004CE-24F7-4F2B-823D-F973E8F02405"
-  },
-  {
-    "primaryMusclesWorked" : [
-      {
-        "abdominal" : {
-
-        }
-      }
-    ],
-    "secondaryMusclesWorked" : [
-      {
-        "oblique" : {
-
-        }
-      }
-    ],
-    "id" : "15290AF1-92AD-4245-92BC-E2EF6C28BF41",
-    "name" : "Plank"
-  },
-  {
-    "name" : "Leg Raise",
-    "id" : "0D7A0E06-9F51-45B5-A343-6802A1371BBA",
-    "primaryMusclesWorked" : [
-      {
-        "abdominal" : {
-
-        }
-      }
-    ],
-    "secondaryMusclesWorked" : [
-      {
-        "oblique" : {
-
-        }
-      }
-    ]
-  },
-  {
-    "id" : "AB5A33BB-7D29-4A24-B404-F3ADBA9691B3",
-    "primaryMusclesWorked" : [
-      {
-        "abdominal" : {
-
-        }
-      }
-    ],
-    "name" : "Suitcases",
-    "secondaryMusclesWorked" : [
-      {
-        "oblique" : {
-
-        }
-      }
-    ]
-  },
-  {
-    "name" : "Windshield Wiper",
-    "primaryMusclesWorked" : [
-      {
-        "oblique" : {
-
-        }
-      }
-    ],
-    "secondaryMusclesWorked" : [
-      {
-        "abdominal" : {
-
-        }
-      }
-    ],
-    "id" : "80D63F5E-6883-48CF-A8D2-AC6EF2E9D484"
   }
 ]

@@ -21,11 +21,11 @@ class TestAnalyzer {
                 return
             }
             
+            //selecting primary pose observation, can loop through and append all observations for all people
             var frameBodyPoints = [[(CGPoint, VNHumanBodyPoseObservation.JointName)]]()
-            for observation in observations {
-                if let points = self.processObservation(observation, forFrame: frame) {
-                    frameBodyPoints.append(points)
-                }
+            var mainObservation = observations[0]
+            if let points = self.processObservation(mainObservation, forFrame: frame) {
+                frameBodyPoints.append(points)
             }
             bodyPoints.append(contentsOf: frameBodyPoints)
         })

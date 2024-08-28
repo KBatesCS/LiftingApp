@@ -49,7 +49,7 @@ struct PersistenceController {
         let workoutRecord = CDWorkoutRecord(notes: "lift lighter next time", usrStr: "ExampleUser", workoutUUID: UUID(), context: context, totalTime: 90)
         
         
-        let exercise1 = CDExerciseRecord(inLBs: true, exercise: loadExercise(uuid: UUID(uuidString: "2ABFB8CA-E493-4EC8-B04A-45FDDF7D92A4")), orderLoc: 1, context: context)
+        let exercise1 = CDExerciseRecord(inLBs: true, exercise: loadExercise(uuid: UUID(uuidString: "24078134-D10B-4F0F-A706-E461A901FC7E")), orderLoc: 1, context: context)
         
         let set11 = CDSetRecord(reps: 8, weight: 135, completed: true, orderLoc: 1, context: context)
         let set12 = CDSetRecord(reps: 8, weight: 140, completed: true, orderLoc: 2, context: context)
@@ -61,7 +61,7 @@ struct PersistenceController {
         
         workoutRecord.exercises.append(exercise1)
         
-        let exercise2 = CDExerciseRecord(inLBs: false, exercise: loadExercise(uuid: UUID(uuidString: "D51D5334-871D-482B-94C0-097F98E39E2C")), orderLoc: 2, context: context)
+        let exercise2 = CDExerciseRecord(inLBs: false, exercise: loadExercise(uuid: UUID(uuidString: "24078134-D10B-4F0F-A706-E461A901FC7E")), orderLoc: 2, context: context)
         
         let set21 = CDSetRecord(reps: 12, weight: 0, completed: true, orderLoc: 1, context: context)
         let set22 = CDSetRecord(reps: 12, weight: 0, completed: true, orderLoc: 2, context: context)
@@ -73,7 +73,7 @@ struct PersistenceController {
         
         workoutRecord.exercises.append(exercise2)
         
-        let exercise3 = CDExerciseRecord(inLBs: true, exercise: loadExercise(uuid: UUID(uuidString: "6C05802B-BFC0-4210-BE3D-DF44A5A137D9")), orderLoc: 3, context: context)
+        let exercise3 = CDExerciseRecord(inLBs: true, exercise: loadExercise(uuid: UUID(uuidString: "24078134-D10B-4F0F-A706-E461A901FC7E")), orderLoc: 3, context: context)
         
         let set31 = CDSetRecord(reps: 10, weight: 35, completed: true, orderLoc: 1, context: context)
         let set32 = CDSetRecord(reps: 8, weight: 40, completed: true, orderLoc: 2, context: context)
@@ -100,7 +100,7 @@ struct PersistenceController {
         
         let workout11 = CDWorkout(name: "Push", orderLoc: 1, context: context)
         
-        let exerciseSet111 = CDExerciseSet(exercise: loadExercise(uuid: UUID(uuidString: "2ABFB8CA-E493-4EC8-B04A-45FDDF7D92A4")), intensityType: IntensityType.PercentOfMax, orderLoc: 1, context: context)
+        let exerciseSet111 = CDExerciseSet(exercise: loadExercise(uuid: UUID(uuidString: "24078134-D10B-4F0F-A706-E461A901FC7E")), intensityType: IntensityType.PercentOfMax, orderLoc: 1, context: context)
         
         let set1111 = CDSet(targetReps: "4", intensity: 85, orderLoc: 1, context: context)
         let set1112 = CDSet(targetReps: "4", intensity: 87.5, orderLoc: 2, context: context)
@@ -112,7 +112,7 @@ struct PersistenceController {
         
         workout11.exercises.append(exerciseSet111)
         
-        let exerciseSet112 = CDExerciseSet(exercise: loadExercise(uuid: UUID(uuidString: "6C05802B-BFC0-4210-BE3D-DF44A5A137D9")), intensityType: IntensityType.RPE, orderLoc: 2, context: context)
+        let exerciseSet112 = CDExerciseSet(exercise: loadExercise(uuid: UUID(uuidString: "24078134-D10B-4F0F-A706-E461A901FC7E")), intensityType: IntensityType.RPE, orderLoc: 2, context: context)
         
         let set1121 = CDSet(targetReps: "10", intensity: 8, orderLoc: 1, context: context)
         let set1122 = CDSet(targetReps: "10", intensity: 8, orderLoc: 2, context: context)
@@ -124,7 +124,7 @@ struct PersistenceController {
         
         workout11.exercises.append(exerciseSet112)
         
-        let exerciseSet113 = CDExerciseSet(exercise: loadExercise(uuid: UUID(uuidString: "D51D5334-871D-482B-94C0-097F98E39E2C")), orderLoc: 3, context: context)
+        let exerciseSet113 = CDExerciseSet(exercise: loadExercise(uuid: UUID(uuidString: "24078134-D10B-4F0F-A706-E461A901FC7E")), orderLoc: 3, context: context)
         
         let set1131 = CDSet(targetReps: "10", intensity: 8, orderLoc: 1, context: context)
         let set1132 = CDSet(targetReps: "10", intensity: 8, orderLoc: 2, context: context)

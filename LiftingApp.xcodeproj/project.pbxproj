@@ -10,6 +10,7 @@
 		31D1B17D2BA6907D0002D615 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D1B17C2BA6907D0002D615 /* SettingsView.swift */; };
 		BE3FCB1137A82738110216F7 /* libPods-LiftingApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC868353408A417A3E3F49D /* libPods-LiftingApp.a */; };
 		D628621A2C6FE77800690F12 /* defaultData.json in Resources */ = {isa = PBXBuildFile; fileRef = D62862192C6FE77700690F12 /* defaultData.json */; };
+		D628621C2C6FF88900690F12 /* CircledBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D628621B2C6FF88900690F12 /* CircledBodyView.swift */; };
 		D62B55E12C41D1DF001753C6 /* BackBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62B55E02C41D1DF001753C6 /* BackBodyView.swift */; };
 		D62BB9EF2BD34B6700ABBAA6 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D62BB9EE2BD34B6700ABBAA6 /* AssetsLibrary.framework */; };
 		D62BB9F12BD34B7500ABBAA6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D62BB9F02BD34B7500ABBAA6 /* CoreGraphics.framework */; };
@@ -69,6 +70,7 @@
 		31D1B17C2BA6907D0002D615 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3A5C07DB321520577D3D6B9F /* Pods-LiftingApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LiftingApp.release.xcconfig"; path = "Target Support Files/Pods-LiftingApp/Pods-LiftingApp.release.xcconfig"; sourceTree = "<group>"; };
 		D62862192C6FE77700690F12 /* defaultData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = defaultData.json; sourceTree = "<group>"; };
+		D628621B2C6FF88900690F12 /* CircledBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircledBodyView.swift; sourceTree = "<group>"; };
 		D62B55E02C41D1DF001753C6 /* BackBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackBodyView.swift; sourceTree = "<group>"; };
 		D62BB9EE2BD34B6700ABBAA6 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.4.sdk/System/Library/Frameworks/AssetsLibrary.framework; sourceTree = DEVELOPER_DIR; };
 		D62BB9F02BD34B7500ABBAA6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.4.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
@@ -164,6 +166,7 @@
 			children = (
 				D6E87EF52C40876300D32177 /* FrontBodyView.swift */,
 				D62B55E02C41D1DF001753C6 /* BackBodyView.swift */,
+				D628621B2C6FF88900690F12 /* CircledBodyView.swift */,
 			);
 			path = "Body Views";
 			sourceTree = "<group>";
@@ -413,6 +416,7 @@
 				D6D56FCE2B4C82F20040D4C4 /* LoginView.swift in Sources */,
 				D665A1392B965EF500FB2043 /* ChooseExerciseView.swift in Sources */,
 				D6F255C82BA513F4006D7AC2 /* CustomFunctions.swift in Sources */,
+				D628621C2C6FF88900690F12 /* CircledBodyView.swift in Sources */,
 				D665A1372B8FB08B00FB2043 /* RegisterAccountView.swift in Sources */,
 				D6D56FCC2B4C82F20040D4C4 /* LiftingAppApp.swift in Sources */,
 				D6E1668F2BEC2FFB00CE53B1 /* TestAnalyzer.swift in Sources */,

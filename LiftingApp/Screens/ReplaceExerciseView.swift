@@ -56,13 +56,12 @@ struct recommendedExercises: View {
     
     var body: some View {
         VStack {
-            Text("hi")
             if let recommendedExercises = self.recommendedExercises {
                 ForEach(recommendedExercises) { exercise in
                     Button(action: {
                         self.selectedExerciseWrapped.wrappedValue = exercise
                     }, label: {
-                        Text("\(exercise.name)")
+                        ExerciseLineView(exercise: exercise)
                     })
                 }
             }
@@ -112,6 +111,26 @@ struct recommendedExercises: View {
     }
 }
 
+struct ExerciseLineView: View {
+    
+    let exercise: Exercise
+    
+    var body: some View {
+        HStack {
+            CircledBodyView(exercise: exercise)
+                .frame(width: 50, height: 50)
+            Text(exercise.name)
+                .frame(alignment: .leading)
+                .foregroundStyle(Color(.text))
+                .bold()
+            Spacer()
+            
+        }
+        .padding(.vertical, 10)
+        
+    }
+}
+
 struct AllExercisesView: View {
     private var selectedExerciseWrapped: Binding<Exercise>
     private var selectedExercise: Exercise
@@ -137,7 +156,7 @@ struct REPreviewView: View {
     var workouts: FetchedResults<CDWorkoutRecord>
     
     //    @State var workoutRecord: CDWorkoutRecord? = nil
-    @State var exercise: Exercise = loadExercise(uuid: UUID(uuidString: "5461CEE3-F61F-4738-B230-9AF06964EB9F"))
+    @State var exercise: Exercise = loadExercise(uuid: UUID(uuidString: "24078134-D10B-4F0F-A706-E461A901FC7E"))
     @State var showSheet = true
     
     

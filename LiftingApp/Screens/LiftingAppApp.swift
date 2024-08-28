@@ -18,6 +18,7 @@ struct LiftingAppApp: App {
                     PersistenceController.shared.save()
                 }
                 .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
+                .preferredColorScheme(.dark)
         }
     }
 }
